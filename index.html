@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Work Hub</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <h1>AI Work Hub</h1>
+      <p>Thư viện tool & prompt AI cho công việc nội bộ</p>
+    </div>
+    <div class="version">Internal v1.0</div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <h2>AI Work Hub nội bộ</h2>
+      <p>Thư viện tool, prompt và hướng dẫn dùng AI cho công việc hằng ngày: rõ mục tiêu, đủ dữ liệu, copy dùng ngay.</p>
+    </section>
+
+    <section class="toolbar">
+      <input id="searchInput" type="text" placeholder="Tìm kiếm: hồ sơ mời thầu, PCCC, pipeline, backlog, action list..." />
+      <select id="departmentFilter">
+        <option value="all">Tất cả phòng ban</option>
+      </select>
+      <select id="platformFilter">
+        <option value="all">Tất cả AI</option>
+        <option value="ChatGPT">ChatGPT</option>
+        <option value="NotebookLM">NotebookLM</option>
+        <option value="Gemini">Gemini</option>
+      </select>
+      <select id="levelFilter">
+        <option value="all">Tất cả mức độ</option>
+        <option value="Nhanh">Nhanh</option>
+        <option value="Chuẩn">Chuẩn</option>
+        <option value="Chuyên sâu">Chuyên sâu</option>
+      </select>
+    </section>
+
+    <section class="quicknote">
+      <strong>Gợi ý dùng:</strong>
+      Dùng <b>Copy ChatGPT/Gemini</b> cho ChatGPT hoặc Gemini. Dùng <b>Copy NotebookLM</b> khi tài liệu đã upload vào NotebookLM và cần bám nguồn.
+    </section>
+
+    <section class="contact-strip">
+      <span>Phong cách sử dụng: thực chiến, ngắn gọn, rõ đầu vào, rõ đầu ra.</span>
+      <span>Góp ý/cập nhật prompt: <a href="mailto:namnh.ee@live.com">namnh.ee@live.com</a></span>
+    </section>
+
+    <section id="departmentTabs" class="tabs"></section>
+    <section id="platformTabs" class="tabs small-tabs"></section>
+
+    <section class="shortcut-bar">
+      <button class="shortcut-btn" onclick="showFavorites()">⭐ Xem yêu thích</button>
+      <button class="shortcut-btn" onclick="showRecent()">🕘 Prompt đã copy gần đây</button>
+      <button class="shortcut-btn" onclick="clearShortcutView()">↩ Quay lại thư viện</button>
+      <button class="shortcut-btn" onclick="showReadme()">📘 Hướng dẫn sử dụng</button>
+    </section>
+
+    <section id="shortcutContainer" class="shortcut-container hidden"></section>
+
+    <section id="toolsContainer" class="tools"></section>
+  </main>
+
+
+  <div id="builderModal" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div>
+          <h2>Prompt Builder</h2>
+          <p id="builderSubtitle">Điền thông tin để tạo prompt hoàn chỉnh.</p>
+        </div>
+        <button class="close-btn" onclick="closeBuilder()">×</button>
+      </div>
+
+      <div class="builder-grid">
+        <label>
+          Tên dự án / gói việc
+          <input id="builderProject" type="text" placeholder="Ví dụ: Kyocera CMOS" />
+        </label>
+        <label>
+          Khách hàng / đối tác
+          <input id="builderClient" type="text" placeholder="Ví dụ: Kyocera, Meiko..." />
+        </label>
+        <label>
+          Mục tiêu sử dụng
+          <select id="builderGoalType" onchange="updateBuilderHints()">
+            <option value="Tóm tắt để nắm nhanh thông tin">Tóm tắt để nắm nhanh thông tin</option>
+            <option value="Báo cáo nội bộ">Báo cáo nội bộ</option>
+            <option value="Trình lãnh đạo ra quyết định">Trình lãnh đạo ra quyết định</option>
+            <option value="Chuẩn bị email gửi khách hàng">Chuẩn bị email gửi khách hàng</option>
+            <option value="Phân tích rủi ro">Phân tích rủi ro</option>
+            <option value="Bảo vệ phương án">Bảo vệ phương án</option>
+            <option value="Phản biện phương án">Phản biện phương án</option>
+            <option value="Lập action list">Lập action list</option>
+            <option value="Tạo checklist">Tạo checklist</option>
+            <option value="Tạo câu hỏi làm rõ / RFI">Tạo câu hỏi làm rõ / RFI</option>
+            <option value="Khác">Khác</option>
+          </select>
+        </label>
+        <label>
+          Định dạng đầu ra
+          <select id="builderOutput" onchange="updateBuilderHints()">
+            <option value="Bảng phân tích">Bảng phân tích</option>
+            <option value="Executive summary">Executive summary</option>
+            <option value="Technical defense memo">Technical defense memo</option>
+            <option value="Decision memo">Decision memo</option>
+            <option value="Risk register">Risk register</option>
+            <option value="Action list">Action list</option>
+            <option value="Email chuyên nghiệp">Email chuyên nghiệp</option>
+            <option value="Checklist">Checklist</option>
+            <option value="RFI / Danh sách câu hỏi làm rõ">RFI / Danh sách câu hỏi làm rõ</option>
+            <option value="Biên bản họp">Biên bản họp</option>
+          </select>
+        </label>
+        <label>
+          Mức độ chi tiết
+          <select id="builderDetail">
+            <option value="Ngắn gọn, đi thẳng vào trọng tâm">Ngắn gọn</option>
+            <option value="Đầy đủ, có phân tích rủi ro và khuyến nghị">Đầy đủ</option>
+            <option value="Chuyên sâu, có fact / assumption / risk / decision gate">Chuyên sâu</option>
+          </select>
+        </label>
+        <label>
+          Công cụ AI
+          <select id="builderPlatform">
+            <option value="ChatGPT/Gemini">ChatGPT/Gemini</option>
+            <option value="NotebookLM">NotebookLM</option>
+          </select>
+        </label>
+      </div>
+
+      <label class="full-label">
+        Mô tả thêm mục tiêu
+        <input id="builderGoalDetail" type="text" placeholder="Ví dụ: Bảo vệ phương án chọn cáp MBA trước phản biện nội bộ" />
+      </label>
+
+      <div class="builder-help" id="builderHintBox">
+        <strong>Gợi ý nhập dữ liệu:</strong>
+        <ul>
+          <li>Không chỉ nhập tên việc. Hãy nhập bối cảnh, phương án, số liệu chính, vấn đề đang bị hỏi/phản biện.</li>
+          <li>Nếu là kỹ thuật: thêm thông số thiết bị, điều kiện lắp đặt/vận hành, tiêu chuẩn áp dụng.</li>
+          <li>Nếu dữ liệu chưa đủ, prompt sẽ yêu cầu AI hỏi lại trước khi kết luận.</li>
+        </ul>
+      </div>
+
+      <label class="full-label">
+        Dữ liệu đầu vào / nội dung cần xử lý
+        <textarea id="builderInput" rows="8" placeholder="Ví dụ kỹ thuật: MBA 2000kVA, 22/0.4kV; cáp đề xuất; chiều dài; phương pháp lắp đặt; tiêu chuẩn; phản biện đang gặp..."></textarea>
+      </label>
+
+      <div class="modal-actions">
+        <button class="copy-btn ChatGPT" onclick="generateBuiltPrompt()">Generate Prompt</button>
+        <button class="copy-btn NotebookLM" onclick="copyBuiltPrompt()">Copy Prompt đã tạo</button>
+      </div>
+
+      <div class="prompt-box builder-output" id="builderOutputBox">Prompt đã tạo sẽ hiển thị tại đây.</div>
+    </div>
+  </div>
+
+  <footer>
+    <p>Internal use only · Prompt chỉ hỗ trợ nháp/phân tích. Người phụ trách phải kiểm tra dữ liệu, kỹ thuật, pháp lý và nội dung trước khi sử dụng chính thức. · Góp ý/cập nhật nội dung: <a href="mailto:namnh.ee@live.com">namnh.ee@live.com</a></p>
+  </footer>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
