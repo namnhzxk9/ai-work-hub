@@ -705,6 +705,7 @@ function showReadme() {
 
   shortcutContainer.innerHTML = `
     <h3>📘 Hướng dẫn sử dụng nhanh</h3>
+
     <div class="readme-grid">
       <div class="readme-card">
         <h4>1. Chọn đúng nhóm việc</h4>
@@ -714,6 +715,7 @@ function showReadme() {
           <li>NotebookLM dùng khi đã upload tài liệu nguồn.</li>
         </ul>
       </div>
+
       <div class="readme-card">
         <h4>2. Copy prompt nhanh</h4>
         <ul>
@@ -722,6 +724,7 @@ function showReadme() {
           <li>Dán vào công cụ AI đang dùng.</li>
         </ul>
       </div>
+
       <div class="readme-card">
         <h4>3. Dùng Prompt Builder</h4>
         <ul>
@@ -730,6 +733,7 @@ function showReadme() {
           <li>Không chỉ nhập tên việc; cần có bối cảnh và số liệu chính.</li>
         </ul>
       </div>
+
       <div class="readme-card">
         <h4>4. Lưu và dùng lại</h4>
         <ul>
@@ -738,6 +742,7 @@ function showReadme() {
           <li>Dữ liệu lưu trên trình duyệt hiện tại.</li>
         </ul>
       </div>
+
       <div class="readme-card">
         <h4>5. Nguyên tắc an toàn</h4>
         <ul>
@@ -746,12 +751,99 @@ function showReadme() {
           <li>Người phụ trách chịu trách nhiệm soát lại nội dung.</li>
         </ul>
       </div>
+
       <div class="readme-card">
         <h4>6. Góp ý/cập nhật</h4>
         <ul>
           <li>Gửi góp ý, prompt mới hoặc lỗi cần sửa về:</li>
           <li><strong>namnh.ee@live.com</strong></li>
         </ul>
+      </div>
+    </div>
+
+    <div class="readme-guide">
+      <h3>🧭 Bảng hướng dẫn chọn nhanh</h3>
+      <p class="prompt-meta">
+        Dùng bảng này khi chưa rõ nên chọn <strong>Mục tiêu sử dụng</strong> và <strong>Định dạng đầu ra</strong> trong Prompt Builder.
+      </p>
+
+      <div class="guide-table-wrap">
+        <table class="guide-table">
+          <thead>
+            <tr>
+              <th>Nhu cầu thực tế</th>
+              <th>Mục tiêu sử dụng nên chọn</th>
+              <th>Định dạng đầu ra nên chọn</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Muốn hiểu nhanh tài liệu/email/nội dung dài</td>
+              <td>Tóm tắt để nắm nhanh thông tin</td>
+              <td>Executive summary</td>
+            </tr>
+            <tr>
+              <td>Muốn báo cáo ngắn cho sếp/nội bộ</td>
+              <td>Báo cáo nội bộ</td>
+              <td>Executive summary hoặc Bảng phân tích</td>
+            </tr>
+            <tr>
+              <td>Muốn xin quyết định Go/No-go/Conditional Go</td>
+              <td>Trình lãnh đạo ra quyết định</td>
+              <td>Decision memo</td>
+            </tr>
+            <tr>
+              <td>Muốn so sánh các phương án</td>
+              <td>Trình lãnh đạo ra quyết định</td>
+              <td>Decision memo hoặc Bảng phân tích</td>
+            </tr>
+            <tr>
+              <td>Muốn soi rủi ro của gói thầu/dự án</td>
+              <td>Phân tích rủi ro</td>
+              <td>Risk register</td>
+            </tr>
+            <tr>
+              <td>Muốn phản biện phương án của người khác</td>
+              <td>Phản biện phương án</td>
+              <td>Bảng phân tích</td>
+            </tr>
+            <tr>
+              <td>Muốn bảo vệ phương án của mình</td>
+              <td>Bảo vệ phương án</td>
+              <td>Technical defense memo</td>
+            </tr>
+            <tr>
+              <td>Muốn tạo danh sách câu hỏi gửi khách hàng/CĐT</td>
+              <td>Tạo câu hỏi làm rõ / RFI</td>
+              <td>RFI / Danh sách câu hỏi làm rõ</td>
+            </tr>
+            <tr>
+              <td>Muốn soạn email gửi khách hàng/đối tác</td>
+              <td>Chuẩn bị email gửi khách hàng</td>
+              <td>Email chuyên nghiệp</td>
+            </tr>
+            <tr>
+              <td>Muốn chia việc sau họp/sau phân tích</td>
+              <td>Lập action list</td>
+              <td>Action list</td>
+            </tr>
+            <tr>
+              <td>Muốn kiểm tra đủ/thiếu trước khi làm</td>
+              <td>Tạo checklist</td>
+              <td>Checklist</td>
+            </tr>
+            <tr>
+              <td>Muốn ghi lại nội dung họp</td>
+              <td>Báo cáo nội bộ hoặc Lập action list</td>
+              <td>Biên bản họp</td>
+            </tr>
+            <tr>
+              <td>Không thuộc nhóm nào rõ ràng</td>
+              <td>Khác</td>
+              <td>Bảng phân tích hoặc Executive summary</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   `;
