@@ -16,6 +16,10 @@ const departments = ["all", ...Array.from(new Set(TOOLS.map(item => item.departm
 const platforms = ["all", "ChatGPT", "NotebookLM", "Gemini"];
 
 function initDepartmentFilter() {
+  if (!departmentFilter) return;
+
+  departmentFilter.innerHTML = `<option value="all">Tất cả phòng ban</option>`;
+
   departments.forEach(dep => {
     if (dep !== "all") {
       const option = document.createElement("option");
@@ -27,6 +31,8 @@ function initDepartmentFilter() {
 }
 
 function initTabs() {
+  if (!departmentTabs || !platformTabs) return;
+
   departmentTabs.innerHTML = "";
   departments.forEach(dep => {
     const btn = document.createElement("button");
@@ -34,7 +40,7 @@ function initTabs() {
     btn.textContent = dep === "all" ? "Tất cả" : dep;
     btn.onclick = () => {
       activeDepartment = dep;
-      departmentFilter.value = dep;
+      if (departmentFilter) departmentFilter.value = dep;
       renderAll();
     };
     departmentTabs.appendChild(btn);
@@ -47,7 +53,7 @@ function initTabs() {
     btn.textContent = platform === "all" ? "Tất cả AI" : platform;
     btn.onclick = () => {
       activePlatform = platform;
-      platformFilter.value = platform;
+      if (platformFilter) platformFilter.value = platform;
       renderAll();
     };
     platformTabs.appendChild(btn);
@@ -55,42 +61,52 @@ function initTabs() {
 }
 
 function normalize(text) {
-  return (text || "").toLowerCase();
+  return String(text || "").toLowerCase();
 }
 
 function promptMatches(prompt, keyword, platform, level) {
-  const promptText = `${prompt.title} ${prompt.use} ${prompt.level} ${prompt.prompt} ${prompt.notebooklm_prompt || ""} ${prompt.gemini_prompt || ""}`;
+  const promptText = `${prompt.title || ""} ${prompt.use || ""} ${prompt.level || ""} ${prompt.prompt || ""} ${prompt.notebooklm_prompt || ""} ${prompt.gemini_prompt || ""}`;
   const matchKeyword = normalize(promptText).includes(keyword);
   const matchPlatform = platform === "all" || (prompt.platforms || []).includes(platform);
   const matchLevel = level === "all" || prompt.level === level;
+
   return matchKeyword && matchPlatform && matchLevel;
 }
 
 function toolMatches(tool, keyword, department, platform, level) {
-  const toolText = `${tool.department} ${tool.tool} ${tool.description}`;
-  const matchingPrompts = tool.prompts.filter(p => promptMatches(p, keyword, platform, level));
+  const toolText = `${tool.department || ""} ${tool.tool || ""} ${tool.description || ""}`;
+  const matchingPrompts = (tool.prompts || []).filter(p => promptMatches(p, keyword, platform, level));
   const matchToolKeyword = normalize(toolText).includes(keyword);
   const matchDepartment = department === "all" || tool.department === department;
-  const matchPlatform = platform === "all" || (tool.platforms || []).includes(platform) || matchingPrompts.length > 0;
+  const matchPlatform =
+    platform === "all" ||
+    (tool.platforms || []).includes(platform) ||
+    matchingPrompts.length > 0;
 
   if (!matchDepartment || !matchPlatform) return false;
-  if (keyword === "") return matchingPrompts.length > 0 || level === "all";
+
+  if (keyword === "") {
+    return matchingPrompts.length > 0 || level === "all";
+  }
+
   return matchToolKeyword || matchingPrompts.length > 0;
 }
 
 function getFilteredPrompts(tool, keyword, platform, level) {
-  return tool.prompts.filter(p => promptMatches(p, keyword, platform, level));
+  return (tool.prompts || []).filter(p => promptMatches(p, keyword, platform, level));
 }
 
 function renderTools() {
   clearShortcutView(false);
 
-  const keyword = normalize(searchInput.value.trim());
+  const keyword = searchInput ? normalize(searchInput.value.trim()) : "";
   const department = activeDepartment;
   const platform = activePlatform;
-  const level = levelFilter.value;
+  const level = levelFilter ? levelFilter.value : "all";
 
   const filtered = TOOLS.filter(tool => toolMatches(tool, keyword, department, platform, level));
+
+  if (!toolsContainer) return;
 
   toolsContainer.innerHTML = "";
 
@@ -104,38 +120,62 @@ function renderTools() {
     card.className = "tool-card";
 
     const visiblePrompts = getFilteredPrompts(tool, keyword, platform, level);
-    const toolPlatformBadges = (tool.platforms || []).map(p => `<span class="badge platform ${p}">${p}</span>`).join("");
+    const toolPlatformBadges = (tool.platforms || [])
+      .map(p => `<span class="badge platform ${escapeAttr(p)}">${escapeHtml(p)}</span>`)
+      .join("");
 
     const promptItems = visiblePrompts.map((prompt, promptIndex) => {
       const safeId = `p-${toolIndex}-${promptIndex}-${Math.random().toString(36).slice(2)}`;
-      const platformBadges = (prompt.platforms || []).map(p => `<span class="badge platform ${p}">${p}</span>`).join("");
+      const platformBadges = (prompt.platforms || [])
+        .map(p => `<span class="badge platform ${escapeAttr(p)}">${escapeHtml(p)}</span>`)
+        .join("");
+
       const defaultPrompt = prompt.prompt || "";
       const notebookPrompt = prompt.notebooklm_prompt || defaultPrompt;
       const geminiPrompt = prompt.gemini_prompt || defaultPrompt;
       const chatGeminiPrompt = defaultPrompt;
 
       let buttons = "";
+
       if ((prompt.platforms || []).includes("ChatGPT") || (prompt.platforms || []).includes("Gemini")) {
-        buttons += `<button class="copy-btn ChatGPT" onclick="copyTextById('${safeId}-chatgemini')">Copy ChatGPT/Gemini</button>
-        <textarea id="${safeId}-chatgemini" hidden>${escapeHtml(chatGeminiPrompt)}</textarea>`;
+        buttons += `
+          <button class="copy-btn ChatGPT" onclick="copyTextById('${safeId}-chatgemini')">Copy ChatGPT/Gemini</button>
+          <textarea id="${safeId}-chatgemini" hidden>${escapeHtml(chatGeminiPrompt)}</textarea>
+        `;
+      } else {
+        buttons += `
+          <textarea id="${safeId}-chatgemini" hidden>${escapeHtml(chatGeminiPrompt)}</textarea>
+        `;
       }
+
       if ((prompt.platforms || []).includes("NotebookLM")) {
-        buttons += `<button class="copy-btn NotebookLM" onclick="copyTextById('${safeId}-notebooklm')">Copy NotebookLM</button>
-        <textarea id="${safeId}-notebooklm" hidden>${escapeHtml(notebookPrompt)}</textarea>`;
+        buttons += `
+          <button class="copy-btn NotebookLM" onclick="copyTextById('${safeId}-notebooklm')">Copy NotebookLM</button>
+          <textarea id="${safeId}-notebooklm" hidden>${escapeHtml(notebookPrompt)}</textarea>
+        `;
+      } else {
+        buttons += `
+          <textarea id="${safeId}-notebooklm" hidden>${escapeHtml(notebookPrompt)}</textarea>
+        `;
       }
 
       if (tool.department !== "Tool Tricks") {
         const guideJson = JSON.stringify(prompt.input_guide || {});
-      buttons += `<button class="builder-btn" onclick="openBuilderById('${safeId}-chatgemini', '${safeId}-notebooklm', '${safeId}-guide', '${escapeAttr(prompt.title)}', '${escapeAttr(prompt.use)}')">Prompt Builder</button>
-      <textarea id="${safeId}-guide" hidden>${escapeHtml(guideJson)}</textarea>`;
+        buttons += `
+          <button class="builder-btn" onclick="openBuilderById('${safeId}-chatgemini', '${safeId}-notebooklm', '${safeId}-guide', '${escapeAttr(prompt.title)}', '${escapeAttr(prompt.use)}')">Prompt Builder</button>
+          <textarea id="${safeId}-guide" hidden>${escapeHtml(guideJson)}</textarea>
+        `;
       }
 
       const favoriteSaved = isFavoriteSaved(prompt.title, chatGeminiPrompt);
       const favClass = favoriteSaved ? "favorite-btn saved" : "favorite-btn";
       const favText = favoriteSaved ? "Đã lưu" : "Lưu";
-      buttons += `<button id="${safeId}-fav-btn" class="${favClass}" onclick="toggleFavorite('${safeId}-fav-title', '${safeId}-fav-use', '${safeId}-chatgemini', '${safeId}-notebooklm', '${safeId}-fav-btn')">${favText}</button>
-      <textarea id="${safeId}-fav-title" hidden>${escapeHtml(prompt.title)}</textarea>
-      <textarea id="${safeId}-fav-use" hidden>${escapeHtml(prompt.use)}</textarea>`;
+
+      buttons += `
+        <button id="${safeId}-fav-btn" class="${favClass}" onclick="toggleFavorite('${safeId}-fav-title', '${safeId}-fav-use', '${safeId}-chatgemini', '${safeId}-notebooklm', '${safeId}-fav-btn')">${favText}</button>
+        <textarea id="${safeId}-fav-title" hidden>${escapeHtml(prompt.title)}</textarea>
+        <textarea id="${safeId}-fav-use" hidden>${escapeHtml(prompt.use)}</textarea>
+      `;
 
       let shownPrompt = chatGeminiPrompt;
       if (activePlatform === "NotebookLM") shownPrompt = notebookPrompt;
@@ -144,15 +184,15 @@ function renderTools() {
       return `
         <div class="prompt-item">
           <button class="prompt-title" onclick="togglePrompt('${safeId}')">
-            <span>${prompt.title}</span>
+            <span>${escapeHtml(prompt.title)}</span>
             <span>▾</span>
           </button>
           <div id="${safeId}" class="prompt-body">
             <div class="badge-row">
-              <span class="badge level">${prompt.level || "Chuẩn"}</span>
+              <span class="badge level">${escapeHtml(prompt.level || "Chuẩn")}</span>
               ${platformBadges}
             </div>
-            <p class="prompt-meta"><strong>Dùng khi:</strong> ${prompt.use}</p>
+            <p class="prompt-meta"><strong>Dùng khi:</strong> ${escapeHtml(prompt.use)}</p>
             <div class="prompt-box">${escapeHtml(shownPrompt)}</div>
             <div class="actions">${buttons}</div>
           </div>
@@ -163,11 +203,11 @@ function renderTools() {
     card.innerHTML = `
       <div class="tool-header">
         <div class="badge-row">
-          <span class="badge">${tool.department}</span>
+          <span class="badge">${escapeHtml(tool.department)}</span>
           ${toolPlatformBadges}
         </div>
-        <h3>${tool.tool}</h3>
-        <p>${tool.description}</p>
+        <h3>${escapeHtml(tool.tool)}</h3>
+        <p>${escapeHtml(tool.description)}</p>
       </div>
       <div class="prompt-list">
         ${promptItems || "<p class='prompt-meta'>Không có prompt phù hợp với bộ lọc hiện tại.</p>"}
@@ -191,22 +231,36 @@ function togglePrompt(id) {
 function copyTextById(id) {
   const el = document.getElementById(id);
   if (!el) return;
+
   copyText(el.value);
   saveRecentFromTextarea(id);
 }
 
 function copyText(text) {
-  navigator.clipboard.writeText(text).then(() => {
-    alert("Đã copy prompt.");
-  }).catch(() => {
-    const textarea = document.createElement("textarea");
-    textarea.value = text;
-    document.body.appendChild(textarea);
-    textarea.select();
-    document.execCommand("copy");
-    document.body.removeChild(textarea);
-    alert("Đã copy prompt.");
-  });
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(() => {
+      alert("Đã copy prompt.");
+    }).catch(() => {
+      fallbackCopyText(text);
+    });
+  } else {
+    fallbackCopyText(text);
+  }
+}
+
+function fallbackCopyText(text) {
+  const textarea = document.createElement("textarea");
+  textarea.value = text;
+  textarea.style.position = "fixed";
+  textarea.style.left = "-9999px";
+  textarea.style.top = "-9999px";
+
+  document.body.appendChild(textarea);
+  textarea.select();
+  document.execCommand("copy");
+  document.body.removeChild(textarea);
+
+  alert("Đã copy prompt.");
 }
 
 function escapeHtml(text) {
@@ -224,15 +278,21 @@ function escapeAttr(text) {
     .replaceAll("<", "&lt;")
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
+    .replaceAll("'", "&#039;")
+    .replaceAll("`", "&#096;");
 }
 
 function openBuilderById(chatGeminiId, notebookId, guideId, title, use) {
   const chatEl = document.getElementById(chatGeminiId);
   const noteEl = document.getElementById(notebookId);
   const guideEl = document.getElementById(guideId);
+
   let inputGuide = null;
-  try { inputGuide = guideEl ? JSON.parse(guideEl.value) : null; } catch { inputGuide = null; }
+  try {
+    inputGuide = guideEl ? JSON.parse(guideEl.value) : null;
+  } catch {
+    inputGuide = null;
+  }
 
   currentBuilderPrompt = {
     title,
@@ -242,36 +302,48 @@ function openBuilderById(chatGeminiId, notebookId, guideId, title, use) {
     inputGuide
   };
 
-  document.getElementById("builderSubtitle").textContent = `${title} · ${use}`;
-  document.getElementById("builderProject").value = "";
-  document.getElementById("builderClient").value = "";
-  document.getElementById("builderGoalType").value = suggestGoalType(title);
-  document.getElementById("builderGoalDetail").value = "";
-  document.getElementById("builderOutput").value = suggestOutputFormat(title);
+  const builderSubtitle = document.getElementById("builderSubtitle");
+  const builderProject = document.getElementById("builderProject");
+  const builderClient = document.getElementById("builderClient");
+  const builderGoalType = document.getElementById("builderGoalType");
+  const builderGoalDetail = document.getElementById("builderGoalDetail");
+  const builderOutput = document.getElementById("builderOutput");
+  const builderInput = document.getElementById("builderInput");
+  const builderOutputBox = document.getElementById("builderOutputBox");
+  const builderModal = document.getElementById("builderModal");
+
+  if (builderSubtitle) builderSubtitle.textContent = `${title} · ${use}`;
+  if (builderProject) builderProject.value = "";
+  if (builderClient) builderClient.value = "";
+  if (builderGoalType) builderGoalType.value = suggestGoalType(title);
+  if (builderGoalDetail) builderGoalDetail.value = "";
+  if (builderOutput) builderOutput.value = suggestOutputFormat(title);
+  if (builderInput) builderInput.value = "";
+  if (builderOutputBox) builderOutputBox.textContent = "Prompt đã tạo sẽ hiển thị tại đây.";
+
   updateBuilderHints();
-  document.getElementById("builderInput").value = "";
-  document.getElementById("builderOutputBox").textContent = "Prompt đã tạo sẽ hiển thị tại đây.";
   builtPromptText = "";
 
-  document.getElementById("builderModal").classList.remove("hidden");
+  if (builderModal) builderModal.classList.remove("hidden");
 }
 
 function closeBuilder() {
-  document.getElementById("builderModal").classList.add("hidden");
+  const builderModal = document.getElementById("builderModal");
+  if (builderModal) builderModal.classList.add("hidden");
 }
 
 function generateBuiltPrompt() {
   if (!currentBuilderPrompt) return;
 
-  const project = document.getElementById("builderProject").value.trim();
-  const client = document.getElementById("builderClient").value.trim();
-  const goalType = document.getElementById("builderGoalType").value;
-  const goalDetail = document.getElementById("builderGoalDetail").value.trim();
+  const project = document.getElementById("builderProject")?.value.trim() || "";
+  const client = document.getElementById("builderClient")?.value.trim() || "";
+  const goalType = document.getElementById("builderGoalType")?.value || "";
+  const goalDetail = document.getElementById("builderGoalDetail")?.value.trim() || "";
   const goal = goalDetail ? `${goalType} - ${goalDetail}` : goalType;
-  const output = document.getElementById("builderOutput").value;
-  const detail = document.getElementById("builderDetail").value;
-  const platform = document.getElementById("builderPlatform").value;
-  const input = document.getElementById("builderInput").value.trim();
+  const output = document.getElementById("builderOutput")?.value || "Executive summary";
+  const detail = document.getElementById("builderDetail")?.value || "Đầy đủ";
+  const platform = document.getElementById("builderPlatform")?.value || "ChatGPT";
+  const input = document.getElementById("builderInput")?.value.trim() || "";
 
   const basePrompt = platform === "NotebookLM"
     ? (currentBuilderPrompt.notebook || currentBuilderPrompt.chatGemini)
@@ -303,7 +375,9 @@ DỮ LIỆU ĐẦU VÀO:
 ${input || "[dán dữ liệu đầu vào tại đây]"}`;
 
   builtPromptText = basePrompt + contextBlock;
-  document.getElementById("builderOutputBox").textContent = builtPromptText;
+
+  const builderOutputBox = document.getElementById("builderOutputBox");
+  if (builderOutputBox) builderOutputBox.textContent = builtPromptText;
 }
 
 function copyBuiltPrompt() {
@@ -326,15 +400,28 @@ function setStore(key, value) {
 function saveRecentFromTextarea(id) {
   const el = document.getElementById(id);
   if (!el) return;
+
   const text = el.value;
   const title = inferTitleFromPrompt(text);
   const items = getStore("ai_work_hub_recent");
-  const next = [{ title, text, time: new Date().toLocaleString("vi-VN") }, ...items.filter(i => i.text !== text)].slice(0, 12);
+
+  const next = [
+    {
+      title,
+      text,
+      time: new Date().toLocaleString("vi-VN")
+    },
+    ...items.filter(i => i.text !== text)
+  ].slice(0, 12);
+
   setStore("ai_work_hub_recent", next);
 }
 
 function inferTitleFromPrompt(text) {
-  const first = String(text || "").split("\n").find(line => line.trim().length > 0) || "Prompt";
+  const first = String(text || "")
+    .split("\n")
+    .find(line => line.trim().length > 0) || "Prompt";
+
   return first.slice(0, 80);
 }
 
@@ -348,9 +435,6 @@ function toggleFavorite(titleId, useId, chatId, notebookId, buttonId) {
   const useEl = document.getElementById(useId);
   const chatEl = document.getElementById(chatId);
   const noteEl = document.getElementById(notebookId);
-  const guideEl = document.getElementById(guideId);
-  let inputGuide = null;
-  try { inputGuide = guideEl ? JSON.parse(guideEl.value) : null; } catch { inputGuide = null; }
   const btn = document.getElementById(buttonId);
 
   const title = titleEl ? titleEl.value : "Prompt yêu thích";
@@ -360,9 +444,19 @@ function toggleFavorite(titleId, useId, chatId, notebookId, buttonId) {
 
   const items = getStore("ai_work_hub_favorites");
   const exists = items.some(i => i.title === title && i.chat === chat);
+
   const next = exists
     ? items.filter(i => !(i.title === title && i.chat === chat))
-    : [{ title, use, chat, notebook, time: new Date().toLocaleString("vi-VN") }, ...items].slice(0, 30);
+    : [
+        {
+          title,
+          use,
+          chat,
+          notebook,
+          time: new Date().toLocaleString("vi-VN")
+        },
+        ...items
+      ].slice(0, 30);
 
   setStore("ai_work_hub_favorites", next);
 
@@ -389,16 +483,25 @@ function showRecent() {
 
 function clearShortcutView(scroll = true) {
   if (!shortcutContainer) return;
+
   shortcutContainer.classList.add("hidden");
   shortcutContainer.innerHTML = "";
-  if (scroll) window.scrollTo({ top: 0, behavior: "smooth" });
+
+  if (scroll) {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+  }
 }
 
 function renderShortcut(title, items, isFavorite) {
+  if (!shortcutContainer) return;
+
   shortcutContainer.classList.remove("hidden");
 
   if (!items.length) {
-    shortcutContainer.innerHTML = `<h3>${title}</h3><p class="prompt-meta">Chưa có dữ liệu.</p>`;
+    shortcutContainer.innerHTML = `<h3>${escapeHtml(title)}</h3><p class="prompt-meta">Chưa có dữ liệu.</p>`;
     return;
   }
 
@@ -407,6 +510,7 @@ function renderShortcut(title, items, isFavorite) {
     const noteId = `shortcut-note-${idx}`;
     const chatText = item.chat || item.text || "";
     const noteText = item.notebook || item.text || "";
+
     return `
       <div class="shortcut-item">
         <h4>${escapeHtml(item.title || "Prompt")}</h4>
@@ -422,21 +526,26 @@ function renderShortcut(title, items, isFavorite) {
     `;
   }).join("");
 
-  shortcutContainer.innerHTML = `<h3>${title}</h3>${html}`;
-  shortcutContainer.scrollIntoView({ behavior: "smooth", block: "start" });
+  shortcutContainer.innerHTML = `<h3>${escapeHtml(title)}</h3>${html}`;
+
+  shortcutContainer.scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
 }
 
 function removeFavorite(index) {
   const items = getStore("ai_work_hub_favorites");
   items.splice(index, 1);
   setStore("ai_work_hub_favorites", items);
+
   showFavorites();
   renderTools();
 }
 
-
 function suggestGoalType(title) {
   const t = String(title || "").toLowerCase();
+
   if (t.includes("bảo vệ")) return "Bảo vệ phương án";
   if (t.includes("phản biện")) return "Phản biện phương án";
   if (t.includes("rủi ro") || t.includes("risk")) return "Phân tích rủi ro";
@@ -446,11 +555,13 @@ function suggestGoalType(title) {
   if (t.includes("action") || t.includes("biên bản")) return "Lập action list";
   if (t.includes("decision") || t.includes("gate") || t.includes("trọng tài")) return "Trình lãnh đạo ra quyết định";
   if (t.includes("tóm tắt") || t.includes("summary")) return "Tóm tắt để nắm nhanh thông tin";
+
   return "Báo cáo nội bộ";
 }
 
 function suggestOutputFormat(title) {
   const t = String(title || "").toLowerCase();
+
   if (t.includes("bảo vệ")) return "Technical defense memo";
   if (t.includes("phản biện")) return "Bảng phân tích";
   if (t.includes("trọng tài") || t.includes("decision") || t.includes("gate")) return "Decision memo";
@@ -460,6 +571,7 @@ function suggestOutputFormat(title) {
   if (t.includes("rfi") || t.includes("câu hỏi") || t.includes("làm rõ")) return "RFI / Danh sách câu hỏi làm rõ";
   if (t.includes("biên bản")) return "Biên bản họp";
   if (t.includes("action")) return "Action list";
+
   return "Executive summary";
 }
 
@@ -480,7 +592,7 @@ function updateBuilderHints() {
   hint.innerHTML = `
     <strong>Gợi ý nhập dữ liệu:</strong>
     <ul>
-      ${hintData.items.map(item => `<li>${escapeHtml(item)}</li>`).join("")}
+      ${(hintData.items || []).map(item => `<li>${escapeHtml(item)}</li>`).join("")}
       <li><strong>Nguyên tắc:</strong> nếu thiếu dữ liệu trọng yếu, prompt sẽ yêu cầu AI hỏi lại trước khi kết luận.</li>
     </ul>
     <div class="prompt-meta"><strong>Ví dụ dữ liệu đầu vào:</strong><br>${escapeHtml(hintData.example || "")}</div>
@@ -505,12 +617,15 @@ function getOutputInstruction(output) {
     "RFI / Danh sách câu hỏi làm rõ": "- Trả lời dạng RFI. Cột: Nhóm vấn đề / Câu hỏi / Lý do hỏi / Ảnh hưởng nếu không trả lời / Mức ưu tiên.",
     "Biên bản họp": "- Trả lời dạng biên bản họp. Có nội dung chính, quyết định đã chốt, action list, vấn đề còn mở."
   };
+
   return map[output] || "- Trả lời rõ ràng, có cấu trúc, dùng được cho công việc nội bộ.";
 }
 
-
 function showReadme() {
+  if (!shortcutContainer) return;
+
   shortcutContainer.classList.remove("hidden");
+
   shortcutContainer.innerHTML = `
     <h3>📘 Hướng dẫn sử dụng nhanh</h3>
     <div class="readme-grid">
@@ -563,19 +678,34 @@ function showReadme() {
       </div>
     </div>
   `;
-  shortcutContainer.scrollIntoView({ behavior: "smooth", block: "start" });
+
+  shortcutContainer.scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
 }
 
-searchInput.addEventListener("input", renderTools);
-departmentFilter.addEventListener("change", () => {
-  activeDepartment = departmentFilter.value;
-  renderAll();
-});
-platformFilter.addEventListener("change", () => {
-  activePlatform = platformFilter.value;
-  renderAll();
-});
-levelFilter.addEventListener("change", renderTools);
+if (searchInput) {
+  searchInput.addEventListener("input", renderTools);
+}
+
+if (departmentFilter) {
+  departmentFilter.addEventListener("change", () => {
+    activeDepartment = departmentFilter.value;
+    renderAll();
+  });
+}
+
+if (platformFilter) {
+  platformFilter.addEventListener("change", () => {
+    activePlatform = platformFilter.value;
+    renderAll();
+  });
+}
+
+if (levelFilter) {
+  levelFilter.addEventListener("change", renderTools);
+}
 
 initDepartmentFilter();
 renderAll();
