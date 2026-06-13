@@ -282,6 +282,44 @@ function escapeAttr(text) {
     .replaceAll("`", "&#096;");
 }
 
+function cleanBasePrompt(text) {
+  let cleaned = String(text || "");
+
+  cleaned = cleaned
+    // Xoá block nhập liệu phổ biến ở cuối prompt
+    .replace(/\n*Nội dung đầu vào:\s*$begin:math:display$dán nội dung vào đây$end:math:display$\s*$/gi, "")
+    .replace(/\n*Dữ liệu đầu vào:\s*$begin:math:display$dán dữ liệu đầu vào tại đây$end:math:display$\s*$/gi, "")
+    .replace(/\n*Thông tin đầu vào:\s*$begin:math:display$dán nội dung vào đây$end:math:display$\s*$/gi, "")
+    .replace(/\n*Thông tin gói thầu:\s*$begin:math:display$dán nội dung vào đây$end:math:display$\s*$/gi, "")
+    .replace(/\n*Thông tin dự án:\s*$begin:math:display$dán nội dung vào đây$end:math:display$\s*$/gi, "")
+    .replace(/\n*Thông tin dự án\/gói việc:\s*$begin:math:display$dán nội dung vào đây$end:math:display$\s*$/gi, "")
+    .replace(/\n*Phương án:\s*$begin:math:display$dán nội dung vào đây$end:math:display$\s*$/gi, "")
+    .replace(/\n*Nội dung:\s*$begin:math:display$dán nội dung vào đây$end:math:display$\s*$/gi, "")
+    .replace(/\n*Dữ liệu:\s*$begin:math:display$dán nội dung vào đây$end:math:display$\s*$/gi, "")
+    .replace(/\n*Thông tin:\s*$begin:math:display$dán nội dung vào đây$end:math:display$\s*$/gi, "")
+
+    // Xoá block email/form dạng:
+    // Thông tin:
+    // - ...
+    // Nội dung thô:
+    // [dán nội dung vào đây]
+    .replace(/\n*Thông tin:\s*\n(?:\s*- .*\n?)*\s*Nội dung thô:\s*$begin:math:display$dán nội dung vào đây$end:math:display$\s*$/gi, "")
+
+    // Xoá block danh sách câu hỏi ở cuối email RFI
+    .replace(/\n*Thông tin:\s*\n(?:\s*- .*\n?)*\s*Danh sách câu hỏi:\s*$begin:math:display$dán câu hỏi vào đây$end:math:display$\s*$/gi, "")
+
+    // Xoá các placeholder còn sót ở cuối
+    .replace(/\n*$begin:math:display$dán nội dung vào đây$end:math:display$\s*$/gi, "")
+    .replace(/\n*$begin:math:display$dán dữ liệu đầu vào tại đây$end:math:display$\s*$/gi, "")
+    .replace(/\n*$begin:math:display$dán câu hỏi vào đây$end:math:display$\s*$/gi, "")
+
+    // Dọn dòng trống thừa
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+
+  return cleaned;
+}
+
 function openBuilderById(chatGeminiId, notebookId, guideId, title, use) {
   const chatEl = document.getElementById(chatGeminiId);
   const noteEl = document.getElementById(notebookId);
@@ -345,9 +383,11 @@ function generateBuiltPrompt() {
   const platform = document.getElementById("builderPlatform")?.value || "ChatGPT";
   const input = document.getElementById("builderInput")?.value.trim() || "";
 
-  const basePrompt = platform === "NotebookLM"
+  let basePrompt = platform === "NotebookLM"
     ? (currentBuilderPrompt.notebook || currentBuilderPrompt.chatGemini)
     : currentBuilderPrompt.chatGemini;
+
+  basePrompt = cleanBasePrompt(basePrompt);
 
   const outputInstruction = getOutputInstruction(output);
 
@@ -468,6 +508,12 @@ function toggleFavorite(titleId, useId, chatId, notebookId, buttonId) {
       btn.classList.add("saved");
       btn.textContent = "Đã lưu";
     }
+  }
+
+  showFavorites();
+
+  if (!exists) {
+    alert("Đã lưu prompt vào danh sách yêu thích.");
   }
 }
 
