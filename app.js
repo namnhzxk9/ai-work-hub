@@ -296,10 +296,23 @@ function cleanBasePrompt(text) {
     "Thông tin cơ hội:",
     "Thông tin:",
     "Phương án:",
+    "Các phương án:",
+    "Danh sách phương án:",
+    "Option:",
+    "Options:",
     "Nội dung:",
-    "Dữ liệu:",
     "Nội dung thô:",
+    "Nội dung cần xử lý:",
+    "Nội dung cần phân tích:",
+    "Nội dung cần review:",
+    "Nội dung cần tóm tắt:",
+    "Dữ liệu:",
+    "Dữ liệu phân tích:",
+    "Dữ liệu cần xử lý:",
+    "Dữ liệu cần review:",
+    "Bảng dữ liệu:",
     "Danh sách câu hỏi:",
+    "Câu hỏi:",
     "Thông tin cần xử lý:",
     "Thông tin cần phân tích:",
     "Thông tin cần review:",
@@ -313,7 +326,9 @@ function cleanBasePrompt(text) {
   inputMarkers.forEach(marker => {
     const idx = cleaned.lastIndexOf(marker);
 
-    if (idx !== -1 && idx > cleaned.length * 0.30) {
+    // Chỉ cắt nếu marker nằm ở phần sau prompt.
+    // Tránh xoá nhầm các từ như "Thông tin khách hàng" trong phần cấu trúc đầu ra.
+    if (idx !== -1 && idx > cleaned.length * 0.25) {
       if (cutIndex === -1 || idx < cutIndex) {
         cutIndex = idx;
       }
