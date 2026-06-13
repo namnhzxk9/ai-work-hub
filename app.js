@@ -766,7 +766,15 @@ function showReadme() {
       <p class="prompt-meta">
         Dùng bảng này khi chưa rõ nên chọn <strong>Mục tiêu sử dụng</strong> và <strong>Định dạng đầu ra</strong> trong Prompt Builder.
       </p>
-
+<div class="guide-note">
+  <strong>Gợi ý:</strong>
+  <ul>
+    <li><strong>Mục tiêu sử dụng</strong> = bạn muốn AI làm việc gì.</li>
+    <li><strong>Định dạng đầu ra</strong> = bạn muốn kết quả trình bày theo mẫu nào.</li>
+    <li>Ví dụ: Muốn xin quyết định có theo gói thầu không → chọn <strong>“Trình lãnh đạo ra quyết định”</strong> + <strong>“Decision memo”</strong>.</li>
+    <li>Ví dụ: Muốn hỏi khách hàng các điểm chưa rõ → chọn <strong>“Tạo câu hỏi làm rõ / RFI”</strong> + <strong>“RFI / Danh sách câu hỏi làm rõ”</strong>.</li>
+  </ul>
+</div>
       <div class="guide-table-wrap">
         <table class="guide-table">
           <thead>
