@@ -510,3 +510,53 @@ footer a {
 .readme-card li {
   margin-bottom: 6px;
 }
+.readme-guide {
+  margin-top: 22px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 18px;
+}
+
+.readme-guide h3 {
+  margin: 0 0 8px 0;
+  font-size: 20px;
+}
+
+.guide-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  margin-top: 12px;
+}
+
+.guide-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 860px;
+  font-size: 14px;
+}
+
+.guide-table th,
+.guide-table td {
+  border-bottom: 1px solid #e5e7eb;
+  padding: 12px 10px;
+  text-align: left;
+  vertical-align: top;
+  line-height: 1.45;
+}
+
+.guide-table th {
+  background: #f8fafc;
+  color: #111827;
+  font-weight: 700;
+}
+
+.guide-table td:nth-child(2),
+.guide-table td:nth-child(3) {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.guide-table tr:hover td {
+  background: #f9fafb;
+}
