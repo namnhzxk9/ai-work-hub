@@ -513,50 +513,86 @@ footer a {
 .readme-guide {
   margin-top: 22px;
   background: #ffffff;
-  border: 1px solid #e5e7eb;
+  border: 1px solid #d1d5db;
   border-radius: 16px;
   padding: 18px;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
 }
 
 .readme-guide h3 {
   margin: 0 0 8px 0;
   font-size: 20px;
+  color: #111827;
 }
 
 .guide-table-wrap {
   width: 100%;
   overflow-x: auto;
-  margin-top: 12px;
+  margin-top: 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 12px;
+  background: #ffffff;
 }
 
 .guide-table {
   width: 100%;
+  min-width: 980px;
   border-collapse: collapse;
-  min-width: 860px;
   font-size: 14px;
+  table-layout: fixed;
 }
 
 .guide-table th,
 .guide-table td {
+  border-right: 1px solid #e5e7eb;
   border-bottom: 1px solid #e5e7eb;
-  padding: 12px 10px;
+  padding: 12px 14px;
   text-align: left;
   vertical-align: top;
   line-height: 1.45;
 }
 
+.guide-table th:last-child,
+.guide-table td:last-child {
+  border-right: none;
+}
+
+.guide-table tr:last-child td {
+  border-bottom: none;
+}
+
 .guide-table th {
-  background: #f8fafc;
+  background: #f1f5f9;
   color: #111827;
-  font-weight: 700;
+  font-weight: 800;
+  font-size: 14px;
 }
 
-.guide-table td:nth-child(2),
-.guide-table td:nth-child(3) {
-  font-weight: 600;
+.guide-table td {
   color: #1f2937;
+  background: #ffffff;
 }
 
-.guide-table tr:hover td {
-  background: #f9fafb;
+.guide-table tbody tr:nth-child(even) td {
+  background: #f8fafc;
+}
+
+.guide-table tbody tr:hover td {
+  background: #eef6ff;
+}
+
+.guide-table td:nth-child(1) {
+  width: 42%;
+}
+
+.guide-table td:nth-child(2) {
+  width: 28%;
+  font-weight: 700;
+  color: #1d4ed8;
+}
+
+.guide-table td:nth-child(3) {
+  width: 30%;
+  font-weight: 700;
+  color: #0f766e;
 }
