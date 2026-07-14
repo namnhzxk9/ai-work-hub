@@ -1,8 +1,10 @@
-# AI Work Hub 3.0
+# AI Work Hub 3.1 — Genesis Network
 
 Workspace thư viện tool, prompt và hướng dẫn dùng AI cho công việc nội bộ.
 
 Phiên bản 3.0 sử dụng ngôn ngữ thiết kế Obsidian Intelligence: hero dạng AI command center, thư viện có sidebar, hệ thống thẻ nghiệp vụ mới và trải nghiệm responsive cao cấp.
+
+Phiên bản 3.1 bổ sung nền mạng thần kinh canvas hai lớp, các nút dữ liệu chuyển động và hiệu ứng truyền thông tin thời gian thực. Hiệu ứng tự giảm mật độ trên điện thoại và tôn trọng cài đặt giảm chuyển động của hệ điều hành.
 
 ## Điểm mới
 

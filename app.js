@@ -1141,4 +1141,149 @@ async function initializeApp() {
   }
 }
 
+function initNeuralNetwork() {
+  const canvas = document.getElementById("neuralNetwork");
+  const hero = canvas?.closest(".hero");
+  if (!canvas || !hero) return;
+
+  const ctx = canvas.getContext("2d");
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let width = 0;
+  let height = 0;
+  let nodes = [];
+  let links = [];
+  let packets = [];
+  let frame = 0;
+  let running = true;
+  let mouse = { x: -1000, y: -1000 };
+
+  function buildNetwork() {
+    const rect = hero.getBoundingClientRect();
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+    width = rect.width;
+    height = rect.height;
+    canvas.width = Math.round(width * dpr);
+    canvas.height = Math.round(height * dpr);
+    canvas.style.width = `${width}px`;
+    canvas.style.height = `${height}px`;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    const count = width < 760 ? 25 : Math.min(64, Math.round(width / 24));
+    nodes = Array.from({ length: count }, (_, index) => ({
+      x: Math.random() * width,
+      y: 40 + Math.random() * (height - 80),
+      vx: (Math.random() - .5) * .11,
+      vy: (Math.random() - .5) * .09,
+      radius: index % 11 === 0 ? 2.4 : .8 + Math.random() * 1.1,
+      energy: Math.random(),
+      phase: Math.random() * Math.PI * 2
+    }));
+
+    links = [];
+    const maxDistance = width < 760 ? 135 : 190;
+    nodes.forEach((node, i) => nodes.slice(i + 1).forEach((other, offset) => {
+      const j = i + offset + 1;
+      const distance = Math.hypot(node.x - other.x, node.y - other.y);
+      if (distance < maxDistance && links.filter(link => link.a === i || link.b === i).length < 4) {
+        links.push({ a: i, b: j, distance, pulse: Math.random() * Math.PI * 2 });
+      }
+    }));
+
+    const packetCount = width < 760 ? 7 : 15;
+    packets = Array.from({ length: packetCount }, (_, index) => createPacket(index / packetCount));
+  }
+
+  function createPacket(progress = Math.random()) {
+    const linkIndex = Math.floor(Math.random() * Math.max(links.length, 1));
+    return { linkIndex, progress, speed: .0012 + Math.random() * .0024, size: 1.2 + Math.random() * 1.4, hue: Math.random() > .35 ? "violet" : "cyan" };
+  }
+
+  function draw(time = 0) {
+    ctx.clearRect(0, 0, width, height);
+
+    nodes.forEach(node => {
+      if (!reduceMotion) {
+        node.x += node.vx;
+        node.y += node.vy;
+        if (node.x < -20 || node.x > width + 20) node.vx *= -1;
+        if (node.y < 10 || node.y > height - 10) node.vy *= -1;
+        const mouseDistance = Math.hypot(node.x - mouse.x, node.y - mouse.y);
+        if (mouseDistance < 150) {
+          node.x += (node.x - mouse.x) * .002;
+          node.y += (node.y - mouse.y) * .002;
+        }
+      }
+    });
+
+    links.forEach(link => {
+      const a = nodes[link.a];
+      const b = nodes[link.b];
+      if (!a || !b) return;
+      const distance = Math.hypot(a.x - b.x, a.y - b.y);
+      const alpha = Math.max(0, 1 - distance / 220) * .22;
+      const gradient = ctx.createLinearGradient(a.x, a.y, b.x, b.y);
+      gradient.addColorStop(0, `rgba(112,87,245,${alpha * (.55 + a.energy * .4)})`);
+      gradient.addColorStop(.5, `rgba(81,155,232,${alpha})`);
+      gradient.addColorStop(1, `rgba(78,214,217,${alpha * (.55 + b.energy * .4)})`);
+      ctx.strokeStyle = gradient;
+      ctx.lineWidth = .65;
+      ctx.beginPath();
+      ctx.moveTo(a.x, a.y);
+      ctx.lineTo(b.x, b.y);
+      ctx.stroke();
+    });
+
+    nodes.forEach(node => {
+      const glow = .55 + Math.sin(time * .001 + node.phase) * .25;
+      ctx.shadowBlur = node.radius > 2 ? 18 : 8;
+      ctx.shadowColor = node.energy > .55 ? "#8c74ff" : "#49cbd8";
+      ctx.fillStyle = node.energy > .55 ? `rgba(158,137,255,${glow})` : `rgba(86,211,220,${glow * .8})`;
+      ctx.beginPath();
+      ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.shadowBlur = 0;
+    });
+
+    packets.forEach((packet, index) => {
+      const link = links[packet.linkIndex];
+      if (!link) return;
+      const a = nodes[link.a];
+      const b = nodes[link.b];
+      packet.progress += reduceMotion ? 0 : packet.speed;
+      if (packet.progress >= 1) packets[index] = createPacket(0);
+      const x = a.x + (b.x - a.x) * packet.progress;
+      const y = a.y + (b.y - a.y) * packet.progress;
+      const color = packet.hue === "violet" ? "#c2b7ff" : "#8ef7f2";
+      ctx.shadowBlur = 14;
+      ctx.shadowColor = color;
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.arc(x, y, packet.size, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.shadowBlur = 0;
+    });
+  }
+
+  function animate(time) {
+    draw(time);
+    if (!reduceMotion && running) frame = requestAnimationFrame(animate);
+  }
+
+  hero.addEventListener("pointermove", event => {
+    const rect = hero.getBoundingClientRect();
+    mouse = { x: event.clientX - rect.left, y: event.clientY - rect.top };
+  });
+  hero.addEventListener("pointerleave", () => { mouse = { x: -1000, y: -1000 }; });
+  new ResizeObserver(() => { cancelAnimationFrame(frame); buildNetwork(); animate(performance.now()); }).observe(hero);
+  new IntersectionObserver(entries => {
+    running = entries[0].isIntersecting;
+    cancelAnimationFrame(frame);
+    if (running && !reduceMotion) frame = requestAnimationFrame(animate);
+  }, { threshold: .05 }).observe(hero);
+
+  buildNetwork();
+  animate(performance.now());
+}
+
+initNeuralNetwork();
 initializeApp();
