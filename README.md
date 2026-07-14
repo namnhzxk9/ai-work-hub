@@ -1,6 +1,16 @@
-# AI Work Hub
+# AI Work Hub 2.0
 
-Thư viện tool, prompt và hướng dẫn dùng AI cho công việc nội bộ.
+Workspace thư viện tool, prompt và hướng dẫn dùng AI cho công việc nội bộ.
+
+## Điểm mới
+
+- Giao diện workspace hiện đại, tối ưu desktop và mobile.
+- Dashboard thống kê tự động theo dữ liệu thực tế.
+- Tìm kiếm và lọc theo phòng ban, nền tảng, mức độ.
+- Chế độ sáng/tối và ghi nhớ lựa chọn trên thiết bị.
+- Thông báo thao tác gọn, không làm gián đoạn công việc.
+- Hỗ trợ bàn phím: nhấn `/` để tìm kiếm, `Esc` để đóng Prompt Builder.
+- Cải thiện khả năng truy cập và trạng thái tương tác.
 
 ## Cách dùng nhanh
 

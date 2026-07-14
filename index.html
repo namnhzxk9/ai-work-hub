@@ -3,66 +3,83 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI Work Hub</title>
+  <meta name="description" content="Thư viện prompt AI thực chiến cho công việc nội bộ." />
+  <meta name="theme-color" content="#07111f" />
+  <title>AI Work Hub — Prompt Intelligence</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <header class="topbar">
-    <div>
-      <h1>AI Work Hub</h1>
-      <p>Thư viện tool & prompt AI cho công việc nội bộ</p>
+    <a class="brand" href="#top" aria-label="AI Work Hub - Trang chủ">
+      <span class="brand-mark">AI</span>
+      <span><strong>Work Hub</strong><small>Prompt Intelligence</small></span>
+    </a>
+    <div class="topbar-actions">
+      <span class="security-pill"><i></i> Internal workspace</span>
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="Đổi giao diện sáng tối">◐</button>
     </div>
-    <div class="version">Internal v1.0</div>
   </header>
 
-  <main>
+  <main id="top">
     <section class="hero">
-      <h2>AI Work Hub nội bộ</h2>
-      <p>Thư viện tool, prompt và hướng dẫn dùng AI cho công việc hằng ngày: rõ mục tiêu, đủ dữ liệu, copy dùng ngay.</p>
+      <div class="hero-copy">
+        <div class="eyebrow">AI ENABLEMENT · INTERNAL LIBRARY</div>
+        <h1>Làm việc sắc hơn<br><span>với prompt đã chuẩn hóa.</span></h1>
+        <p>Từ dữ liệu thô đến báo cáo, phân tích và quyết định — chọn đúng mẫu, thêm bối cảnh và dùng ngay trong vài phút.</p>
+        <div class="hero-actions">
+          <a class="primary-cta" href="#library">Khám phá thư viện <span>→</span></a>
+          <button class="secondary-cta" type="button" onclick="showReadme()">Xem cách sử dụng</button>
+        </div>
+      </div>
+      <div class="hero-panel" aria-label="Thống kê thư viện">
+        <div class="hero-panel-head"><span>Library overview</span><span class="live-dot">Live</span></div>
+        <div class="stat-grid">
+          <div class="stat"><strong id="toolCount">—</strong><span>Bộ công cụ</span></div>
+          <div class="stat"><strong id="promptCount">—</strong><span>Prompt sẵn dùng</span></div>
+          <div class="stat"><strong id="departmentCount">—</strong><span>Nhóm nghiệp vụ</span></div>
+          <div class="stat"><strong>03</strong><span>Nền tảng AI</span></div>
+        </div>
+        <div class="quality-note"><span>✓</span><p><strong>Structured for quality</strong><br>Rõ mục tiêu · Rõ đầu vào · Rõ đầu ra</p></div>
+      </div>
     </section>
 
-    <section class="toolbar">
-      <input id="searchInput" type="text" placeholder="Tìm kiếm: hồ sơ mời thầu, PCCC, pipeline, backlog, action list..." />
-      <select id="departmentFilter">
-        <option value="all">Tất cả phòng ban</option>
-      </select>
-      <select id="platformFilter">
-        <option value="all">Tất cả AI</option>
-        <option value="ChatGPT">ChatGPT</option>
-        <option value="NotebookLM">NotebookLM</option>
-        <option value="Gemini">Gemini</option>
-      </select>
-      <select id="levelFilter">
-        <option value="all">Tất cả mức độ</option>
-        <option value="Nhanh">Nhanh</option>
-        <option value="Chuẩn">Chuẩn</option>
-        <option value="Chuyên sâu">Chuyên sâu</option>
-      </select>
+    <section class="library-shell" id="library">
+      <div class="section-heading">
+        <div><span class="eyebrow">PROMPT LIBRARY</span><h2>Tìm đúng công cụ cho việc cần làm</h2></div>
+        <p id="resultSummary">Đang tải thư viện...</p>
+      </div>
+
+      <section class="toolbar" aria-label="Bộ lọc thư viện">
+        <label class="search-box"><span>⌕</span><input id="searchInput" type="search" placeholder="Tìm hồ sơ thầu, PCCC, backlog, action list..." autocomplete="off" /></label>
+        <select id="departmentFilter" aria-label="Lọc theo phòng ban"><option value="all">Tất cả phòng ban</option></select>
+        <select id="platformFilter" aria-label="Lọc theo nền tảng AI">
+          <option value="all">Tất cả nền tảng</option><option value="ChatGPT">ChatGPT</option><option value="NotebookLM">NotebookLM</option><option value="Gemini">Gemini</option>
+        </select>
+        <select id="levelFilter" aria-label="Lọc theo mức độ">
+          <option value="all">Tất cả mức độ</option><option value="Nhanh">Nhanh</option><option value="Chuẩn">Chuẩn</option><option value="Chuyên sâu">Chuyên sâu</option>
+        </select>
+        <button class="reset-btn" type="button" onclick="resetFilters()" title="Xóa bộ lọc">↺</button>
+      </section>
+
+      <section id="departmentTabs" class="tabs"></section>
+      <section id="platformTabs" class="tabs small-tabs"></section>
+
+      <section class="shortcut-bar">
+        <button class="shortcut-btn" onclick="showFavorites()"><span>☆</span> Yêu thích</button>
+        <button class="shortcut-btn" onclick="showRecent()"><span>↺</span> Đã dùng gần đây</button>
+        <button class="shortcut-btn" onclick="showReadme()"><span>?</span> Hướng dẫn</button>
+      </section>
+
+      <section id="shortcutContainer" class="shortcut-container hidden"></section>
+
+      <section id="toolsContainer" class="tools"></section>
     </section>
 
-    <section class="quicknote">
-      <strong>Gợi ý dùng:</strong>
-      Dùng <b>Copy ChatGPT/Gemini</b> cho ChatGPT hoặc Gemini. Dùng <b>Copy NotebookLM</b> khi tài liệu đã upload vào NotebookLM và cần bám nguồn.
+    <section class="safety-banner">
+      <div class="safety-icon">!</div>
+      <div><strong>AI hỗ trợ, con người chịu trách nhiệm.</strong><p>Không đưa dữ liệu mật khi chưa được phép. Luôn kiểm tra dữ liệu, kỹ thuật và pháp lý trước khi sử dụng chính thức.</p></div>
+      <a href="mailto:namnh.ee@live.com">Góp ý prompt →</a>
     </section>
-
-    <section class="contact-strip">
-      <span>Phong cách sử dụng: thực chiến, ngắn gọn, rõ đầu vào, rõ đầu ra.</span>
-      <span>Góp ý/cập nhật prompt: <a href="mailto:namnh.ee@live.com">namnh.ee@live.com</a></span>
-    </section>
-
-    <section id="departmentTabs" class="tabs"></section>
-    <section id="platformTabs" class="tabs small-tabs"></section>
-
-    <section class="shortcut-bar">
-      <button class="shortcut-btn" onclick="showFavorites()">⭐ Xem yêu thích</button>
-      <button class="shortcut-btn" onclick="showRecent()">🕘 Prompt đã copy gần đây</button>
-      <button class="shortcut-btn" onclick="clearShortcutView()">↩ Quay lại thư viện</button>
-      <button class="shortcut-btn" onclick="showReadme()">📘 Hướng dẫn sử dụng</button>
-    </section>
-
-    <section id="shortcutContainer" class="shortcut-container hidden"></section>
-
-    <section id="toolsContainer" class="tools"></section>
   </main>
 
 
@@ -161,9 +178,9 @@
     </div>
   </div>
 
-  <footer>
-    <p>Internal use only · Prompt chỉ hỗ trợ nháp/phân tích. Người phụ trách phải kiểm tra dữ liệu, kỹ thuật, pháp lý và nội dung trước khi sử dụng chính thức. · Góp ý/cập nhật nội dung: <a href="mailto:namnh.ee@live.com">namnh.ee@live.com</a></p>
-  </footer>
+  <footer><div class="footer-brand"><span class="brand-mark small">AI</span><strong>AI Work Hub</strong></div><p>Built for better work · Internal use only</p><a href="mailto:namnh.ee@live.com">namnh.ee@live.com</a></footer>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
   <script src="data.js"></script>
   <script src="app.js"></script>

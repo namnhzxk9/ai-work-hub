@@ -6,6 +6,7 @@ const levelFilter = document.getElementById("levelFilter");
 const departmentTabs = document.getElementById("departmentTabs");
 const platformTabs = document.getElementById("platformTabs");
 const shortcutContainer = document.getElementById("shortcutContainer");
+const resultSummary = document.getElementById("resultSummary");
 
 let activeDepartment = "all";
 let activePlatform = "all";
@@ -105,6 +106,11 @@ function renderTools() {
   const level = levelFilter ? levelFilter.value : "all";
 
   const filtered = TOOLS.filter(tool => toolMatches(tool, keyword, department, platform, level));
+  const visiblePromptCount = filtered.reduce((total, tool) => total + getFilteredPrompts(tool, keyword, platform, level).length, 0);
+
+  if (resultSummary) {
+    resultSummary.textContent = `${filtered.length} bộ công cụ · ${visiblePromptCount} prompt phù hợp`;
+  }
 
   if (!toolsContainer) return;
 
@@ -183,7 +189,7 @@ function renderTools() {
 
       return `
         <div class="prompt-item">
-          <button class="prompt-title" onclick="togglePrompt('${safeId}')">
+          <button class="prompt-title" onclick="togglePrompt('${safeId}')" aria-expanded="false" aria-controls="${safeId}">
             <span>${escapeHtml(prompt.title)}</span>
             <span>▾</span>
           </button>
@@ -225,7 +231,11 @@ function renderAll() {
 
 function togglePrompt(id) {
   const el = document.getElementById(id);
-  if (el) el.classList.toggle("open");
+  if (el) {
+    el.classList.toggle("open");
+    const trigger = el.previousElementSibling;
+    if (trigger) trigger.setAttribute("aria-expanded", String(el.classList.contains("open")));
+  }
 }
 
 function copyTextById(id) {
@@ -239,7 +249,7 @@ function copyTextById(id) {
 function copyText(text) {
   if (navigator.clipboard && navigator.clipboard.writeText) {
     navigator.clipboard.writeText(text).then(() => {
-      alert("Đã copy prompt.");
+      showToast("Đã sao chép prompt vào clipboard");
     }).catch(() => {
       fallbackCopyText(text);
     });
@@ -260,7 +270,17 @@ function fallbackCopyText(text) {
   document.execCommand("copy");
   document.body.removeChild(textarea);
 
-  alert("Đã copy prompt.");
+  showToast("Đã sao chép prompt vào clipboard");
+}
+
+let toastTimer;
+function showToast(message) {
+  const toast = document.getElementById("toast");
+  if (!toast) return;
+  toast.textContent = message;
+  toast.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove("show"), 2200);
 }
 
 function escapeHtml(text) {
@@ -544,8 +564,40 @@ function toggleFavorite(titleId, useId, chatId, notebookId, buttonId) {
   showFavorites();
 
   if (!exists) {
-    alert("Đã lưu prompt vào danh sách yêu thích.");
+    showToast("Đã thêm vào danh sách yêu thích");
   }
+}
+
+function resetFilters() {
+  activeDepartment = "all";
+  activePlatform = "all";
+  if (searchInput) searchInput.value = "";
+  if (departmentFilter) departmentFilter.value = "all";
+  if (platformFilter) platformFilter.value = "all";
+  if (levelFilter) levelFilter.value = "all";
+  renderAll();
+  showToast("Đã xóa toàn bộ bộ lọc");
+}
+
+function initWorkspaceOverview() {
+  const promptTotal = TOOLS.reduce((total, tool) => total + (tool.prompts || []).length, 0);
+  const uniqueDepartments = new Set(TOOLS.map(tool => tool.department)).size;
+  const values = { toolCount: TOOLS.length, promptCount: promptTotal, departmentCount: uniqueDepartments };
+  Object.entries(values).forEach(([id, value]) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = String(value).padStart(2, "0");
+  });
+}
+
+function initTheme() {
+  const toggle = document.getElementById("themeToggle");
+  const savedTheme = localStorage.getItem("ai_work_hub_theme");
+  if (savedTheme === "dark") document.body.classList.add("dark");
+  if (!toggle) return;
+  toggle.addEventListener("click", () => {
+    document.body.classList.toggle("dark");
+    localStorage.setItem("ai_work_hub_theme", document.body.classList.contains("dark") ? "dark" : "light");
+  });
 }
 
 function showFavorites() {
@@ -884,5 +936,19 @@ if (levelFilter) {
   levelFilter.addEventListener("change", renderTools);
 }
 
+document.addEventListener("keydown", event => {
+  if (event.key === "Escape") closeBuilder();
+  if (event.key === "/" && document.activeElement?.tagName !== "INPUT" && document.activeElement?.tagName !== "TEXTAREA") {
+    event.preventDefault();
+    searchInput?.focus();
+  }
+});
+
+document.getElementById("builderModal")?.addEventListener("click", event => {
+  if (event.target.id === "builderModal") closeBuilder();
+});
+
 initDepartmentFilter();
+initWorkspaceOverview();
+initTheme();
 renderAll();
