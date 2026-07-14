@@ -1,10 +1,22 @@
-# AI Work Hub 3.1 — Genesis Network
+# AI Work Hub 4.0 — AI Work Operating System
 
 Workspace thư viện tool, prompt và hướng dẫn dùng AI cho công việc nội bộ.
 
 Phiên bản 3.0 sử dụng ngôn ngữ thiết kế Obsidian Intelligence: hero dạng AI command center, thư viện có sidebar, hệ thống thẻ nghiệp vụ mới và trải nghiệm responsive cao cấp.
 
 Phiên bản 3.1 bổ sung nền mạng thần kinh canvas hai lớp, các nút dữ liệu chuyển động và hiệu ứng truyền thông tin thời gian thực. Hiệu ứng tự giảm mật độ trên điện thoại và tôn trọng cài đặt giảm chuyển động của hệ điều hành.
+
+## Work OS 4.0
+
+- Motion Controller: Auto / On / Off, cho phép bật hiệu ứng ngay cả khi hệ điều hành đang giảm chuyển động.
+- AI Task Router: phân tích yêu cầu tự nhiên và đề xuất prompt, công cụ AI, chế độ xử lý.
+- Command Palette `Cmd/Ctrl + K`.
+- Project Workspace lưu cục bộ theo dự án.
+- Workflow Center nhiều bước cho đấu thầu, thiết kế, báo cáo và rủi ro.
+- Smart Next gợi ý prompt tiếp theo từ lịch sử sử dụng trên thiết bị.
+- Xuất prompt thành Markdown, Word, CSV, JSON hoặc email.
+- Content Studio tạo, nhập và xuất prompt tùy chỉnh.
+- Đánh giá prompt và ghim prompt vào dự án.
 
 ## Điểm mới
 

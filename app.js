@@ -266,6 +266,7 @@ function openPromptDetail(promptKey, updateHash = true) {
   platform.querySelector('option[value="NotebookLM"]').disabled = !(prompt.platforms || []).includes("NotebookLM");
   changeDetailPlatform();
   updateDetailUsage();
+  renderCurrentRating();
   document.getElementById("promptDetailModal").classList.remove("hidden");
   document.body.classList.add("modal-open");
   if (updateHash) history.replaceState(null, "", `${location.pathname}${location.search}#prompt=${encodeURIComponent(promptKey)}`);
@@ -1106,7 +1107,8 @@ if (levelFilter) {
 }
 
 document.addEventListener("keydown", event => {
-  if (event.key === "Escape") { closeBuilder(); closePromptDetail(); }
+  if (event.key === "Escape") { closeBuilder(); closePromptDetail(); closeOsModal(); closeCommandPalette(); }
+  if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") { event.preventDefault(); document.getElementById("commandPalette")?.classList.contains("hidden") ? openCommandPalette() : closeCommandPalette(); return; }
   if (event.key === "/" && document.activeElement?.tagName !== "INPUT" && document.activeElement?.tagName !== "TEXTAREA") {
     event.preventDefault();
     searchInput?.focus();
@@ -1121,11 +1123,23 @@ document.getElementById("promptDetailModal")?.addEventListener("click", event =>
   if (event.target.id === "promptDetailModal") closePromptDetail();
 });
 
+document.getElementById("osModal")?.addEventListener("click", event => { if (event.target.id === "osModal") closeOsModal(); });
+document.getElementById("commandPalette")?.addEventListener("click", event => { if (event.target.id === "commandPalette") closeCommandPalette(); });
+document.getElementById("paletteInput")?.addEventListener("input", event => renderPaletteResults(event.target.value));
+document.getElementById("paletteInput")?.addEventListener("keydown", event => {
+  const buttons=[...document.querySelectorAll("#paletteResults button")];
+  if(event.key==="ArrowDown"||event.key==="ArrowUp"){event.preventDefault();paletteSelection=Math.max(0,Math.min(buttons.length-1,paletteSelection+(event.key==="ArrowDown"?1:-1)));buttons.forEach((button,index)=>button.classList.toggle("selected",index===paletteSelection));buttons[paletteSelection]?.scrollIntoView({block:"nearest"});}
+  if(event.key==="Enter"){event.preventDefault();runPaletteSelection();}
+});
+document.getElementById("paletteResults")?.addEventListener("click", event => { const button=event.target.closest("button[data-action]");if(button){closeCommandPalette();new Function(button.dataset.action)();} });
+
 async function initializeApp() {
   try {
-    const response = await fetch(`data.json?v=3.0.0`);
+    const response = await fetch(`data.json?v=4.0.0`);
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     TOOLS = await response.json();
+    const customPrompts = getStore("ai_work_hub_custom_prompts");
+    if (customPrompts.length) TOOLS.unshift({ department:"Cá nhân", tool:"Prompt cá nhân", description:"Các prompt tùy chỉnh được lưu trên thiết bị này.", platforms:["ChatGPT","Gemini"], prompts:customPrompts });
     departments = ["all", ...Array.from(new Set(TOOLS.map(item => item.department)))];
     initDepartmentFilter();
     initWorkspaceOverview();
@@ -1147,7 +1161,7 @@ function initNeuralNetwork() {
   if (!canvas || !hero) return;
 
   const ctx = canvas.getContext("2d");
-  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let reduceMotion = getMotionMode() === "off" || (getMotionMode() === "auto" && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
   let width = 0;
   let height = 0;
   let nodes = [];
@@ -1281,9 +1295,229 @@ function initNeuralNetwork() {
     if (running && !reduceMotion) frame = requestAnimationFrame(animate);
   }, { threshold: .05 }).observe(hero);
 
+  window.addEventListener("motionmodechange", () => {
+    reduceMotion = getMotionMode() === "off" || (getMotionMode() === "auto" && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+    cancelAnimationFrame(frame);
+    draw(performance.now());
+    if (!reduceMotion && running) frame = requestAnimationFrame(animate);
+  });
+
   buildNetwork();
   animate(performance.now());
 }
+
+function getMotionMode() {
+  return localStorage.getItem("ai_work_hub_motion") || "auto";
+}
+
+function renderMotionMode() {
+  const button = document.getElementById("motionToggle");
+  if (!button) return;
+  const mode = getMotionMode();
+  const labels = { auto: "Auto", on: "On", off: "Off" };
+  button.innerHTML = `<span>${mode === "off" ? "○" : "◉"}</span> Motion: ${labels[mode]}`;
+  button.classList.toggle("active", mode === "on");
+}
+
+function cycleMotionMode() {
+  const modes = ["auto", "on", "off"];
+  const next = modes[(modes.indexOf(getMotionMode()) + 1) % modes.length];
+  localStorage.setItem("ai_work_hub_motion", next);
+  renderMotionMode();
+  window.dispatchEvent(new Event("motionmodechange"));
+  showToast(`Chuyển động: ${next === "on" ? "Luôn bật" : next === "off" ? "Tắt" : "Theo hệ thống"}`);
+}
+
+function openOsModal(title, subtitle, html, eyebrow = "AI WORK OS") {
+  document.getElementById("osModalTitle").textContent = title;
+  document.getElementById("osModalSubtitle").textContent = subtitle || "";
+  document.getElementById("osModalEyebrow").textContent = eyebrow;
+  document.getElementById("osModalBody").innerHTML = html;
+  document.getElementById("osModal").classList.remove("hidden");
+  document.body.classList.add("modal-open");
+}
+
+function closeOsModal() {
+  document.getElementById("osModal")?.classList.add("hidden");
+  document.body.classList.remove("modal-open");
+}
+
+function openTaskRouter() {
+  openOsModal("AI Task Router", "Mô tả việc cần làm. Hệ thống sẽ chọn workflow, công cụ AI và prompt phù hợp nhất.", `
+    <div class="router-shell">
+      <div class="router-input"><label>Bạn muốn hoàn thành việc gì?</label><textarea id="routerQuery" rows="5" placeholder="Ví dụ: Tôi vừa nhận hồ sơ mời thầu nhà máy, cần tìm rủi ro và báo cáo lãnh đạo trước chiều mai."></textarea><div class="router-options"><select id="routerUrgency"><option value="normal">Tiêu chuẩn</option><option value="fast">Cần kết quả nhanh</option><option value="deep">Phân tích chuyên sâu</option></select><button class="builder-btn" onclick="runTaskRouter()">Phân tích nhiệm vụ ✦</button></div></div>
+      <div id="routerResults" class="router-results"><div class="router-empty"><span>✦</span><strong>Task intelligence đang chờ</strong><p>Nhập mục tiêu bằng ngôn ngữ tự nhiên để bắt đầu.</p></div></div>
+    </div>`, "INTENT → WORKFLOW");
+  setTimeout(() => document.getElementById("routerQuery")?.focus(), 50);
+}
+
+function runTaskRouter() {
+  const query = document.getElementById("routerQuery")?.value.trim() || "";
+  const urgency = document.getElementById("routerUrgency")?.value || "normal";
+  if (query.length < 12) { showToast("Hãy mô tả nhiệm vụ chi tiết hơn"); return; }
+  const words = normalize(query).split(/\s+/).filter(word => word.length > 2);
+  const signals = [
+    { name: "Đấu thầu", terms: ["thầu", "hồ sơ", "rfq", "rfp", "báo giá", "go", "no-go"] },
+    { name: "Thiết kế", terms: ["thiết kế", "kỹ thuật", "pccc", "cáp", "điện", "bản vẽ", "spec"] },
+    { name: "Báo cáo", terms: ["báo cáo", "lãnh đạo", "tóm tắt", "executive", "tuần"] },
+    { name: "Rủi ro", terms: ["rủi ro", "risk", "phản biện", "bảo vệ", "quyết định"] },
+    { name: "Email", terms: ["email", "khách hàng", "nhắc", "phản hồi", "gửi"] }
+  ];
+  const intent = signals.map(group => ({ ...group, score: group.terms.filter(term => normalize(query).includes(term)).length })).sort((a,b) => b.score - a.score)[0];
+  const ranked = [...promptRegistry.values()].map(prompt => {
+    const haystack = normalize(`${prompt.title} ${prompt.use} ${prompt.department} ${prompt.tool || ""}`);
+    let score = words.reduce((sum, word) => sum + (haystack.includes(word) ? 2 : 0), 0);
+    if (intent?.score && haystack.includes(normalize(intent.name))) score += 5;
+    if (urgency === "fast" && prompt.level === "Nhanh") score += 3;
+    if (urgency === "deep" && prompt.level === "Chuyên sâu") score += 3;
+    return { prompt, score };
+  }).sort((a,b) => b.score - a.score).slice(0, 4);
+  const sourceHeavy = /tài liệu|nguồn|hồ sơ|file|pdf|upload/i.test(query);
+  const platform = sourceHeavy ? "NotebookLM + ChatGPT" : "ChatGPT / Gemini";
+  document.getElementById("routerResults").innerHTML = `
+    <div class="router-decision"><div><small>NHẬN DIỆN Ý ĐỊNH</small><strong>${escapeHtml(intent?.score ? intent.name : "Công việc tổng hợp")}</strong></div><div><small>CÔNG CỤ KHUYẾN NGHỊ</small><strong>${platform}</strong></div><div><small>CHẾ ĐỘ</small><strong>${urgency === "deep" ? "Chuyên sâu" : urgency === "fast" ? "Tốc độ" : "Tiêu chuẩn"}</strong></div></div>
+    <div class="router-warning"><b>Trước khi bắt đầu:</b> Chuẩn bị bối cảnh, dữ liệu chính, deadline và người nhận đầu ra. Nếu dùng tài liệu nội bộ, hãy kiểm tra chính sách bảo mật.</div>
+    <h4>Prompt phù hợp nhất</h4><div class="router-cards">${ranked.map(({prompt},index) => `<button onclick="openRoutedPrompt('${prompt.id}')"><span>0${index+1}</span><div><b>${escapeHtml(prompt.title)}</b><small>${escapeHtml(prompt.department)} · ${escapeHtml(prompt.level || "Chuẩn")}</small></div><i>→</i></button>`).join("")}</div>
+    <div class="router-next"><button class="text-btn" onclick="openWorkflowCenter('${escapeAttr(intent?.name || "")}' )">Tạo workflow nhiều bước</button><button class="builder-btn" onclick="saveRouterAsProject()">Lưu thành dự án</button></div>`;
+  sessionStorage.setItem("ai_work_hub_last_task", JSON.stringify({ query, intent: intent?.name || "Tổng hợp", promptIds: ranked.map(item => item.prompt.id) }));
+}
+
+function openRoutedPrompt(id) {
+  closeOsModal();
+  openPromptDetail(id);
+}
+
+function saveRouterAsProject() {
+  const task = JSON.parse(sessionStorage.getItem("ai_work_hub_last_task") || "null");
+  if (!task) return;
+  const projects = getStore("ai_work_hub_projects");
+  projects.unshift({ id: `prj-${Date.now()}`, name: task.query.slice(0, 60), client: "", status: "Đang thực hiện", createdAt: new Date().toISOString(), notes: task.query, promptIds: task.promptIds || [] });
+  setStore("ai_work_hub_projects", projects.slice(0, 30));
+  showToast("Đã tạo Project Workspace từ nhiệm vụ");
+  openWorkspace();
+}
+
+function openWorkspace(selectedId = "") {
+  const projects = getStore("ai_work_hub_projects");
+  const selected = projects.find(project => project.id === selectedId) || projects[0];
+  openOsModal("Project Workspace", "Tổ chức prompt, ghi chú và workflow theo từng dự án trên thiết bị này.", `
+    <div class="workspace-layout"><aside class="project-list"><button class="new-project-btn" onclick="showProjectForm()">＋ Dự án mới</button><div id="projectItems">${projects.length ? projects.map(project => `<button class="${selected?.id === project.id ? "active" : ""}" onclick="openWorkspace('${project.id}')"><span>${escapeHtml(project.name.slice(0,2).toUpperCase())}</span><div><b>${escapeHtml(project.name)}</b><small>${escapeHtml(project.status || "Đang thực hiện")}</small></div></button>`).join("") : `<p>Chưa có dự án.</p>`}</div></aside><section id="projectDetail" class="project-detail">${selected ? renderProjectDetail(selected) : renderProjectForm()}</section></div>`, "LOCAL-FIRST PROJECTS");
+}
+
+function renderProjectForm() {
+  return `<div class="project-form"><div class="workspace-empty-icon">▦</div><h3>Tạo Project Workspace</h3><p>Gom prompt, workflow và quyết định vào cùng một không gian.</p><label>Tên dự án<input id="projectName" placeholder="Ví dụ: Kyocera CMOS"/></label><label>Khách hàng / đối tác<input id="projectClient" placeholder="Tên khách hàng"/></label><label>Mục tiêu<textarea id="projectNotes" rows="4" placeholder="Mục tiêu, deadline, đầu ra cần hoàn thành..."></textarea></label><button class="builder-btn" onclick="createProject()">Tạo workspace</button></div>`;
+}
+
+function showProjectForm() { document.getElementById("projectDetail").innerHTML = renderProjectForm(); }
+
+function createProject() {
+  const name = document.getElementById("projectName")?.value.trim();
+  if (!name) { showToast("Hãy nhập tên dự án"); return; }
+  const projects = getStore("ai_work_hub_projects");
+  const project = { id:`prj-${Date.now()}`, name, client:document.getElementById("projectClient")?.value.trim() || "", notes:document.getElementById("projectNotes")?.value.trim() || "", status:"Đang thực hiện", createdAt:new Date().toISOString(), promptIds:[] };
+  projects.unshift(project); setStore("ai_work_hub_projects", projects); openWorkspace(project.id); showToast("Đã tạo project workspace");
+}
+
+function pinCurrentPromptToProject() {
+  if (!currentDetailPrompt) return;
+  const projects = getStore("ai_work_hub_projects");
+  if (!projects.length) { closePromptDetail(false); openWorkspace(); showToast("Hãy tạo project trước khi ghim prompt"); return; }
+  const options = projects.map(project => `<button class="project-pick" onclick="confirmPinPrompt('${project.id}')"><span>${escapeHtml(project.name.slice(0,2).toUpperCase())}</span><div><b>${escapeHtml(project.name)}</b><small>${escapeHtml(project.client||"Dự án nội bộ")}</small></div><i>＋</i></button>`).join("");
+  const promptId = currentDetailPrompt.id;
+  sessionStorage.setItem("ai_work_hub_pin_prompt", promptId);
+  closePromptDetail(false);
+  openOsModal("Ghim prompt vào project","Chọn không gian làm việc sẽ sử dụng prompt này.",`<div class="project-picker">${options}</div>`,`PROMPT → PROJECT`);
+}
+
+function confirmPinPrompt(projectId) {
+  const promptId = sessionStorage.getItem("ai_work_hub_pin_prompt");
+  const projects = getStore("ai_work_hub_projects"); const project=projects.find(item=>item.id===projectId); if(!project||!promptId)return;
+  project.promptIds=[...new Set([...(project.promptIds||[]),promptId])]; setStore("ai_work_hub_projects",projects); showToast("Đã ghim prompt vào project"); openWorkspace(projectId);
+}
+
+function renderProjectDetail(project) {
+  const prompts = (project.promptIds || []).map(id => promptRegistry.get(id)).filter(Boolean);
+  return `<div class="project-hero"><div><span>${escapeHtml(project.status)}</span><h3>${escapeHtml(project.name)}</h3><p>${escapeHtml(project.client || "Dự án nội bộ")}</p></div><button class="text-btn" onclick="exportProject('${project.id}')">Xuất project ↓</button></div><div class="project-grid"><div><small>MỤC TIÊU & GHI CHÚ</small><p>${escapeHtml(project.notes || "Chưa có ghi chú.")}</p></div><div><small>PROMPT ĐÃ GHIM</small><strong>${prompts.length}</strong></div><div><small>NGÀY TẠO</small><strong>${new Date(project.createdAt).toLocaleDateString("vi-VN")}</strong></div></div><h4>Prompt trong dự án</h4><div class="project-prompts">${prompts.length ? prompts.map(prompt => `<button onclick="openRoutedPrompt('${prompt.id}')"><span>✦</span><div><b>${escapeHtml(prompt.title)}</b><small>${escapeHtml(prompt.department)}</small></div><i>→</i></button>`).join("") : `<p>Chưa có prompt. Mở một prompt và chọn ghim vào dự án.</p>`}</div><div class="smart-next">${renderSmartRecommendations()}</div>`;
+}
+
+function renderSmartRecommendations() {
+  const usage = getUsageMap();
+  const used = Object.entries(usage).sort((a,b) => (b[1].count||0)-(a[1].count||0));
+  const top = used[0] ? promptRegistry.get(used[0][0]) : null;
+  const suggestions = [...promptRegistry.values()].filter(prompt => !usage[prompt.id] && (!top || prompt.department === top.department)).slice(0,3);
+  return `<small>SMART NEXT</small><h4>Có thể bạn cần tiếp theo</h4><div>${suggestions.map(prompt => `<button onclick="openRoutedPrompt('${prompt.id}')">${escapeHtml(prompt.title)} <b>→</b></button>`).join("") || `<p>Hãy sử dụng thêm prompt để nhận gợi ý cá nhân hóa.</p>`}</div>`;
+}
+
+function exportProject(id) {
+  const project = getStore("ai_work_hub_projects").find(item => item.id === id); if (!project) return;
+  downloadFile(`${slugify(project.name)}.json`, JSON.stringify(project,null,2), "application/json");
+}
+
+const WORKFLOW_DEFINITIONS = {
+  "Đấu thầu": ["Tóm tắt scope / volume / deadline","Tách yêu cầu kỹ thuật / thương mại","Bảng missing information","Đánh giá Go / No-go / Conditional Go","Risk register gói thầu"],
+  "Thiết kế": ["Tóm tắt yêu cầu thiết kế","Checklist đầu vào thiết kế","Phân tích phương án kỹ thuật","Review rủi ro thiết kế"],
+  "Báo cáo": ["Tóm tắt thông tin gửi lãnh đạo","Executive summary","Báo cáo rủi ro","Lập action list sau họp"],
+  "Rủi ro": ["Fact / Assumption / Risk","Giả sử phương án thất bại","Xác định decision gate","Workflow 3 bước: bảo vệ / phản biện / trọng tài"]
+};
+
+function openWorkflowCenter(preferred = "") {
+  const names = Object.keys(WORKFLOW_DEFINITIONS); const active = names.includes(preferred) ? preferred : "Đấu thầu";
+  const state = getStore("ai_work_hub_workflow_state");
+  openOsModal("Workflow Center", "Kết nối nhiều prompt thành một quy trình công việc có thứ tự và trạng thái.", `<div class="workflow-tabs">${names.map(name => `<button class="${name===active?"active":""}" onclick="renderWorkflow('${name}')">${name}</button>`).join("")}</div><div id="workflowCanvas"></div>`, "MULTI-STEP AUTOMATION");
+  renderWorkflow(active, state);
+}
+
+function renderWorkflow(name, state = getStore("ai_work_hub_workflow_state")) {
+  const titles = WORKFLOW_DEFINITIONS[name] || WORKFLOW_DEFINITIONS["Đấu thầu"];
+  const completed = state.find(item => item.name === name)?.completed || [];
+  const steps = titles.map(title => [...promptRegistry.values()].find(prompt => normalize(prompt.title).includes(normalize(title))) || [...promptRegistry.values()].find(prompt => normalize(prompt.title).includes(normalize(title.split(" ").slice(0,2).join(" "))))).filter(Boolean);
+  document.getElementById("workflowCanvas").innerHTML = `<div class="workflow-head"><div><small>WORKFLOW</small><h3>${name}</h3></div><span>${completed.length}/${steps.length} hoàn thành</span></div><div class="workflow-steps">${steps.map((prompt,index) => `<div class="${completed.includes(index)?"done":""}"><button class="step-check" onclick="toggleWorkflowStep('${name}',${index})">${completed.includes(index)?"✓":index+1}</button><button class="step-main" onclick="openRoutedPrompt('${prompt.id}')"><small>${escapeHtml(prompt.department)} · ${escapeHtml(prompt.level||"Chuẩn")}</small><b>${escapeHtml(prompt.title)}</b><span>${escapeHtml(prompt.use||"")}</span></button><i>→</i></div>`).join("")}</div>`;
+}
+
+function toggleWorkflowStep(name,index) {
+  const state = getStore("ai_work_hub_workflow_state"); let item = state.find(entry => entry.name===name);
+  if (!item) { item={name,completed:[]}; state.push(item); }
+  item.completed = item.completed.includes(index) ? item.completed.filter(i=>i!==index) : [...item.completed,index];
+  setStore("ai_work_hub_workflow_state",state); renderWorkflow(name,state);
+}
+
+let paletteSelection = 0;
+function openCommandPalette() {
+  document.getElementById("commandPalette").classList.remove("hidden"); document.body.classList.add("modal-open");
+  const input=document.getElementById("paletteInput"); input.value=""; renderPaletteResults(""); setTimeout(()=>input.focus(),30);
+}
+function closeCommandPalette(){document.getElementById("commandPalette")?.classList.add("hidden");document.body.classList.remove("modal-open");}
+function getPaletteItems(query="") {
+  const commands=[{title:"Mở AI Task Router",meta:"Command",action:"openTaskRouter()",icon:"✦"},{title:"Mở Project Workspace",meta:"Command",action:"openWorkspace()",icon:"▦"},{title:"Mở Workflow Center",meta:"Command",action:"openWorkflowCenter()",icon:"⌁"},{title:"Xem thống kê sử dụng",meta:"Command",action:"closeCommandPalette();showUsageStats();location.hash='library'",icon:"↗"},{title:"Quản trị nội dung",meta:"Command",action:"openAdminCenter()",icon:"⚙"}];
+  const prompts=[...promptRegistry.values()].map(prompt=>({title:prompt.title,meta:`${prompt.department} · ${prompt.level||"Chuẩn"}`,action:`openRoutedPrompt('${prompt.id}')`,icon:"◇"}));
+  return [...commands,...prompts].filter(item=>normalize(`${item.title} ${item.meta}`).includes(normalize(query))).slice(0,9);
+}
+function renderPaletteResults(query){const items=getPaletteItems(query);paletteSelection=0;document.getElementById("paletteResults").innerHTML=items.map((item,i)=>`<button class="${i===0?"selected":""}" data-action="${escapeAttr(item.action)}"><span>${item.icon}</span><div><b>${escapeHtml(item.title)}</b><small>${escapeHtml(item.meta)}</small></div><kbd>↵</kbd></button>`).join("")||`<p>Không tìm thấy lệnh hoặc prompt.</p>`;}
+function runPaletteSelection(){const button=document.querySelectorAll("#paletteResults button")[paletteSelection];if(!button)return;closeCommandPalette();new Function(button.dataset.action)();}
+
+function downloadFile(filename, content, type) { const blob=new Blob([content],{type});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download=filename;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000); }
+function exportDetailPrompt() {
+  if(!currentDetailPrompt)return; const text=document.getElementById("detailEditor")?.value||"";const format=document.getElementById("detailExportFormat")?.value||"markdown";const name=slugify(currentDetailPrompt.title);
+  if(format==="markdown")downloadFile(`${name}.md`,`# ${currentDetailPrompt.title}\n\n${text}\n`,`text/markdown`);
+  if(format==="word")downloadFile(`${name}.doc`,`<html><meta charset="utf-8"><body><h1>${escapeHtml(currentDetailPrompt.title)}</h1><pre style="white-space:pre-wrap;font-family:Arial">${escapeHtml(text)}</pre></body></html>`,`application/msword`);
+  if(format==="csv")downloadFile(`${name}.csv`,`"Title","Department","Prompt"\n"${currentDetailPrompt.title.replaceAll('"','""')}","${currentDetailPrompt.department}","${text.replaceAll('"','""')}"`,`text/csv;charset=utf-8`);
+  if(format==="json")downloadFile(`${name}.json`,JSON.stringify({title:currentDetailPrompt.title,department:currentDetailPrompt.department,prompt:text},null,2),`application/json`);
+  if(format==="email")location.href=`mailto:?subject=${encodeURIComponent(currentDetailPrompt.title)}&body=${encodeURIComponent(text)}`;
+  showToast(`Đã chuẩn bị bản xuất ${format.toUpperCase()}`);
+}
+
+function rateCurrentPrompt(score){if(!currentDetailPrompt)return;const ratings=JSON.parse(localStorage.getItem("ai_work_hub_ratings")||"{}");ratings[currentDetailPrompt.id]=score;localStorage.setItem("ai_work_hub_ratings",JSON.stringify(ratings));renderCurrentRating();showToast(`Đã đánh giá ${score}/5`);}
+function renderCurrentRating(){if(!currentDetailPrompt)return;const score=JSON.parse(localStorage.getItem("ai_work_hub_ratings")||"{}")[currentDetailPrompt.id];document.querySelectorAll(".rating-row button").forEach((button,index)=>button.classList.toggle("active",Boolean(score&&index<score)));const el=document.getElementById("detailRating");if(el)el.textContent=score?`${score}/5 · lưu trên thiết bị`:"";}
+
+function openAdminCenter(){
+  const custom=getStore("ai_work_hub_custom_prompts");
+  openOsModal("Content Studio","Tạo prompt cá nhân, nhập/xuất dữ liệu và chuẩn bị đề xuất chia sẻ.",`<div class="admin-layout"><section class="admin-form"><h3>Tạo prompt tùy chỉnh</h3><div class="builder-grid"><label>Tiêu đề<input id="adminTitle" placeholder="Tên prompt"/></label><label>Nhóm nghiệp vụ<input id="adminDepartment" placeholder="Ví dụ: Đấu thầu"/></label></div><label class="full-label">Mục đích<input id="adminUse" placeholder="Dùng khi..."/></label><label class="full-label">Nội dung prompt<textarea id="adminPrompt" rows="8" placeholder="Vai trò, bối cảnh, nhiệm vụ, đầu ra..."></textarea></label><button class="builder-btn" onclick="saveCustomPrompt()">Lưu prompt vào thiết bị</button></section><section class="admin-tools"><h3>Kho cá nhân <span>${custom.length}</span></h3>${custom.map(item=>`<div><b>${escapeHtml(item.title)}</b><small>${escapeHtml(item.department)}</small></div>`).join("")||`<p>Chưa có prompt tùy chỉnh.</p>`}<hr><button class="text-btn" onclick="exportContentLibrary()">Xuất toàn bộ dữ liệu JSON</button><label class="import-btn">Nhập thư viện JSON<input type="file" accept="application/json" onchange="importContentLibrary(event)" hidden></label><p>Dữ liệu tùy chỉnh chỉ lưu trên thiết bị. Xuất JSON để gửi người quản trị hoặc sao lưu.</p></section></div>`,"CONTENT GOVERNANCE");
+}
+function saveCustomPrompt(){const title=document.getElementById("adminTitle")?.value.trim(),prompt=document.getElementById("adminPrompt")?.value.trim();if(!title||!prompt){showToast("Cần nhập tiêu đề và nội dung prompt");return;}const items=getStore("ai_work_hub_custom_prompts");items.unshift({title,department:document.getElementById("adminDepartment")?.value.trim()||"Cá nhân",use:document.getElementById("adminUse")?.value.trim()||"Prompt tùy chỉnh",level:"Chuẩn",platforms:["ChatGPT","Gemini"],prompt});setStore("ai_work_hub_custom_prompts",items);showToast("Đã lưu prompt tùy chỉnh");location.reload();}
+function exportContentLibrary(){downloadFile("ai-work-hub-library.json",JSON.stringify({version:"4.0",exportedAt:new Date().toISOString(),customPrompts:getStore("ai_work_hub_custom_prompts"),ratings:JSON.parse(localStorage.getItem("ai_work_hub_ratings")||"{}")},null,2),"application/json");}
+function importContentLibrary(event){const file=event.target.files?.[0];if(!file)return;const reader=new FileReader();reader.onload=()=>{try{const data=JSON.parse(reader.result);const prompts=Array.isArray(data)?data:data.customPrompts;if(!Array.isArray(prompts))throw new Error();setStore("ai_work_hub_custom_prompts",prompts);showToast("Nhập thư viện thành công");setTimeout(()=>location.reload(),500);}catch{showToast("Tệp JSON không đúng định dạng");}};reader.readAsText(file);}
+
+renderMotionMode();
 
 initNeuralNetwork();
 initializeApp();

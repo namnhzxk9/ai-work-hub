@@ -6,7 +6,7 @@
   <meta name="description" content="Thư viện prompt AI thực chiến cho công việc nội bộ." />
   <meta name="theme-color" content="#070711" />
   <title>AI Work Hub — Prompt Intelligence</title>
-  <link rel="stylesheet" href="style.css?v=3.1.0" />
+  <link rel="stylesheet" href="style.css?v=4.0.0" />
 </head>
 <body>
   <header class="topbar">
@@ -14,9 +14,10 @@
       <span class="brand-mark"><i></i><i></i><i></i></span>
       <span><strong>AI Work Hub</strong><small>Enterprise intelligence</small></span>
     </a>
-    <nav class="main-nav" aria-label="Điều hướng chính"><a href="#top" class="active">Tổng quan</a><a href="#library">Thư viện</a><button onclick="showUsageStats()">Thống kê</button></nav>
+    <nav class="main-nav" aria-label="Điều hướng chính"><a href="#top" class="active">Tổng quan</a><a href="#library">Thư viện</a><button onclick="openTaskRouter()">AI Router</button><button onclick="openWorkspace()">Projects</button><button onclick="openCommandPalette()">⌘K</button></nav>
     <div class="topbar-actions">
       <span class="security-pill"><i></i> Secure workspace</span>
+      <button class="motion-btn" id="motionToggle" type="button" onclick="cycleMotionMode()" aria-label="Điều khiển chuyển động"><span>◉</span> Motion: Auto</button>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Đổi giao diện sáng tối">◐</button>
     </div>
   </header>
@@ -76,10 +77,14 @@
         <div class="sidebar-divider"></div>
         <div class="sidebar-label">TRUY CẬP NHANH</div>
         <section class="shortcut-bar">
+          <button class="shortcut-btn accent" onclick="openTaskRouter()"><span>✦</span> AI Task Router</button>
+          <button class="shortcut-btn" onclick="openWorkspace()"><span>▦</span> Project Workspace</button>
+          <button class="shortcut-btn" onclick="openWorkflowCenter()"><span>⌁</span> Workflow Center</button>
           <button class="shortcut-btn" onclick="showFavorites()"><span>☆</span> Prompt yêu thích</button>
           <button class="shortcut-btn" onclick="showRecent()"><span>↺</span> Dùng gần đây</button>
           <button class="shortcut-btn" onclick="showUsageStats()"><span>↗</span> Thống kê cá nhân</button>
           <button class="shortcut-btn" onclick="showReadme()"><span>?</span> Hướng dẫn sử dụng</button>
+          <button class="shortcut-btn" onclick="openAdminCenter()"><span>⚙</span> Quản trị nội dung</button>
         </section>
         <div class="sidebar-upgrade"><span>✦</span><strong>Work smarter</strong><p>Dùng Prompt Builder để tạo đầu ra chuẩn theo dự án.</p><button onclick="showReadme()">Tìm hiểu thêm →</button></div>
       </aside>
@@ -127,10 +132,25 @@
       <div class="modal-actions detail-actions">
         <button class="copy-btn ChatGPT" type="button" onclick="copyDetailPrompt()">Sao chép prompt</button>
         <button class="builder-btn" type="button" onclick="openBuilderFromDetail()">Mở Prompt Builder</button>
+        <button class="text-btn" type="button" onclick="pinCurrentPromptToProject()">Ghim vào project</button>
         <button class="favorite-btn" id="detailShareButton" type="button" onclick="shareCurrentPrompt()">Chia sẻ liên kết</button>
         <button class="text-btn" type="button" onclick="resetDetailPrompt()">Khôi phục bản gốc</button>
+        <select id="detailExportFormat" class="export-select" aria-label="Định dạng xuất"><option value="markdown">Markdown</option><option value="word">Word</option><option value="csv">Excel/CSV</option><option value="json">JSON</option><option value="email">Email</option></select>
+        <button class="text-btn" type="button" onclick="exportDetailPrompt()">Xuất tài liệu ↓</button>
       </div>
+      <div class="rating-row"><span>Prompt này hữu ích?</span><button onclick="rateCurrentPrompt(1)">★</button><button onclick="rateCurrentPrompt(2)">★</button><button onclick="rateCurrentPrompt(3)">★</button><button onclick="rateCurrentPrompt(4)">★</button><button onclick="rateCurrentPrompt(5)">★</button><small id="detailRating"></small></div>
     </div>
+  </div>
+
+  <div id="osModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="osModalTitle">
+    <div class="modal-content os-modal-content">
+      <div class="modal-header"><div><div class="eyebrow" id="osModalEyebrow">AI WORK OS</div><h2 id="osModalTitle">Workspace</h2><p id="osModalSubtitle"></p></div><button class="close-btn" onclick="closeOsModal()" aria-label="Đóng">×</button></div>
+      <div id="osModalBody"></div>
+    </div>
+  </div>
+
+  <div id="commandPalette" class="command-palette hidden" role="dialog" aria-modal="true" aria-label="Command palette">
+    <div class="command-palette-box"><div class="palette-search"><span>⌕</span><input id="paletteInput" type="search" placeholder="Tìm prompt hoặc nhập lệnh..." autocomplete="off"/><kbd>ESC</kbd></div><div id="paletteResults" class="palette-results"></div><div class="palette-footer"><span>↑↓ Di chuyển</span><span>↵ Mở</span><span>⌘K Đóng</span></div></div>
   </div>
 
 
@@ -245,6 +265,6 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-  <script src="app.js?v=3.1.0"></script>
+  <script src="app.js?v=4.0.0"></script>
 </body>
 </html>
