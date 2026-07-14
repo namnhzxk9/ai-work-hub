@@ -223,6 +223,7 @@ function renderTools() {
 
     card.innerHTML = `
       <div class="tool-header">
+        <div class="tool-topline"><span class="tool-glyph">${String(toolIndex + 1).padStart(2, "0")}</span><span class="prompt-total">${visiblePrompts.length} prompt <b>↗</b></span></div>
         <div class="badge-row">
           <span class="badge">${escapeHtml(tool.department)}</span>
           ${toolPlatformBadges}
@@ -1122,7 +1123,7 @@ document.getElementById("promptDetailModal")?.addEventListener("click", event =>
 
 async function initializeApp() {
   try {
-    const response = await fetch(`data.json?v=2.5.0`);
+    const response = await fetch(`data.json?v=3.0.0`);
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     TOOLS = await response.json();
     departments = ["all", ...Array.from(new Set(TOOLS.map(item => item.department)))];

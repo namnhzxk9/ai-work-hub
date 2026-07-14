@@ -4,18 +4,19 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Thư viện prompt AI thực chiến cho công việc nội bộ." />
-  <meta name="theme-color" content="#07111f" />
+  <meta name="theme-color" content="#070711" />
   <title>AI Work Hub — Prompt Intelligence</title>
-  <link rel="stylesheet" href="style.css?v=2.5.0" />
+  <link rel="stylesheet" href="style.css?v=3.0.0" />
 </head>
 <body>
   <header class="topbar">
     <a class="brand" href="#top" aria-label="AI Work Hub - Trang chủ">
-      <span class="brand-mark">AI</span>
-      <span><strong>Work Hub</strong><small>Prompt Intelligence</small></span>
+      <span class="brand-mark"><i></i><i></i><i></i></span>
+      <span><strong>AI Work Hub</strong><small>Enterprise intelligence</small></span>
     </a>
+    <nav class="main-nav" aria-label="Điều hướng chính"><a href="#top" class="active">Tổng quan</a><a href="#library">Thư viện</a><button onclick="showUsageStats()">Thống kê</button></nav>
     <div class="topbar-actions">
-      <span class="security-pill"><i></i> Internal workspace</span>
+      <span class="security-pill"><i></i> Secure workspace</span>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Đổi giao diện sáng tối">◐</button>
     </div>
   </header>
@@ -23,34 +24,65 @@
   <main id="top">
     <section class="hero">
       <div class="hero-copy">
-        <div class="eyebrow">AI ENABLEMENT · INTERNAL LIBRARY</div>
-        <h1>Làm việc sắc hơn<br><span>với prompt đã chuẩn hóa.</span></h1>
-        <p>Từ dữ liệu thô đến báo cáo, phân tích và quyết định — chọn đúng mẫu, thêm bối cảnh và dùng ngay trong vài phút.</p>
+        <div class="release-pill"><span>NEW</span> AI Work Hub 3.0 <b>→</b></div>
+        <h1>Biến ý tưởng thành<br><span>kết quả xuất sắc.</span></h1>
+        <p>Một không gian làm việc AI được thiết kế cho tốc độ, độ chính xác và những quyết định tốt hơn — từ prompt đầu tiên đến đầu ra hoàn chỉnh.</p>
         <div class="hero-actions">
-          <a class="primary-cta" href="#library">Khám phá thư viện <span>→</span></a>
-          <button class="secondary-cta" type="button" onclick="showReadme()">Xem cách sử dụng</button>
+          <a class="primary-cta" href="#library">Bắt đầu khám phá <span>↗</span></a>
+          <button class="secondary-cta" type="button" onclick="showReadme()"><i>▶</i> Xem cách hoạt động</button>
         </div>
+        <div class="trust-line"><span><b>✓</b> 58 prompt chuyên nghiệp</span><span><b>✓</b> 7 nhóm nghiệp vụ</span><span><b>✓</b> Dữ liệu lưu cục bộ</span></div>
       </div>
-      <div class="hero-panel" aria-label="Thống kê thư viện">
-        <div class="hero-panel-head"><span>Library overview</span><span class="live-dot">Live</span></div>
-        <div class="stat-grid">
-          <div class="stat"><strong id="toolCount">—</strong><span>Bộ công cụ</span></div>
-          <div class="stat"><strong id="promptCount">—</strong><span>Prompt sẵn dùng</span></div>
-          <div class="stat"><strong id="departmentCount">—</strong><span>Nhóm nghiệp vụ</span></div>
-          <div class="stat"><strong id="usageCount">00</strong><span>Lượt dùng trên máy</span></div>
+      <div class="hero-visual" aria-label="Minh họa không gian prompt">
+        <div class="visual-glow"></div>
+        <div class="command-card">
+          <div class="command-head"><span class="window-dots"><i></i><i></i><i></i></span><small>AI WORKFLOW</small><span class="live-dot">LIVE</span></div>
+          <div class="command-body">
+            <div class="ai-orb"><span></span></div>
+            <p class="command-label">WHAT DO YOU WANT TO ACHIEVE?</p>
+            <h3>Phân tích rủi ro<br>gói thầu mới</h3>
+            <div class="typing-line"><span>Fact</span><span>Assumption</span><span>Risk</span><i></i></div>
+            <div class="output-preview"><div><b></b><span></span></div><div><b></b><span></span></div><div><b></b><span></span></div></div>
+            <button type="button" onclick="document.getElementById('searchInput')?.focus();location.hash='library'">Generate exceptional output <b>⌘ ↵</b></button>
+          </div>
         </div>
-        <div class="quality-note"><span>✓</span><p><strong>Structured for quality</strong><br>Rõ mục tiêu · Rõ đầu vào · Rõ đầu ra</p></div>
+        <div class="floating-card card-one"><span>✓</span><div><strong>Prompt quality</strong><small>Ready to use</small></div><b>96</b></div>
+        <div class="floating-card card-two"><span>↗</span><div><strong>Output generated</strong><small>Decision memo</small></div></div>
       </div>
+    </section>
+
+    <section class="metric-rail" aria-label="Thống kê AI Work Hub">
+      <div><strong id="toolCount">—</strong><span>Bộ công cụ chuyên biệt</span></div>
+      <div><strong id="promptCount">—</strong><span>Prompt được chuẩn hóa</span></div>
+      <div><strong id="departmentCount">—</strong><span>Nhóm nghiệp vụ</span></div>
+      <div><strong id="usageCount">00</strong><span>Lượt dùng trên máy</span></div>
     </section>
 
     <section class="library-shell" id="library">
       <div class="section-heading">
-        <div><span class="eyebrow">PROMPT LIBRARY</span><h2>Tìm đúng công cụ cho việc cần làm</h2></div>
+        <div><span class="eyebrow">INTELLIGENCE LIBRARY</span><h2>Mọi workflow. Một không gian.</h2><p>Khám phá bộ công cụ được thiết kế theo từng nghiệp vụ và mục tiêu thực tế.</p></div>
         <p id="resultSummary">Đang tải thư viện...</p>
       </div>
 
+      <section class="command-search" aria-label="Tìm kiếm nhanh"><span>⌕</span><input id="searchInput" type="search" placeholder="Bạn muốn AI giúp gì hôm nay?" autocomplete="off" /><kbd>⌘ K</kbd></section>
+
+      <div class="library-layout">
+      <aside class="library-sidebar">
+        <div class="sidebar-label">KHÔNG GIAN LÀM VIỆC</div>
+        <section id="departmentTabs" class="tabs"></section>
+        <div class="sidebar-divider"></div>
+        <div class="sidebar-label">TRUY CẬP NHANH</div>
+        <section class="shortcut-bar">
+          <button class="shortcut-btn" onclick="showFavorites()"><span>☆</span> Prompt yêu thích</button>
+          <button class="shortcut-btn" onclick="showRecent()"><span>↺</span> Dùng gần đây</button>
+          <button class="shortcut-btn" onclick="showUsageStats()"><span>↗</span> Thống kê cá nhân</button>
+          <button class="shortcut-btn" onclick="showReadme()"><span>?</span> Hướng dẫn sử dụng</button>
+        </section>
+        <div class="sidebar-upgrade"><span>✦</span><strong>Work smarter</strong><p>Dùng Prompt Builder để tạo đầu ra chuẩn theo dự án.</p><button onclick="showReadme()">Tìm hiểu thêm →</button></div>
+      </aside>
+
+      <div class="library-content">
       <section class="toolbar" aria-label="Bộ lọc thư viện">
-        <label class="search-box"><span>⌕</span><input id="searchInput" type="search" placeholder="Tìm hồ sơ thầu, PCCC, backlog, action list..." autocomplete="off" /></label>
         <select id="departmentFilter" aria-label="Lọc theo phòng ban"><option value="all">Tất cả phòng ban</option></select>
         <select id="platformFilter" aria-label="Lọc theo nền tảng AI">
           <option value="all">Tất cả nền tảng</option><option value="ChatGPT">ChatGPT</option><option value="NotebookLM">NotebookLM</option><option value="Gemini">Gemini</option>
@@ -61,19 +93,13 @@
         <button class="reset-btn" type="button" onclick="resetFilters()" title="Xóa bộ lọc">↺</button>
       </section>
 
-      <section id="departmentTabs" class="tabs"></section>
       <section id="platformTabs" class="tabs small-tabs"></section>
-
-      <section class="shortcut-bar">
-        <button class="shortcut-btn" onclick="showFavorites()"><span>☆</span> Yêu thích</button>
-        <button class="shortcut-btn" onclick="showRecent()"><span>↺</span> Đã dùng gần đây</button>
-        <button class="shortcut-btn" onclick="showUsageStats()"><span>↗</span> Thống kê</button>
-        <button class="shortcut-btn" onclick="showReadme()"><span>?</span> Hướng dẫn</button>
-      </section>
 
       <section id="shortcutContainer" class="shortcut-container hidden"></section>
 
       <section id="toolsContainer" class="tools"></section>
+      </div>
+      </div>
     </section>
 
     <section class="safety-banner">
@@ -216,6 +242,6 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-  <script src="app.js?v=2.5.0"></script>
+  <script src="app.js?v=3.0.0"></script>
 </body>
 </html>

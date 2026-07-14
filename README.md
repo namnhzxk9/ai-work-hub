@@ -1,6 +1,8 @@
-# AI Work Hub 2.5
+# AI Work Hub 3.0
 
 Workspace thư viện tool, prompt và hướng dẫn dùng AI cho công việc nội bộ.
+
+Phiên bản 3.0 sử dụng ngôn ngữ thiết kế Obsidian Intelligence: hero dạng AI command center, thư viện có sidebar, hệ thống thẻ nghiệp vụ mới và trải nghiệm responsive cao cấp.
 
 ## Điểm mới
 
