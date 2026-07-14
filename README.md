@@ -1,4 +1,4 @@
-# AI Work Hub 2.0
+# AI Work Hub 2.5
 
 Workspace thư viện tool, prompt và hướng dẫn dùng AI cho công việc nội bộ.
 
@@ -11,14 +11,27 @@ Workspace thư viện tool, prompt và hướng dẫn dùng AI cho công việc 
 - Thông báo thao tác gọn, không làm gián đoạn công việc.
 - Hỗ trợ bàn phím: nhấn `/` để tìm kiếm, `Esc` để đóng Prompt Builder.
 - Cải thiện khả năng truy cập và trạng thái tương tác.
+- Trang chi tiết cho từng prompt, cho phép chỉnh sửa trước khi sao chép.
+- Liên kết trực tiếp tới từng prompt để chia sẻ cho đồng nghiệp.
+- Prompt Builder 4 bước và chấm điểm chất lượng đầu vào.
+- Thống kê sử dụng riêng trên từng thiết bị.
+- Kho nội dung chuẩn JSON, dễ nhập/xuất và quản trị.
+- Phiên bản hóa tài nguyên để tránh trình duyệt hiển thị bản cũ.
 
 ## Cách dùng nhanh
 
-1. Mở `index.html`.
+1. Chạy website qua GitHub Pages hoặc một máy chủ web cục bộ.
 2. Chọn phòng ban/tool hoặc tìm kiếm.
 3. Chọn công cụ AI: ChatGPT/Gemini hoặc NotebookLM.
 4. Copy prompt hoặc dùng Prompt Builder.
 5. Dán sang công cụ AI đang dùng.
+
+> Do dữ liệu được lưu trong `data.json`, trình duyệt không thể tải đầy đủ website nếu mở trực tiếp bằng đường dẫn `file://`.
+
+## Cập nhật nội dung
+
+- Toàn bộ tool và prompt nằm trong `data.json`.
+- Khi phát hành phiên bản mới, cập nhật số phiên bản tại các đường dẫn `style.css?v=...`, `data.json?v=...` và `app.js?v=...` để vô hiệu hóa cache cũ.
 
 ## Lưu ý
 

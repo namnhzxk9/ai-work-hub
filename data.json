@@ -1,0 +1,1609 @@
+[
+  {
+    "department": "Thư ký Ban",
+    "tool": "Báo cáo & tổng hợp thông tin",
+    "description": "Tổng hợp thông tin rời rạc thành báo cáo ngắn gọn, rõ việc, rõ trách nhiệm.",
+    "platforms": [
+      "ChatGPT",
+      "Gemini"
+    ],
+    "prompts": [
+      {
+        "title": "Tạo báo cáo tổng hợp tuần",
+        "use": "Khi cần tổng hợp các đầu việc trong tuần để gửi lãnh đạo.",
+        "level": "Chuẩn",
+        "platforms": [
+          "ChatGPT",
+          "Gemini"
+        ],
+        "prompt": "Đóng vai thư ký Ban.\n\nTổng hợp nội dung dưới đây thành báo cáo tuần.\n\nCấu trúc:\n1. Tổng quan tình hình\n2. Các việc đã hoàn thành\n3. Các việc đang thực hiện\n4. Các việc chậm / có rủi ro\n5. Việc cần lãnh đạo quyết định\n6. Action tuần tới\n\nYêu cầu:\n- Ngắn gọn\n- Rõ việc, rõ owner, rõ deadline\n- Không văn chương\n- Dùng được để gửi nội bộ\n\nNội dung đầu vào:\n[dán nội dung vào đây]",
+        "notebooklm_prompt": "Chỉ sử dụng các nguồn đã upload trong notebook này.\n\nTổng hợp nội dung trong các nguồn thành báo cáo tuần.\n\nCấu trúc:\n1. Tổng quan tình hình\n2. Các việc đã hoàn thành\n3. Các việc đang thực hiện\n4. Các việc chậm / có rủi ro\n5. Việc cần lãnh đạo quyết định\n6. Action tuần tới\n\nNếu nguồn không có thông tin, ghi rõ: \"Không thấy trong nguồn\".\n\nYêu cầu:\n- Ngắn gọn\n- Rõ việc, rõ owner, rõ deadline\n- Ưu tiên trích dẫn nguồn nếu NotebookLM hỗ trợ.",
+        "gemini_prompt": "Đóng vai thư ký Ban.\n\nTổng hợp nội dung dưới đây thành báo cáo tuần.\n\nCấu trúc:\n1. Tổng quan tình hình\n2. Các việc đã hoàn thành\n3. Các việc đang thực hiện\n4. Các việc chậm / có rủi ro\n5. Việc cần lãnh đạo quyết định\n6. Action tuần tới\n\nYêu cầu:\n- Ngắn gọn\n- Rõ việc, rõ owner, rõ deadline\n- Không văn chương\n- Dùng được để gửi nội bộ\n\nNội dung đầu vào:\n[dán nội dung vào đây]",
+        "input_guide": {
+          "items": [
+            "Danh sách đầu việc, trạng thái, người phụ trách, deadline.",
+            "Việc đã xong, đang làm, chậm hoặc cần lãnh đạo quyết định.",
+            "Người nhận báo cáo: lãnh đạo Ban, phòng ban, khách hàng hay nội bộ.",
+            "Loại báo cáo mong muốn: tuần, tiến độ, rủi ro."
+          ],
+          "example": "Tuần này hoàn thành A; đang làm B; chậm C do thiếu dữ liệu khách hàng; cần lãnh đạo quyết định D.",
+          "placeholder": "Đầu việc; trạng thái; owner; deadline; rủi ro; việc cần quyết định..."
+        }
+      },
+      {
+        "title": "Tóm tắt thông tin gửi lãnh đạo",
+        "use": "Khi có email/chat/tài liệu dài và cần rút ý chính.",
+        "level": "Nhanh",
+        "platforms": [
+          "ChatGPT",
+          "NotebookLM",
+          "Gemini"
+        ],
+        "prompt": "Đóng vai thư ký Ban.\n\nTóm tắt nội dung sau để báo cáo lãnh đạo.\n\nĐầu ra gồm:\n1. Vấn đề chính\n2. Thông tin quan trọng\n3. Rủi ro nếu có\n4. Việc cần xử lý\n5. Người/phòng ban liên quan\n6. Khuyến nghị bước tiếp theo\n\nYêu cầu:\n- Tối đa 1 trang\n- Ưu tiên bullet\n- Không tự suy diễn nếu thiếu dữ liệu\n\nNội dung:\n[dán nội dung vào đây]",
+        "notebooklm_prompt": "Chỉ sử dụng các nguồn đã upload trong notebook này.\n\nTóm tắt nội dung để báo cáo lãnh đạo.\n\nĐầu ra gồm:\n1. Vấn đề chính\n2. Thông tin quan trọng\n3. Rủi ro nếu có\n4. Việc cần xử lý\n5. Người/phòng ban liên quan\n6. Khuyến nghị bước tiếp theo\n\nNếu nguồn không có thông tin, ghi rõ: \"Không thấy trong nguồn\".\nƯu tiên trích dẫn nguồn nếu NotebookLM hỗ trợ.",
+        "gemini_prompt": "Đóng vai thư ký Ban.\n\nTóm tắt nội dung sau để báo cáo lãnh đạo.\n\nĐầu ra gồm:\n1. Vấn đề chính\n2. Thông tin quan trọng\n3. Rủi ro nếu có\n4. Việc cần xử lý\n5. Người/phòng ban liên quan\n6. Khuyến nghị bước tiếp theo\n\nYêu cầu:\n- Tối đa 1 trang\n- Ưu tiên bullet\n- Không tự suy diễn nếu thiếu dữ liệu\n\nNội dung:\n[dán nội dung vào đây]",
+        "input_guide": {
+          "items": [
+            "Danh sách đầu việc, trạng thái, người phụ trách, deadline.",
+            "Việc đã xong, đang làm, chậm hoặc cần lãnh đạo quyết định.",
+            "Người nhận báo cáo: lãnh đạo Ban, phòng ban, khách hàng hay nội bộ.",
+            "Loại báo cáo mong muốn: tuần, tiến độ, rủi ro."
+          ],
+          "example": "Tuần này hoàn thành A; đang làm B; chậm C do thiếu dữ liệu khách hàng; cần lãnh đạo quyết định D.",
+          "placeholder": "Đầu việc; trạng thái; owner; deadline; rủi ro; việc cần quyết định..."
+        }
+      }
+    ]
+  },
+  {
+    "department": "Thư ký Ban",
+    "tool": "Email khách hàng / đối tác",
+    "description": "Soạn email gửi khách hàng, đối tác, nhà thầu với giọng lịch sự, rõ ràng và chuyên nghiệp.",
+    "platforms": [
+      "ChatGPT",
+      "Gemini"
+    ],
+    "prompts": [
+      {
+        "title": "Email gửi khách hàng xin thông tin",
+        "use": "Khi cần xin bổ sung hồ sơ, dữ liệu, xác nhận hoặc phản hồi từ khách hàng.",
+        "level": "Chuẩn",
+        "platforms": [
+          "ChatGPT",
+          "Gemini"
+        ],
+        "prompt": "Viết email gửi khách hàng để xin bổ sung thông tin.\n\nYêu cầu:\n- Lịch sự, chuyên nghiệp\n- Ngắn gọn\n- Nêu rõ cần khách hàng cung cấp gì\n- Có deadline phản hồi\n- Không gây cảm giác đổ lỗi\n\nThông tin:\n- Dự án/gói việc:\n- Thông tin cần xin:\n- Lý do cần thông tin:\n- Deadline mong muốn:\n- Người nhận nếu có:\n\nNội dung thô:\n[dán nội dung vào đây]",
+        "gemini_prompt": "Viết email gửi khách hàng để xin bổ sung thông tin.\n\nYêu cầu:\n- Lịch sự, chuyên nghiệp\n- Ngắn gọn\n- Nêu rõ cần khách hàng cung cấp gì\n- Có deadline phản hồi\n- Không gây cảm giác đổ lỗi\n\nThông tin:\n- Dự án/gói việc:\n- Thông tin cần xin:\n- Lý do cần thông tin:\n- Deadline mong muốn:\n- Người nhận nếu có:\n\nNội dung thô:\n[dán nội dung vào đây]",
+        "input_guide": {
+          "items": [
+            "Người nhận và vai trò: khách hàng, đối tác, nhà thầu hay nội bộ.",
+            "Mục đích email: xin thông tin, gửi tài liệu, nhắc deadline, xác nhận lịch, follow-up.",
+            "Nội dung chính cần nói, deadline mong muốn, tài liệu đính kèm nếu có.",
+            "Giọng điệu mong muốn: mềm, trung tính, dứt khoát hoặc escalation."
+          ],
+          "example": "Người nhận: anh A - khách hàng KVC; Mục đích: xin xác nhận lịch họp; Nội dung: gửi agenda, đề nghị phản hồi trước 16h ngày mai; Giọng: lịch sự, rõ deadline.",
+          "placeholder": "Người nhận; mục đích email; nội dung chính; deadline; tài liệu đính kèm; giọng điệu..."
+        }
+      },
+      {
+        "title": "Email nhắc phản hồi / nhắc deadline",
+        "use": "Khi cần nhắc khách hàng, đối tác hoặc nhà thầu phản hồi đúng hạn.",
+        "level": "Chuẩn",
+        "platforms": [
+          "ChatGPT",
+          "Gemini"
+        ],
+        "prompt": "Viết email nhắc phản hồi/deadline.\n\nYêu cầu:\n- Lịch sự nhưng rõ trách nhiệm\n- Có nhắc lại nội dung đang chờ\n- Có deadline cụ thể\n- Có nêu ảnh hưởng nếu chậm, nhưng không gay gắt\n\nThông tin:\n- Nội dung đang chờ phản hồi:\n- Deadline cũ nếu có:\n- Deadline mới mong muốn:\n- Ảnh hưởng nếu chậm:\n\nNội dung thô:\n[dán nội dung vào đây]",
+        "gemini_prompt": "Viết email nhắc phản hồi/deadline.\n\nYêu cầu:\n- Lịch sự nhưng rõ trách nhiệm\n- Có nhắc lại nội dung đang chờ\n- Có deadline cụ thể\n- Có nêu ảnh hưởng nếu chậm, nhưng không gay gắt\n\nThông tin:\n- Nội dung đang chờ phản hồi:\n- Deadline cũ nếu có:\n- Deadline mới mong muốn:\n- Ảnh hưởng nếu chậm:\n\nNội dung thô:\n[dán nội dung vào đây]",
+        "input_guide": {
+          "items": [
+            "Người nhận và vai trò: khách hàng, đối tác, nhà thầu hay nội bộ.",
+            "Mục đích email: xin thông tin, gửi tài liệu, nhắc deadline, xác nhận lịch, follow-up.",
+            "Nội dung chính cần nói, deadline mong muốn, tài liệu đính kèm nếu có.",
+            "Giọng điệu mong muốn: mềm, trung tính, dứt khoát hoặc escalation."
+          ],
+          "example": "Người nhận: anh A - khách hàng KVC; Mục đích: xin xác nhận lịch họp; Nội dung: gửi agenda, đề nghị phản hồi trước 16h ngày mai; Giọng: lịch sự, rõ deadline.",
+          "placeholder": "Người nhận; mục đích email; nội dung chính; deadline; tài liệu đính kèm; giọng điệu..."
+        }
+      },
+      {
+        "title": "Email gửi tài liệu / hồ sơ",
+        "use": "Khi cần gửi hồ sơ, báo giá, tài liệu, biên bản cho khách hàng/đối tác.",
+        "level": "Nhanh",
+        "platforms": [
+          "ChatGPT",
+          "Gemini"
+        ],
+        "prompt": "Viết email gửi tài liệu/hồ sơ cho khách hàng hoặc đối tác.\n\nYêu cầu:\n- Ngắn gọn\n- Nêu rõ tài liệu gửi kèm\n- Nêu mục đích gửi\n- Nêu hành động mong muốn từ người nhận\n- Có thông tin liên hệ nếu cần\n\nThông tin:\n- Tên dự án/gói việc:\n- Tài liệu gửi kèm:\n- Mục đích gửi:\n- Mong muốn người nhận làm gì:\n- Deadline phản hồi nếu có:\n\nNội dung thô:\n[dán nội dung vào đây]",
+        "gemini_prompt": "Viết email gửi tài liệu/hồ sơ cho khách hàng hoặc đối tác.\n\nYêu cầu:\n- Ngắn gọn\n- Nêu rõ tài liệu gửi kèm\n- Nêu mục đích gửi\n- Nêu hành động mong muốn từ người nhận\n- Có thông tin liên hệ nếu cần\n\nThông tin:\n- Tên dự án/gói việc:\n- Tài liệu gửi kèm:\n- Mục đích gửi:\n- Mong muốn người nhận làm gì:\n- Deadline phản hồi nếu có:\n\nNội dung thô:\n[dán nội dung vào đây]",
+        "input_guide": {
+          "items": [
+            "Người nhận và vai trò: khách hàng, đối tác, nhà thầu hay nội bộ.",
+            "Mục đích email: xin thông tin, gửi tài liệu, nhắc deadline, xác nhận lịch, follow-up.",
+            "Nội dung chính cần nói, deadline mong muốn, tài liệu đính kèm nếu có.",
+            "Giọng điệu mong muốn: mềm, trung tính, dứt khoát hoặc escalation."
+          ],
+          "example": "Người nhận: anh A - khách hàng KVC; Mục đích: xin xác nhận lịch họp; Nội dung: gửi agenda, đề nghị phản hồi trước 16h ngày mai; Giọng: lịch sự, rõ deadline.",
+          "placeholder": "Người nhận; mục đích email; nội dung chính; deadline; tài liệu đính kèm; giọng điệu..."
+        }
+      }
+    ]
+  },
+  {
+    "department": "Đấu thầu",
+    "tool": "Tóm tắt hồ sơ mời thầu",
+    "description": "Dùng khi nhận ITB/RFQ/RFP/email mời thầu và cần nắm nhanh scope, volume, deadline, điều kiện và rủi ro.",
+    "platforms": [
+      "ChatGPT",
+      "NotebookLM",
+      "Gemini"
+    ],
+    "prompts": [
+      {
+        "title": "Tóm tắt scope / volume / deadline",
+        "use": "Khi mới nhận hồ sơ mời thầu hoặc email mời báo giá.",
+        "level": "Chuẩn",
+        "platforms": [
+          "ChatGPT",
+          "NotebookLM",
+          "Gemini"
+        ],
+        "prompt": "Đóng vai chuyên viên đấu thầu.\n\nTóm tắt nội dung hồ sơ mời thầu/email dưới đây theo cấu trúc:\n1. Tên dự án/gói thầu\n2. Chủ đầu tư/khách hàng\n3. Phạm vi công việc\n4. Quy mô/volume chính\n5. Mốc thời gian/deadline\n6. Điều kiện thương mại đáng chú ý\n7. Rủi ro ban đầu\n8. Thông tin còn thiếu\n9. Khuyến nghị bước tiếp theo\n\nYêu cầu:\n- Không suy diễn nếu hồ sơ chưa nêu.\n- Đầu ra dạng bảng ngắn gọn, dùng được để báo cáo nội bộ.\n\nNội dung đầu vào:\n[dán nội dung vào đây]",
+        "notebooklm_prompt": "Chỉ sử dụng các nguồn đã upload trong notebook này.\n\nĐóng vai chuyên viên đấu thầu.\nTóm tắt hồ sơ mời thầu theo cấu trúc:\n1. Tên dự án/gói thầu\n2. Chủ đầu tư/khách hàng\n3. Phạm vi công việc\n4. Quy mô/volume chính\n5. Mốc thời gian/deadline\n6. Điều kiện thương mại đáng chú ý\n7. Rủi ro ban đầu\n8. Thông tin còn thiếu\n9. Khuyến nghị bước tiếp theo\n\nYêu cầu:\n- Không suy diễn nếu nguồn chưa nêu.\n- Nếu không thấy thông tin trong nguồn, ghi: \"Không thấy trong nguồn\".\n- Ưu tiên trích dẫn nguồn nếu NotebookLM hỗ trợ.",
+        "gemini_prompt": "Đóng vai chuyên viên đấu thầu.\n\nTóm tắt nội dung hồ sơ mời thầu/email dưới đây theo cấu trúc:\n1. Tên dự án/gói thầu\n2. Chủ đầu tư/khách hàng\n3. Phạm vi công việc\n4. Quy mô/volume chính\n5. Mốc thời gian/deadline\n6. Điều kiện thương mại đáng chú ý\n7. Rủi ro ban đầu\n8. Thông tin còn thiếu\n9. Khuyến nghị bước tiếp theo\n\nYêu cầu:\n- Không suy diễn nếu hồ sơ chưa nêu.\n- Đầu ra dạng bảng ngắn gọn, dùng được để báo cáo nội bộ.\n\nNội dung đầu vào:\n[dán nội dung vào đây]",
+        "input_guide": {
+          "items": [
+            "Hồ sơ mời thầu/email mời báo giá hoặc tóm tắt nội dung chính.",
+            "Scope, volume, deadline, điều kiện thương mại, yêu cầu kỹ thuật.",
+            "Mục đích xử lý: tóm tắt, chia việc, báo cáo bid/no-bid, lập missing information.",
+            "Nếu là nhiều file, nên dùng NotebookLM và upload nguồn trước."
+          ],
+          "example": "Dự án Kyocera CMOS; D&B; diện tích 5.200m²; deadline nộp QA 15/06; scope điện, HVAC, utility; cần báo cáo nội bộ.",
+          "placeholder": "Nội dung HSMT/RFQ/RFP; scope; volume; deadline; điều kiện thầu; yêu cầu kỹ thuật; missing info..."
+        }
+      },
+      {
+        "title": "Tách yêu cầu kỹ thuật / thương mại",
+        "use": "Khi cần chia thông tin cho team kỹ thuật, thương mại, pháp lý dự án.",
+        "level": "Chuẩn",
+        "platforms": [
+          "ChatGPT",
+          "NotebookLM",
+          "Gemini"
+        ],
+        "prompt": "Đóng vai điều phối hồ sơ thầu.\n\nHãy tách nội dung sau thành các nhóm:\n1. Yêu cầu kỹ thuật\n2. Yêu cầu thương mại\n3. Yêu cầu pháp lý/thủ tục dự án\n4. Yêu cầu tiến độ\n5. Yêu cầu bảo hành/nghiệm thu\n6. Điểm chưa rõ cần làm rõ\n\nĐầu ra dạng bảng gồm:\n- Nhóm yêu cầu\n- Nội dung\n- Mức độ quan trọng: Critical / High / Medium / Low\n- Bộ phận cần xử lý\n\nNội dung đầu vào:\n[dán nội dung vào đây]",
+        "notebooklm_prompt": "Chỉ sử dụng các nguồn đã upload trong notebook này.\n\nTách nội dung hồ sơ thành các nhóm:\n1. Yêu cầu kỹ thuật\n2. Yêu cầu thương mại\n3. Yêu cầu pháp lý/thủ tục dự án\n4. Yêu cầu tiến độ\n5. Yêu cầu bảo hành/nghiệm thu\n6. Điểm chưa rõ cần làm rõ\n\nĐầu ra dạng bảng gồm:\n- Nhóm yêu cầu\n- Nội dung\n- Mức độ quan trọng: Critical / High / Medium / Low\n- Bộ phận cần xử lý\n\nNếu nguồn không có thông tin, ghi rõ: \"Không thấy trong nguồn\".",
+        "gemini_prompt": "Đóng vai điều phối hồ sơ thầu.\n\nHãy tách nội dung sau thành các nhóm:\n1. Yêu cầu kỹ thuật\n2. Yêu cầu thương mại\n3. Yêu cầu pháp lý/thủ tục dự án\n4. Yêu cầu tiến độ\n5. Yêu cầu bảo hành/nghiệm thu\n6. Điểm chưa rõ cần làm rõ\n\nĐầu ra dạng bảng gồm:\n- Nhóm yêu cầu\n- Nội dung\n- Mức độ quan trọng: Critical / High / Medium / Low\n- Bộ phận cần xử lý\n\nNội dung đầu vào:\n[dán nội dung vào đây]",
+        "input_guide": {
+          "items": [
+            "Hồ sơ mời thầu/email mời báo giá hoặc tóm tắt nội dung chính.",
+            "Scope, volume, deadline, điều kiện thương mại, yêu cầu kỹ thuật.",
+            "Mục đích xử lý: tóm tắt, chia việc, báo cáo bid/no-bid, lập missing information.",
+            "Nếu là nhiều file, nên dùng NotebookLM và upload nguồn trước."
+          ],
+          "example": "Dự án Kyocera CMOS; D&B; diện tích 5.200m²; deadline nộp QA 15/06; scope điện, HVAC, utility; cần báo cáo nội bộ.",
+          "placeholder": "Nội dung HSMT/RFQ/RFP; scope; volume; deadline; điều kiện thầu; yêu cầu kỹ thuật; missing info..."
+        }
+      },
+      {
+        "title": "Bảng missing information",
+        "use": "Khi hồ sơ thiếu dữ liệu để báo giá hoặc thiết kế.",
+        "level": "Chuyên sâu",
+        "platforms": [
+          "ChatGPT",
+          "NotebookLM",
+          "Gemini"
+        ],
+        "prompt": "Đóng vai trưởng nhóm chuẩn bị hồ sơ thầu.\n\nTừ nội dung dưới đây, lập bảng thông tin còn thiếu để có thể báo giá/thiết kế chính xác.\n\nĐầu ra gồm:\n1. Thông tin còn thiếu\n2. Vì sao cần thông tin này\n3. Ảnh hưởng nếu không có\n4. Ai cần cung cấp/xác nhận\n5. Mức độ ưu tiên\n6. Câu hỏi làm rõ đề xuất\n\nNội dung đầu vào:\n[dán nội dung vào đây]",
+        "notebooklm_prompt": "Chỉ sử dụng các nguồn đã upload trong notebook này.\n\nLập bảng thông tin còn thiếu để có thể báo giá/thiết kế chính xác.\n\nĐầu ra gồm:\n1. Thông tin còn thiếu\n2. Vì sao cần thông tin này\n3. Ảnh hưởng nếu không có\n4. Ai cần cung cấp/xác nhận\n5. Mức độ ưu tiên\n6. Câu hỏi làm rõ đề xuất\n\nNếu không đủ dữ liệu trong nguồn, ghi rõ phần thiếu.",
+        "gemini_prompt": "Đóng vai trưởng nhóm chuẩn bị hồ sơ thầu.\n\nTừ nội dung dưới đây, lập bảng thông tin còn thiếu để có thể báo giá/thiết kế chính xác.\n\nĐầu ra gồm:\n1. Thông tin còn thiếu\n2. Vì sao cần thông tin này\n3. Ảnh hưởng nếu không có\n4. Ai cần cung cấp/xác nhận\n5. Mức độ ưu tiên\n6. Câu hỏi làm rõ đề xuất\n\nNội dung đầu vào:\n[dán nội dung vào đây]",
+        "input_guide": {
+          "items": [
+            "Hồ sơ mời thầu/email mời báo giá hoặc tóm tắt nội dung chính.",
+            "Scope, volume, deadline, điều kiện thương mại, yêu cầu kỹ thuật.",
+            "Mục đích xử lý: tóm tắt, chia việc, báo cáo bid/no-bid, lập missing information.",
+            "Nếu là nhiều file, nên dùng NotebookLM và upload nguồn trước."
+          ],
+          "example": "Dự án Kyocera CMOS; D&B; diện tích 5.200m²; deadline nộp QA 15/06; scope điện, HVAC, utility; cần báo cáo nội bộ.",
+          "placeholder": "Nội dung HSMT/RFQ/RFP; scope; volume; deadline; điều kiện thầu; yêu cầu kỹ thuật; missing info..."
+        }
+      }
+    ]
+  },
+  {
+    "department": "Đấu thầu",
+    "tool": "Phân tích rủi ro gói thầu",
+    "description": "Đánh giá Go / No-go / Go with conditions trước khi quyết định tham gia hoặc tiếp tục gói thầu.",
+    "platforms": [
+      "ChatGPT",
+      "NotebookLM",
+      "Gemini"
+    ],
+    "prompts": [
+      {
+        "title": "Đánh giá Go / No-go / Conditional Go",
+        "use": "Khi cần xin ý kiến có tham gia gói thầu hay không.",
+        "level": "Chuyên sâu",
+        "platforms": [
+          "ChatGPT",
+          "NotebookLM",
+          "Gemini"
+        ],
+        "prompt": "Đóng vai hội đồng xét thầu nội bộ.\n\nPhân tích gói thầu sau và kết luận:\n- Go\n- No-go\n- Go with conditions\n\nCấu trúc phân tích:\n1. Tóm tắt cơ hội\n2. Phù hợp với năng lực công ty\n3. Rủi ro kỹ thuật\n4. Rủi ro tiến độ\n5. Rủi ro chi phí\n6. Rủi ro pháp lý/thủ tục\n7. Rủi ro thương mại\n8. Điều kiện tối thiểu nếu muốn tham gia\n9. Khuyến nghị cuối cùng\n\nNội dung đầu vào:\n[dán nội dung vào đây]",
+        "notebooklm_prompt": "Chỉ sử dụng các nguồn đã upload trong notebook này.\n\nPhân tích gói thầu và kết luận:\n- Go\n- No-go\n- Go with conditions\n\nCấu trúc:\n1. Tóm tắt cơ hội\n2. Phù hợp với năng lực công ty\n3. Rủi ro kỹ thuật\n4. Rủi ro tiến độ\n5. Rủi ro chi phí\n6. Rủi ro pháp lý/thủ tục\n7. Rủi ro thương mại\n8. Điều kiện tối thiểu nếu muốn tham gia\n9. Khuyến nghị cuối cùng\n\nNếu không thấy dữ liệu trong nguồn, ghi rõ: \"Không thấy trong nguồn\".",
+        "gemini_prompt": "Đóng vai hội đồng xét thầu nội bộ.\n\nPhân tích gói thầu sau và kết luận:\n- Go\n- No-go\n- Go with conditions\n\nCấu trúc phân tích:\n1. Tóm tắt cơ hội\n2. Phù hợp với năng lực công ty\n3. Rủi ro kỹ thuật\n4. Rủi ro tiến độ\n5. Rủi ro chi phí\n6. Rủi ro pháp lý/thủ tục\n7. Rủi ro thương mại\n8. Điều kiện tối thiểu nếu muốn tham gia\n9. Khuyến nghị cuối cùng\n\nNội dung đầu vào:\n[dán nội dung vào đây]",
+        "input_guide": {
+          "items": [
+            "Tên gói thầu, scope, quy mô, deadline, hình thức hợp đồng.",
+            "Điều kiện thương mại chính: thanh toán, bảo lãnh, phạt, bảo hành.",
+            "Năng lực nội bộ hiện tại và điểm đang lo ngại.",
+            "Thông tin còn thiếu có thể ảnh hưởng quyết định tham gia."
+          ],
+          "example": "Gói cải tạo CMOS 5.200m²; D&B; deadline QA 15/06; scope điện/HVAC/utility; rủi ro: thời gian báo giá gấp, thiếu bản vẽ.",
+          "placeholder": "Tên gói; scope; volume; deadline; điều kiện thương mại; năng lực nội bộ; rủi ro; missing info..."
+        }
+      },
+      {
+        "title": "Risk register gói thầu",
+        "use": "Khi muốn lập bảng rủi ro cho hồ sơ thầu.",
+        "level": "Chuyên sâu",
+        "platforms": [
+          "ChatGPT",
+          "NotebookLM",
+          "Gemini"
+        ],
+        "prompt": "Đóng vai chuyên viên quản lý rủi ro thầu.\n\nLập risk register cho gói thầu sau.\n\nĐầu ra dạng bảng:\n- Mã rủi ro\n- Mô tả rủi ro\n- Nhóm: kỹ thuật / tiến độ / chi phí / pháp lý / thương mại / năng lực\n- Xác suất: High / Medium / Low\n- Ảnh hưởng: High / Medium / Low\n- Mức độ ưu tiên\n- Phương án giảm thiểu\n- Owner đề xuất\n\nThông tin gói thầu:\n[dán nội dung vào đây]",
+        "notebooklm_prompt": "Chỉ sử dụng các nguồn đã upload trong notebook này.\nNếu nguồn không có thông tin, ghi rõ: \"Không thấy trong nguồn\".\nƯu tiên trích dẫn nguồn nếu NotebookLM hỗ trợ.\n\nĐóng vai chuyên viên quản lý rủi ro thầu.\n\nLập risk register cho gói thầu sau.\n\nĐầu ra dạng bảng:\n- Mã rủi ro\n- Mô tả rủi ro\n- Nhóm: kỹ thuật / tiến độ / chi phí / pháp lý / thương mại / năng lực\n- Xác suất: High / Medium / Low\n- Ảnh hưởng: High / Medium / Low\n- Mức độ ưu tiên\n- Phương án giảm thiểu\n- Owner đề xuất\n\nThông tin gói thầu:\n[dán nội dung vào đây]",
+        "gemini_prompt": "Đóng vai chuyên viên quản lý rủi ro thầu.\n\nLập risk register cho gói thầu sau.\n\nĐầu ra dạng bảng:\n- Mã rủi ro\n- Mô tả rủi ro\n- Nhóm: kỹ thuật / tiến độ / chi phí / pháp lý / thương mại / năng lực\n- Xác suất: High / Medium / Low\n- Ảnh hưởng: High / Medium / Low\n- Mức độ ưu tiên\n- Phương án giảm thiểu\n- Owner đề xuất\n\nThông tin gói thầu:\n[dán nội dung vào đây]",
+        "input_guide": {
+          "items": [
+            "Tên gói thầu, scope, quy mô, deadline, hình thức hợp đồng.",
+            "Điều kiện thương mại chính: thanh toán, bảo lãnh, phạt, bảo hành.",
+            "Năng lực nội bộ hiện tại và điểm đang lo ngại.",
+            "Thông tin còn thiếu có thể ảnh hưởng quyết định tham gia."
+          ],
+          "example": "Gói cải tạo CMOS 5.200m²; D&B; deadline QA 15/06; scope điện/HVAC/utility; rủi ro: thời gian báo giá gấp, thiếu bản vẽ.",
+          "placeholder": "Tên gói; scope; volume; deadline; điều kiện thương mại; năng lực nội bộ; rủi ro; missing info..."
+        }
+      }
+    ]
+  },
+  {
+    "department": "Đấu thầu",
+    "tool": "Lập câu hỏi làm rõ",
+    "description": "Dùng khi hồ sơ mời thầu thiếu, mâu thuẫn hoặc cần xác nhận trước báo giá.",
+    "platforms": [
+      "ChatGPT",
+      "NotebookLM",
+      "Gemini"
+    ],
+    "prompts": [
+      {
+        "title": "Tạo danh sách RFI",
+        "use": "Khi cần gửi câu hỏi làm rõ cho khách hàng/CĐT.",
+        "level": "Chuẩn",
+        "platforms": [
+          "ChatGPT",
+          "NotebookLM",
+          "Gemini"
+        ],
+        "prompt": "Đóng vai chuyên viên đấu thầu.\n\nTừ nội dung hồ sơ sau, hãy lập danh sách RFI/câu hỏi làm rõ.\n\nĐầu ra dạng bảng:\n1. STT\n2. Nhóm: kỹ thuật / thương mại / tiến độ / pháp lý / khác\n3. Nội dung cần làm rõ\n4. Lý do cần làm rõ\n5. Ảnh hưởng nếu không được trả lời\n6. Mức độ ưu tiên\n7. Cách diễn đạt câu hỏi gửi khách hàng\n\nNội dung đầu vào:\n[dán nội dung vào đây]",
+        "notebooklm_prompt": "Chỉ sử dụng các nguồn đã upload trong notebook này.\n\nLập danh sách RFI/câu hỏi làm rõ từ hồ sơ.\n\nĐầu ra dạng bảng:\n1. STT\n2. Nhóm: kỹ thuật / thương mại / tiến độ / pháp lý / khác\n3. Nội dung cần làm rõ\n4. Lý do cần làm rõ\n5. Ảnh hưởng nếu không được trả lời\n6. Mức độ ưu tiên\n7. Cách diễn đạt câu hỏi gửi khách hàng\n\nNếu không thấy căn cứ trong nguồn, ghi rõ.",
+        "gemini_prompt": "Đóng vai chuyên viên đấu thầu.\n\nTừ nội dung hồ sơ sau, hãy lập danh sách RFI/câu hỏi làm rõ.\n\nĐầu ra dạng bảng:\n1. STT\n2. Nhóm: kỹ thuật / thương mại / tiến độ / pháp lý / khác\n3. Nội dung cần làm rõ\n4. Lý do cần làm rõ\n5. Ảnh hưởng nếu không được trả lời\n6. Mức độ ưu tiên\n7. Cách diễn đạt câu hỏi gửi khách hàng\n\nNội dung đầu vào:\n[dán nội dung vào đây]",
+        "input_guide": {
+          "items": [
+            "Điểm chưa rõ trong HSMT/RFQ/RFP.",
+            "Điều khoản, bản vẽ, scope hoặc yêu cầu liên quan.",
+            "Ảnh hưởng nếu không được làm rõ: thiếu giá, thiếu scope, sai tiến độ, rủi ro hợp đồng.",
+            "Deadline cần khách hàng phản hồi."
+          ],
+          "example": "HSMT chưa rõ phạm vi HVAC; chưa có bản vẽ layout; deadline nộp giá 15/06; nếu không rõ scope thì rủi ro thiếu khối lượng.",
+          "placeholder": "Điểm chưa rõ; điều khoản liên quan; ảnh hưởng; nhóm câu hỏi; deadline cần phản hồi..."
+        }
+      },
+      {
+        "title": "Email gửi khách hàng xin làm rõ",
+        "use": "Khi đã có danh sách câu hỏi và cần soạn email gửi ra ngoài.",
+        "level": "Nhanh",
+        "platforms": [
+          "ChatGPT",
+          "Gemini"
+        ],
+        "prompt": "Viết email gửi khách hàng/CĐT để xin làm rõ hồ sơ.\n\nYêu cầu:\n- Giọng lịch sự, chuyên nghiệp\n- Ngắn gọn\n- Có deadline mong muốn nhận phản hồi\n- Câu hỏi trình bày dạng bảng hoặc bullet\n- Không đổ lỗi hồ sơ thiếu\n\nThông tin:\n- Người nhận: [nhập nếu có]\n- Dự án/gói thầu: [nhập]\n- Deadline phản hồi mong muốn: [nhập]\n- Danh sách câu hỏi:\n[dán câu hỏi vào đây]",
+        "gemini_prompt": "Viết email gửi khách hàng/CĐT để xin làm rõ hồ sơ.\n\nYêu cầu:\n- Giọng lịch sự, chuyên nghiệp\n- Ngắn gọn\n- Có deadline mong muốn nhận phản hồi\n- Câu hỏi trình bày dạng bảng hoặc bullet\n- Không đổ lỗi hồ sơ thiếu\n\nThông tin:\n- Người nhận: [nhập nếu có]\n- Dự án/gói thầu: [nhập]\n- Deadline phản hồi mong muốn: [nhập]\n- Danh sách câu hỏi:\n[dán câu hỏi vào đây]",
+        "input_guide": {
+          "items": [
+            "Điểm chưa rõ trong HSMT/RFQ/RFP.",
+            "Điều khoản, bản vẽ, scope hoặc yêu cầu liên quan.",
+            "Ảnh hưởng nếu không được làm rõ: thiếu giá, thiếu scope, sai tiến độ, rủi ro hợp đồng.",
+            "Deadline cần khách hàng phản hồi."
+          ],
+          "example": "HSMT chưa rõ phạm vi HVAC; chưa có bản vẽ layout; deadline nộp giá 15/06; nếu không rõ scope thì rủi ro thiếu khối lượng.",
+          "placeholder": "Điểm chưa rõ; điều khoản liên quan; ảnh hưởng; nhóm câu hỏi; deadline cần phản hồi..."
+        }
+      }
+    ]
+  },
+  {
+    "department": "Thiết kế",
+    "tool": "Review đầu vào thiết kế",
+    "description": "Dùng khi nhận layout, spec, tiêu chuẩn, yêu cầu khách hàng hoặc tài liệu đầu vào thiết kế.",
+    "platforms": [
+      "ChatGPT",
+      "NotebookLM",
+      "Gemini"
+    ],
+    "prompts": [
+      {
+        "title": "Tách dữ liệu đã có / còn thiếu",
+        "use": "Khi khởi động thiết kế hoặc nhận hồ sơ đầu vào chưa rõ.",
+        "level": "Chuẩn",
+        "platforms": [
+          "ChatGPT",
+          "NotebookLM",
+          "Gemini"
+        ],
+        "prompt": "Đóng vai trưởng nhóm thiết kế MEP.\n\nReview dữ liệu đầu vào dưới đây và tách thành:\n1. Dữ liệu đã có\n2. Dữ liệu còn thiếu\n3. Dữ liệu mâu thuẫn\n4. Dữ liệu cần khách hàng xác nhận\n5. Ảnh hưởng đến thiết kế nếu chưa có\n6. Mức độ ưu tiên cần xử lý\n\nĐầu ra dạng bảng.\n\nDữ liệu đầu vào:\n[dán nội dung vào đây]",
+        "notebooklm_prompt": "Chỉ sử dụng các nguồn đã upload trong notebook này.\n\nReview dữ liệu đầu vào thiết kế và tách thành:\n1. Dữ liệu đã có\n2. Dữ liệu còn thiếu\n3. Dữ liệu mâu thuẫn\n4. Dữ liệu cần khách hàng xác nhận\n5. Ảnh hưởng đến thiết kế nếu chưa có\n6. Mức độ ưu tiên cần xử lý\n\nĐầu ra dạng bảng. Nếu nguồn không có thông tin, ghi: \"Không thấy trong nguồn\".",
+        "gemini_prompt": "Đóng vai trưởng nhóm thiết kế MEP.\n\nReview dữ liệu đầu vào dưới đây và tách thành:\n1. Dữ liệu đã có\n2. Dữ liệu còn thiếu\n3. Dữ liệu mâu thuẫn\n4. Dữ liệu cần khách hàng xác nhận\n5. Ảnh hưởng đến thiết kế nếu chưa có\n6. Mức độ ưu tiên cần xử lý\n\nĐầu ra dạng bảng.\n\nDữ liệu đầu vào:\n[dán nội dung vào đây]",
+        "input_guide": {
+          "items": [
+            "Hệ thống cần review: điện, HVAC, ELV, PCCC, plumbing, solar.",
+            "Giai đoạn hồ sơ: concept, basic design, detailed design, IFC, as-built.",
+            "Dữ liệu đầu vào đã có và phần còn thiếu.",
+            "Mục tiêu review: tìm lỗi, tạo checklist, tạo comment hay kiểm tra phát hành."
+          ],
+          "example": "Review bản vẽ điện LV giai đoạn IFC; đã có layout và SLD; chưa có phụ tải chi tiết; cần checklist trước phát hành.",
+          "placeholder": "Hệ thống; giai đoạn thiết kế; bản vẽ/spec; dữ liệu đầu vào; lỗi cần kiểm tra; mục tiêu review..."
+        }
+      },
+      {
+        "title": "Checklist kick-off thiết kế",
+        "use": "Khi chuẩn bị họp kick-off thiết kế.",
+        "level": "Chuẩn",
+        "platforms": [
+          "ChatGPT",
+          "NotebookLM",
+          "Gemini"
+        ],
+        "prompt": "Đóng vai design manager.\n\nTạo checklist kick-off thiết kế cho dự án sau.\n\nĐầu ra gồm:\n1. Dữ liệu cần thu thập trước kick-off\n2. Câu hỏi cần hỏi khách hàng\n3. Các hệ thống cần phân công\n4. Rủi ro thiết kế ban đầu\n5. Deliverables cần thống nhất\n6. Mốc tiến độ thiết kế cần chốt\n\nThông tin dự án:\n[dán nội dung vào đây]",
+        "notebooklm_prompt": "Chỉ sử dụng các nguồn đã upload trong notebook này.\nNếu nguồn không có thông tin, ghi rõ: \"Không thấy trong nguồn\".\nƯu tiên trích dẫn nguồn nếu NotebookLM hỗ trợ.\n\nĐóng vai design manager.\n\nTạo checklist kick-off thiết kế cho dự án sau.\n\nĐầu ra gồm:\n1. Dữ liệu cần thu thập trước kick-off\n2. Câu hỏi cần hỏi khách hàng\n3. Các hệ thống cần phân công\n4. Rủi ro thiết kế ban đầu\n5. Deliverables cần thống nhất\n6. Mốc tiến độ thiết kế cần chốt\n\nThông tin dự án:\n[dán nội dung vào đây]",
+        "gemini_prompt": "Đóng vai design manager.\n\nTạo checklist kick-off thiết kế cho dự án sau.\n\nĐầu ra gồm:\n1. Dữ liệu cần thu thập trước kick-off\n2. Câu hỏi cần hỏi khách hàng\n3. Các hệ thống cần phân công\n4. Rủi ro thiết kế ban đầu\n5. Deliverables cần thống nhất\n6. Mốc tiến độ thiết kế cần chốt\n\nThông tin dự án:\n[dán nội dung vào đây]",
+        "input_guide": {
+          "items": [
+            "Hệ thống cần review: điện, HVAC, ELV, PCCC, plumbing, solar.",
+            "Giai đoạn hồ sơ: concept, basic design, detailed design, IFC, as-built.",
+            "Dữ liệu đầu vào đã có và phần còn thiếu.",
+            "Mục tiêu review: tìm lỗi, tạo checklist, tạo comment hay kiểm tra phát hành."
+          ],
+          "example": "Review bản vẽ điện LV giai đoạn IFC; đã có layout và SLD; chưa có phụ tải chi tiết; cần checklist trước phát hành.",
+          "placeholder": "Hệ thống; giai đoạn thiết kế; bản vẽ/spec; dữ liệu đầu vào; lỗi cần kiểm tra; mục tiêu review..."
+        }
+      }
+    ]
+  },
+  {
+    "department": "Thiết kế",
+    "tool": "Review phương án thiết kế",
+    "description": "Kiểm tra concept, so sánh phương án hoặc phản biện phương án kỹ thuật.",
+    "platforms": [
+      "ChatGPT",
+      "Gemini"
+    ],
+    "prompts": [
+      {
+        "title": "Phản biện phương án thiết kế",
+        "use": "Khi cần soi rủi ro và lỗ hổng của một phương án kỹ thuật.",
+        "level": "Chuyên sâu",
+        "platforms": [
+          "ChatGPT",
+          "Gemini"
+        ],
+        "prompt": "Đóng vai reviewer kỹ thuật độc lập.\n\nPhản biện phương án thiết kế sau theo cấu trúc:\n1. Kết luận nhanh\n2. Điểm hợp lý\n3. Điểm yếu/lỗ hổng\n4. Giả định nguy hiểm\n5. Rủi ro kỹ thuật\n6. Rủi ro vận hành/bảo trì\n7. Rủi ro chi phí/tiến độ\n8. Thông tin cần bổ sung\n9. Khuyến nghị chỉnh sửa\n\nPhương án:\n[dán nội dung vào đây]",
+        "gemini_prompt": "Đóng vai reviewer kỹ thuật độc lập.\n\nPhản biện phương án thiết kế sau theo cấu trúc:\n1. Kết luận nhanh\n2. Điểm hợp lý\n3. Điểm yếu/lỗ hổng\n4. Giả định nguy hiểm\n5. Rủi ro kỹ thuật\n6. Rủi ro vận hành/bảo trì\n7. Rủi ro chi phí/tiến độ\n8. Thông tin cần bổ sung\n9. Khuyến nghị chỉnh sửa\n\nPhương án:\n[dán nội dung vào đây]",
+        "input_guide": {
+          "items": [
+            "Phương án kỹ thuật đang đề xuất.",
+            "Thông số thiết bị/hệ thống, số liệu tính toán chính, tiêu chuẩn áp dụng.",
+            "Điều kiện lắp đặt/vận hành, giới hạn thiết kế và phản biện đang gặp.",
+            "Phương án thay thế nếu có để AI so sánh."
+          ],
+          "example": "MBA 2000kVA 22/0.4kV; cáp đề xuất 4x1C-630mm² mỗi pha; chiều dài 60m; lắp trên máng; IEC; phản biện: vì sao không dùng 500mm².",
+          "placeholder": "Phương án đề xuất; thông số thiết bị; số liệu tính toán; điều kiện lắp đặt; tiêu chuẩn; phản biện..."
+        }
+      },
+      {
+        "title": "So sánh 3 phương án",
+        "use": "Khi có nhiều option và cần chọn phương án tối ưu.",
+        "level": "Chuẩn",
+        "platforms": [
+          "ChatGPT",
+          "Gemini"
+        ],
+        "prompt": "Đóng vai trưởng nhóm thiết kế.\n\nSo sánh các phương án dưới đây theo bảng:\n- Chi phí đầu tư\n- Độ tin cậy\n- Dễ thi công\n- Dễ vận hành/bảo trì\n- Rủi ro kỹ thuật\n- Rủi ro tiến độ\n- Phù hợp yêu cầu khách hàng\n- Khuyến nghị chọn\n\nCác phương án:\n[dán nội dung vào đây]",
+        "gemini_prompt": "Đóng vai trưởng nhóm thiết kế.\n\nSo sánh các phương án dưới đây theo bảng:\n- Chi phí đầu tư\n- Độ tin cậy\n- Dễ thi công\n- Dễ vận hành/bảo trì\n- Rủi ro kỹ thuật\n- Rủi ro tiến độ\n- Phù hợp yêu cầu khách hàng\n- Khuyến nghị chọn\n\nCác phương án:\n[dán nội dung vào đây]",
+        "input_guide": {
+          "items": [
+            "Phương án kỹ thuật đang đề xuất.",
+            "Thông số thiết bị/hệ thống, số liệu tính toán chính, tiêu chuẩn áp dụng.",
+            "Điều kiện lắp đặt/vận hành, giới hạn thiết kế và phản biện đang gặp.",
+            "Phương án thay thế nếu có để AI so sánh."
+          ],
+          "example": "MBA 2000kVA 22/0.4kV; cáp đề xuất 4x1C-630mm² mỗi pha; chiều dài 60m; lắp trên máng; IEC; phản biện: vì sao không dùng 500mm².",
+          "placeholder": "Phương án đề xuất; thông số thiết bị; số liệu tính toán; điều kiện lắp đặt; tiêu chuẩn; phản biện..."
+        }
+      }
+    ]
+  },
+  {
+    "department": "Thiết kế",
+    "tool": "Kiểm tra hồ sơ bản vẽ",
+    "description": "Dùng trước khi phát hành bản vẽ hoặc gửi hồ sơ cho khách hàng/đội thi công.",
+    "platforms": [
+      "ChatGPT",
+      "NotebookLM",
+      "Gemini"
+    ],
+    "prompts": [
+      {
+        "title": "Checklist review bản vẽ MEP",
+        "use": "Khi cần checklist kiểm tra trước phát hành.",
+        "level": "Chuẩn",
+        "platforms": [
+          "ChatGPT",
+          "NotebookLM",
+          "Gemini"
+        ],
+        "prompt": "Đóng vai QA/QC hồ sơ thiết kế MEP.\n\nTạo checklist review bản vẽ cho hệ sau:\n[hệ thống: điện / HVAC / PCCC / ELV / plumbing / solar / khác]\n\nYêu cầu checklist gồm:\n1. Kiểm tra dữ liệu đầu vào\n2. Kiểm tra tính đồng bộ bản vẽ\n3. Kiểm tra sizing/capacity\n4. Kiểm tra routing/layout\n5. Kiểm tra interface với hệ khác\n6. Kiểm tra ghi chú/spec\n7. Kiểm tra lỗi thường gặp\n8. Điều kiện phát hành bản vẽ\n\nThông tin dự án/hệ thống:\n[dán nội dung vào đây]",
+        "notebooklm_prompt": "Chỉ sử dụng các nguồn đã upload trong notebook này.\nNếu nguồn không có thông tin, ghi rõ: \"Không thấy trong nguồn\".\nƯu tiên trích dẫn nguồn nếu NotebookLM hỗ trợ.\n\nĐóng vai QA/QC hồ sơ thiết kế MEP.\n\nTạo checklist review bản vẽ cho hệ sau:\n[hệ thống: điện / HVAC / PCCC / ELV / plumbing / solar / khác]\n\nYêu cầu checklist gồm:\n1. Kiểm tra dữ liệu đầu vào\n2. Kiểm tra tính đồng bộ bản vẽ\n3. Kiểm tra sizing/capacity\n4. Kiểm tra routing/layout\n5. Kiểm tra interface với hệ khác\n6. Kiểm tra ghi chú/spec\n7. Kiểm tra lỗi thường gặp\n8. Điều kiện phát hành bản vẽ\n\nThông tin dự án/hệ thống:\n[dán nội dung vào đây]",
+        "gemini_prompt": "Đóng vai QA/QC hồ sơ thiết kế MEP.\n\nTạo checklist review bản vẽ cho hệ sau:\n[hệ thống: điện / HVAC / PCCC / ELV / plumbing / solar / khác]\n\nYêu cầu checklist gồm:\n1. Kiểm tra dữ liệu đầu vào\n2. Kiểm tra tính đồng bộ bản vẽ\n3. Kiểm tra sizing/capacity\n4. Kiểm tra routing/layout\n5. Kiểm tra interface với hệ khác\n6. Kiểm tra ghi chú/spec\n7. Kiểm tra lỗi thường gặp\n8. Điều kiện phát hành bản vẽ\n\nThông tin dự án/hệ thống:\n[dán nội dung vào đây]",
+        "input_guide": {
+          "items": [
+            "Hệ thống cần review: điện, HVAC, ELV, PCCC, plumbing, solar.",
+            "Giai đoạn hồ sơ: concept, basic design, detailed design, IFC, as-built.",
+            "Dữ liệu đầu vào đã có và phần còn thiếu.",
+            "Mục tiêu review: tìm lỗi, tạo checklist, tạo comment hay kiểm tra phát hành."
+          ],
+          "example": "Review bản vẽ điện LV giai đoạn IFC; đã có layout và SLD; chưa có phụ tải chi tiết; cần checklist trước phát hành.",
+          "placeholder": "Hệ thống; giai đoạn thiết kế; bản vẽ/spec; dữ liệu đầu vào; lỗi cần kiểm tra; mục tiêu review..."
+        }
+      },
+      {
+        "title": "Tạo comment review bản vẽ",
+        "use": "Khi có danh sách lỗi/ảnh chụp/bản mô tả và cần chuyển thành comment chuyên nghiệp.",
+        "level": "Nhanh",
+        "platforms": [
+          "ChatGPT",
+          "Gemini"
+        ],
+        "prompt": "Chuyển các ghi chú review bản vẽ dưới đây thành bảng comment chuyên nghiệp.\n\nĐầu ra gồm:\n- STT\n- Vị trí/bản vẽ\n- Nội dung comment\n- Mức độ: Critical / Major / Minor\n- Ảnh hưởng nếu không sửa\n- Đề xuất xử lý\n- Owner đề xuất\n\nGhi chú thô:\n[dán nội dung vào đây]",
+        "gemini_prompt": "Chuyển các ghi chú review bản vẽ dưới đây thành bảng comment chuyên nghiệp.\n\nĐầu ra gồm:\n- STT\n- Vị trí/bản vẽ\n- Nội dung comment\n- Mức độ: Critical / Major / Minor\n- Ảnh hưởng nếu không sửa\n- Đề xuất xử lý\n- Owner đề xuất\n\nGhi chú thô:\n[dán nội dung vào đây]",
+        "input_guide": {
+          "items": [
+            "Hệ thống cần review: điện, HVAC, ELV, PCCC, plumbing, solar.",
+            "Giai đoạn hồ sơ: concept, basic design, detailed design, IFC, as-built.",
+            "Dữ liệu đầu vào đã có và phần còn thiếu.",
+            "Mục tiêu review: tìm lỗi, tạo checklist, tạo comment hay kiểm tra phát hành."
+          ],
+          "example": "Review bản vẽ điện LV giai đoạn IFC; đã có layout và SLD; chưa có phụ tải chi tiết; cần checklist trước phát hành.",
+          "placeholder": "Hệ thống; giai đoạn thiết kế; bản vẽ/spec; dữ liệu đầu vào; lỗi cần kiểm tra; mục tiêu review..."
+        }
+      }
+    ]
+  },
+  {
+    "department": "Pháp lý dự án",
+    "tool": "Checklist pháp lý dự án",
+    "description": "Kiểm tra hồ sơ pháp lý/thủ tục dự án trước khi đấu thầu, thiết kế hoặc thi công.",
+    "platforms": [
+      "ChatGPT",
+      "NotebookLM",
+      "Gemini"
+    ],
+    "prompts": [
+      {
+        "title": "Legal readiness check",
+        "use": "Khi cần biết dự án đã đủ điều kiện triển khai chưa.",
+        "level": "Chuyên sâu",
+        "platforms": [
+          "ChatGPT",
+          "NotebookLM",
+          "Gemini"
+        ],
+        "prompt": "Đóng vai chuyên viên pháp lý dự án xây dựng.\n\nRà soát tình trạng pháp lý dự án sau theo cấu trúc:\n1. Hồ sơ pháp lý đã có\n2. Hồ sơ còn thiếu\n3. Hồ sơ critical/blocking trước thi công\n4. Hồ sơ có thể bổ sung song song\n5. Rủi ro nếu triển khai khi chưa đủ hồ sơ\n6. Owner cần xử lý\n7. Khuyến nghị: được triển khai / chưa được triển khai / triển khai có điều kiện\n\nThông tin dự án:\n[dán nội dung vào đây]",
+        "notebooklm_prompt": "Chỉ sử dụng các nguồn đã upload trong notebook này.\n\nRà soát tình trạng pháp lý dự án theo cấu trúc:\n1. Hồ sơ pháp lý đã có\n2. Hồ sơ còn thiếu\n3. Hồ sơ critical/blocking trước thi công\n4. Hồ sơ có thể bổ sung song song\n5. Rủi ro nếu triển khai khi chưa đủ hồ sơ\n6. Owner cần xử lý\n7. Khuyến nghị: được triển khai / chưa được triển khai / triển khai có điều kiện\n\nNếu nguồn không có thông tin, ghi rõ: \"Không thấy trong nguồn\".",
+        "gemini_prompt": "Đóng vai chuyên viên pháp lý dự án xây dựng.\n\nRà soát tình trạng pháp lý dự án sau theo cấu trúc:\n1. Hồ sơ pháp lý đã có\n2. Hồ sơ còn thiếu\n3. Hồ sơ critical/blocking trước thi công\n4. Hồ sơ có thể bổ sung song song\n5. Rủi ro nếu triển khai khi chưa đủ hồ sơ\n6. Owner cần xử lý\n7. Khuyến nghị: được triển khai / chưa được triển khai / triển khai có điều kiện\n\nThông tin dự án:\n[dán nội dung vào đây]",
+        "input_guide": {
+          "items": [
+            "Loại thủ tục: GPXD, PCCC, ĐTM, GPMT, nghiệm thu hoặc điều chỉnh hồ sơ.",
+            "Trạng thái hiện tại: đã có, chưa có, đang nộp, đang chờ duyệt, cần điều chỉnh.",
+            "Mốc triển khai dự kiến và rủi ro nếu hồ sơ chậm.",
+            "Đơn vị phụ trách và hồ sơ còn thiếu nếu biết."
+          ],
+          "example": "Dự án cải tạo nhà xưởng; PCCC đang thẩm duyệt; GPXD chưa rõ có cần điều chỉnh không; dự kiến thi công 01/09; cần legal gate trước triển khai.",
+          "placeholder": "Loại thủ tục; trạng thái hồ sơ; mốc triển khai; hồ sơ còn thiếu; owner; rủi ro nếu chậm..."
+        }
+      },
+      {
+        "title": "Bảng owner / deadline hồ sơ pháp lý",
+        "use": "Khi cần quản lý tiến độ hoàn thiện thủ tục.",
+        "level": "Chuẩn",
+        "platforms": [
+          "ChatGPT",
+          "NotebookLM",
+          "Gemini"
+        ],
+        "prompt": "Tạo bảng theo dõi hồ sơ pháp lý dự án.\n\nĐầu ra gồm:\n- Tên hồ sơ/thủ tục\n- Trạng thái hiện tại\n- Hồ sơ còn thiếu\n- Owner\n- Deadline\n- Mức độ ảnh hưởng\n- Rủi ro nếu chậm\n- Hành động tiếp theo\n\nDữ liệu đầu vào:\n[dán nội dung vào đây]",
+        "notebooklm_prompt": "Chỉ sử dụng các nguồn đã upload trong notebook này.\nNếu nguồn không có thông tin, ghi rõ: \"Không thấy trong nguồn\".\nƯu tiên trích dẫn nguồn nếu NotebookLM hỗ trợ.\n\nTạo bảng theo dõi hồ sơ pháp lý dự án.\n\nĐầu ra gồm:\n- Tên hồ sơ/thủ tục\n- Trạng thái hiện tại\n- Hồ sơ còn thiếu\n- Owner\n- Deadline\n- Mức độ ảnh hưởng\n- Rủi ro nếu chậm\n- Hành động tiếp theo\n\nDữ liệu đầu vào:\n[dán nội dung vào đây]",
+        "gemini_prompt": "Tạo bảng theo dõi hồ sơ pháp lý dự án.\n\nĐầu ra gồm:\n- Tên hồ sơ/thủ tục\n- Trạng thái hiện tại\n- Hồ sơ còn thiếu\n- Owner\n- Deadline\n- Mức độ ảnh hưởng\n- Rủi ro nếu chậm\n- Hành động tiếp theo\n\nDữ liệu đầu vào:\n[dán nội dung vào đây]",
+        "input_guide": {
+          "items": [
+            "Loại thủ tục: GPXD, PCCC, ĐTM, GPMT, nghiệm thu hoặc điều chỉnh hồ sơ.",
+            "Trạng thái hiện tại: đã có, chưa có, đang nộp, đang chờ duyệt, cần điều chỉnh.",
+            "Mốc triển khai dự kiến và rủi ro nếu hồ sơ chậm.",
+            "Đơn vị phụ trách và hồ sơ còn thiếu nếu biết."
+          ],
+          "example": "Dự án cải tạo nhà xưởng; PCCC đang thẩm duyệt; GPXD chưa rõ có cần điều chỉnh không; dự kiến thi công 01/09; cần legal gate trước triển khai.",
+          "placeholder": "Loại thủ tục; trạng thái hồ sơ; mốc triển khai; hồ sơ còn thiếu; owner; rủi ro nếu chậm..."
+        }
+      }
+    ]
+  },
+  {
+    "department": "Pháp lý dự án",
+    "tool": "Cấp phép xây dựng",
+    "description": "Rà soát GPXD, miễn GPXD, điều chỉnh GPXD hoặc rủi ro liên quan trước thi công.",
+    "platforms": [
+      "ChatGPT",
+      "NotebookLM",
+      "Gemini"
+    ],
+    "prompts": [
+      {
+        "title": "Checklist GPXD",
+        "use": "Khi cần lập danh sách hồ sơ/điều kiện cấp phép xây dựng.",
+        "level": "Chuẩn",
+        "platforms": [
+          "ChatGPT",
+          "NotebookLM",
+          "Gemini"
+        ],
+        "prompt": "Đóng vai chuyên viên thủ tục cấp phép xây dựng.\n\nTạo checklist GPXD cho dự án sau.\n\nĐầu ra gồm:\n1. Nhóm hồ sơ pháp lý đất/quy hoạch\n2. Nhóm hồ sơ thiết kế\n3. Nhóm thẩm định/thẩm tra nếu có\n4. Nhóm văn bản chấp thuận liên quan\n5. Thông tin còn thiếu\n6. Rủi ro nếu thiếu từng nhóm hồ sơ\n7. Câu hỏi cần làm rõ với CĐT/tư vấn pháp lý\n\nThông tin dự án:\n[dán nội dung vào đây]",
+        "notebooklm_prompt": "Chỉ sử dụng các nguồn đã upload trong notebook này.\nNếu nguồn không có thông tin, ghi rõ: \"Không thấy trong nguồn\".\nƯu tiên trích dẫn nguồn nếu NotebookLM hỗ trợ.\n\nĐóng vai chuyên viên thủ tục cấp phép xây dựng.\n\nTạo checklist GPXD cho dự án sau.\n\nĐầu ra gồm:\n1. Nhóm hồ sơ pháp lý đất/quy hoạch\n2. Nhóm hồ sơ thiết kế\n3. Nhóm thẩm định/thẩm tra nếu có\n4. Nhóm văn bản chấp thuận liên quan\n5. Thông tin còn thiếu\n6. Rủi ro nếu thiếu từng nhóm hồ sơ\n7. Câu hỏi cần làm rõ với CĐT/tư vấn pháp lý\n\nThông tin dự án:\n[dán nội dung vào đây]",
+        "gemini_prompt": "Đóng vai chuyên viên thủ tục cấp phép xây dựng.\n\nTạo checklist GPXD cho dự án sau.\n\nĐầu ra gồm:\n1. Nhóm hồ sơ pháp lý đất/quy hoạch\n2. Nhóm hồ sơ thiết kế\n3. Nhóm thẩm định/thẩm tra nếu có\n4. Nhóm văn bản chấp thuận liên quan\n5. Thông tin còn thiếu\n6. Rủi ro nếu thiếu từng nhóm hồ sơ\n7. Câu hỏi cần làm rõ với CĐT/tư vấn pháp lý\n\nThông tin dự án:\n[dán nội dung vào đây]",
+        "input_guide": {
+          "items": [
+            "Loại thủ tục: GPXD, PCCC, ĐTM, GPMT, nghiệm thu hoặc điều chỉnh hồ sơ.",
+            "Trạng thái hiện tại: đã có, chưa có, đang nộp, đang chờ duyệt, cần điều chỉnh.",
+            "Mốc triển khai dự kiến và rủi ro nếu hồ sơ chậm.",
+            "Đơn vị phụ trách và hồ sơ còn thiếu nếu biết."
+          ],
+          "example": "Dự án cải tạo nhà xưởng; PCCC đang thẩm duyệt; GPXD chưa rõ có cần điều chỉnh không; dự kiến thi công 01/09; cần legal gate trước triển khai.",
+          "placeholder": "Loại thủ tục; trạng thái hồ sơ; mốc triển khai; hồ sơ còn thiếu; owner; rủi ro nếu chậm..."
+        }
+      },
+      {
+        "title": "Rủi ro thi công khi chưa đủ GPXD",
+        "use": "Khi cần cảnh báo rủi ro trước khi triển khai.",
+        "level": "Chuyên sâu",
+        "platforms": [
+          "ChatGPT",
+          "Gemini"
+        ],
+        "prompt": "Phân tích rủi ro nếu triển khai thi công khi tình trạng GPXD chưa rõ/chưa đủ.\n\nCấu trúc:\n1. Fact đã biết\n2. Assumption\n3. Rủi ro pháp lý/thủ tục\n4. Rủi ro tiến độ\n5. Rủi ro chi phí\n6. Điều kiện tối thiểu cần chốt trước\n7. Decision gate: được làm / dừng / làm có điều kiện\n\nThông tin:\n[dán nội dung vào đây]",
+        "gemini_prompt": "Phân tích rủi ro nếu triển khai thi công khi tình trạng GPXD chưa rõ/chưa đủ.\n\nCấu trúc:\n1. Fact đã biết\n2. Assumption\n3. Rủi ro pháp lý/thủ tục\n4. Rủi ro tiến độ\n5. Rủi ro chi phí\n6. Điều kiện tối thiểu cần chốt trước\n7. Decision gate: được làm / dừng / làm có điều kiện\n\nThông tin:\n[dán nội dung vào đây]",
+        "input_guide": {
+          "items": [
+            "Loại thủ tục: GPXD, PCCC, ĐTM, GPMT, nghiệm thu hoặc điều chỉnh hồ sơ.",
+            "Trạng thái hiện tại: đã có, chưa có, đang nộp, đang chờ duyệt, cần điều chỉnh.",
+            "Mốc triển khai dự kiến và rủi ro nếu hồ sơ chậm.",
+            "Đơn vị phụ trách và hồ sơ còn thiếu nếu biết."
+          ],
+          "example": "Dự án cải tạo nhà xưởng; PCCC đang thẩm duyệt; GPXD chưa rõ có cần điều chỉnh không; dự kiến thi công 01/09; cần legal gate trước triển khai.",
+          "placeholder": "Loại thủ tục; trạng thái hồ sơ; mốc triển khai; hồ sơ còn thiếu; owner; rủi ro nếu chậm..."
+        }
+      }
+    ]
+  },
+  {
+    "department": "Pháp lý dự án",
+    "tool": "PCCC",
+    "description": "Dùng cho thẩm duyệt, nghiệm thu, điều chỉnh thiết kế PCCC và rủi ro ảnh hưởng tiến độ.",
+    "platforms": [
+      "ChatGPT",
+      "NotebookLM",
+      "Gemini"
+    ],
+    "prompts": [
+      {
+        "title": "Checklist thẩm duyệt / nghiệm thu PCCC",
+        "use": "Khi cần rà soát hồ sơ PCCC theo giai đoạn.",
+        "level": "Chuẩn",
+        "platforms": [
+          "ChatGPT",
+          "NotebookLM",
+          "Gemini"
+        ],
+        "prompt": "Đóng vai chuyên viên điều phối hồ sơ PCCC.\n\nLập checklist hồ sơ PCCC cho dự án sau, tách theo:\n1. Thẩm duyệt thiết kế PCCC\n2. Điều chỉnh thiết kế PCCC nếu có\n3. Nghiệm thu PCCC\n4. Hồ sơ/as-built/chứng chỉ cần chuẩn bị\n5. Hạng mục còn thiếu\n6. Rủi ro ảnh hưởng tiến độ\n7. Owner cần xử lý\n\nThông tin dự án:\n[dán nội dung vào đây]",
+        "notebooklm_prompt": "Chỉ sử dụng các nguồn đã upload trong notebook này.\nNếu nguồn không có thông tin, ghi rõ: \"Không thấy trong nguồn\".\nƯu tiên trích dẫn nguồn nếu NotebookLM hỗ trợ.\n\nĐóng vai chuyên viên điều phối hồ sơ PCCC.\n\nLập checklist hồ sơ PCCC cho dự án sau, tách theo:\n1. Thẩm duyệt thiết kế PCCC\n2. Điều chỉnh thiết kế PCCC nếu có\n3. Nghiệm thu PCCC\n4. Hồ sơ/as-built/chứng chỉ cần chuẩn bị\n5. Hạng mục còn thiếu\n6. Rủi ro ảnh hưởng tiến độ\n7. Owner cần xử lý\n\nThông tin dự án:\n[dán nội dung vào đây]",
+        "gemini_prompt": "Đóng vai chuyên viên điều phối hồ sơ PCCC.\n\nLập checklist hồ sơ PCCC cho dự án sau, tách theo:\n1. Thẩm duyệt thiết kế PCCC\n2. Điều chỉnh thiết kế PCCC nếu có\n3. Nghiệm thu PCCC\n4. Hồ sơ/as-built/chứng chỉ cần chuẩn bị\n5. Hạng mục còn thiếu\n6. Rủi ro ảnh hưởng tiến độ\n7. Owner cần xử lý\n\nThông tin dự án:\n[dán nội dung vào đây]",
+        "input_guide": {
+          "items": [
+            "Loại thủ tục: GPXD, PCCC, ĐTM, GPMT, nghiệm thu hoặc điều chỉnh hồ sơ.",
+            "Trạng thái hiện tại: đã có, chưa có, đang nộp, đang chờ duyệt, cần điều chỉnh.",
+            "Mốc triển khai dự kiến và rủi ro nếu hồ sơ chậm.",
+            "Đơn vị phụ trách và hồ sơ còn thiếu nếu biết."
+          ],
+          "example": "Dự án cải tạo nhà xưởng; PCCC đang thẩm duyệt; GPXD chưa rõ có cần điều chỉnh không; dự kiến thi công 01/09; cần legal gate trước triển khai.",
+          "placeholder": "Loại thủ tục; trạng thái hồ sơ; mốc triển khai; hồ sơ còn thiếu; owner; rủi ro nếu chậm..."
+        }
+      },
+      {
+        "title": "Câu hỏi làm rõ phạm vi PCCC",
+        "use": "Khi phạm vi PCCC chưa rõ giữa CĐT, tư vấn, nhà thầu.",
+        "level": "Chuẩn",
+        "platforms": [
+          "ChatGPT",
+          "NotebookLM",
+          "Gemini"
+        ],
+        "prompt": "Tạo danh sách câu hỏi làm rõ về phạm vi PCCC.\n\nĐầu ra dạng bảng:\n- Nhóm vấn đề\n- Câu hỏi cần làm rõ\n- Vì sao cần làm rõ\n- Ảnh hưởng đến thiết kế/thi công/nghiệm thu\n- Đơn vị cần trả lời\n- Mức độ ưu tiên\n\nThông tin đầu vào:\n[dán nội dung vào đây]",
+        "notebooklm_prompt": "Chỉ sử dụng các nguồn đã upload trong notebook này.\nNếu nguồn không có thông tin, ghi rõ: \"Không thấy trong nguồn\".\nƯu tiên trích dẫn nguồn nếu NotebookLM hỗ trợ.\n\nTạo danh sách câu hỏi làm rõ về phạm vi PCCC.\n\nĐầu ra dạng bảng:\n- Nhóm vấn đề\n- Câu hỏi cần làm rõ\n- Vì sao cần làm rõ\n- Ảnh hưởng đến thiết kế/thi công/nghiệm thu\n- Đơn vị cần trả lời\n- Mức độ ưu tiên\n\nThông tin đầu vào:\n[dán nội dung vào đây]",
+        "gemini_prompt": "Tạo danh sách câu hỏi làm rõ về phạm vi PCCC.\n\nĐầu ra dạng bảng:\n- Nhóm vấn đề\n- Câu hỏi cần làm rõ\n- Vì sao cần làm rõ\n- Ảnh hưởng đến thiết kế/thi công/nghiệm thu\n- Đơn vị cần trả lời\n- Mức độ ưu tiên\n\nThông tin đầu vào:\n[dán nội dung vào đây]",
+        "input_guide": {
+          "items": [
+            "Loại thủ tục: GPXD, PCCC, ĐTM, GPMT, nghiệm thu hoặc điều chỉnh hồ sơ.",
+            "Trạng thái hiện tại: đã có, chưa có, đang nộp, đang chờ duyệt, cần điều chỉnh.",
+            "Mốc triển khai dự kiến và rủi ro nếu hồ sơ chậm.",
+            "Đơn vị phụ trách và hồ sơ còn thiếu nếu biết."
+          ],
+          "example": "Dự án cải tạo nhà xưởng; PCCC đang thẩm duyệt; GPXD chưa rõ có cần điều chỉnh không; dự kiến thi công 01/09; cần legal gate trước triển khai.",
+          "placeholder": "Loại thủ tục; trạng thái hồ sơ; mốc triển khai; hồ sơ còn thiếu; owner; rủi ro nếu chậm..."
+        }
+      }
+    ]
+  },
+  {
+    "department": "Pháp lý dự án",
+    "tool": "ĐTM / Môi trường",
+    "description": "Dùng cho ĐTM, giấy phép môi trường, hồ sơ môi trường và rủi ro thủ tục liên quan.",
+    "platforms": [
+      "ChatGPT",
+      "NotebookLM",
+      "Gemini"
+    ],
+    "prompts": [
+      {
+        "title": "Checklist hồ sơ môi trường",
+        "use": "Khi cần rà soát ĐTM/giấy phép môi trường/cam kết môi trường.",
+        "level": "Chuẩn",
+        "platforms": [
+          "ChatGPT",
+          "NotebookLM",
+          "Gemini"
+        ],
+        "prompt": "Đóng vai chuyên viên thủ tục môi trường dự án.\n\nRà soát yêu cầu hồ sơ môi trường cho dự án sau.\n\nĐầu ra gồm:\n1. Hồ sơ môi trường có thể cần\n2. Hồ sơ hiện đã có\n3. Hồ sơ còn thiếu\n4. Điểm cần xác nhận với CĐT/tư vấn môi trường\n5. Rủi ro nếu thiếu phê duyệt/giấy phép\n6. Ảnh hưởng đến tiến độ triển khai\n7. Khuyến nghị hành động\n\nThông tin dự án:\n[dán nội dung vào đây]",
+        "notebooklm_prompt": "Chỉ sử dụng các nguồn đã upload trong notebook này.\nNếu nguồn không có thông tin, ghi rõ: \"Không thấy trong nguồn\".\nƯu tiên trích dẫn nguồn nếu NotebookLM hỗ trợ.\n\nĐóng vai chuyên viên thủ tục môi trường dự án.\n\nRà soát yêu cầu hồ sơ môi trường cho dự án sau.\n\nĐầu ra gồm:\n1. Hồ sơ môi trường có thể cần\n2. Hồ sơ hiện đã có\n3. Hồ sơ còn thiếu\n4. Điểm cần xác nhận với CĐT/tư vấn môi trường\n5. Rủi ro nếu thiếu phê duyệt/giấy phép\n6. Ảnh hưởng đến tiến độ triển khai\n7. Khuyến nghị hành động\n\nThông tin dự án:\n[dán nội dung vào đây]",
+        "gemini_prompt": "Đóng vai chuyên viên thủ tục môi trường dự án.\n\nRà soát yêu cầu hồ sơ môi trường cho dự án sau.\n\nĐầu ra gồm:\n1. Hồ sơ môi trường có thể cần\n2. Hồ sơ hiện đã có\n3. Hồ sơ còn thiếu\n4. Điểm cần xác nhận với CĐT/tư vấn môi trường\n5. Rủi ro nếu thiếu phê duyệt/giấy phép\n6. Ảnh hưởng đến tiến độ triển khai\n7. Khuyến nghị hành động\n\nThông tin dự án:\n[dán nội dung vào đây]",
+        "input_guide": {
+          "items": [
+            "Loại thủ tục: GPXD, PCCC, ĐTM, GPMT, nghiệm thu hoặc điều chỉnh hồ sơ.",
+            "Trạng thái hiện tại: đã có, chưa có, đang nộp, đang chờ duyệt, cần điều chỉnh.",
+            "Mốc triển khai dự kiến và rủi ro nếu hồ sơ chậm.",
+            "Đơn vị phụ trách và hồ sơ còn thiếu nếu biết."
+          ],
+          "example": "Dự án cải tạo nhà xưởng; PCCC đang thẩm duyệt; GPXD chưa rõ có cần điều chỉnh không; dự kiến thi công 01/09; cần legal gate trước triển khai.",
+          "placeholder": "Loại thủ tục; trạng thái hồ sơ; mốc triển khai; hồ sơ còn thiếu; owner; rủi ro nếu chậm..."
+        }
+      },
+      {
+        "title": "Missing info môi trường",
+        "use": "Khi cần gửi danh sách thông tin còn thiếu cho CĐT/tư vấn.",
+        "level": "Nhanh",
+        "platforms": [
+          "ChatGPT",
+          "NotebookLM",
+          "Gemini"
+        ],
+        "prompt": "Tạo bảng missing information cho hồ sơ môi trường.\n\nĐầu ra gồm:\n- Thông tin còn thiếu\n- Mục đích sử dụng\n- Ảnh hưởng nếu thiếu\n- Người cần cung cấp\n- Deadline đề xuất\n- Câu hỏi làm rõ\n\nThông tin hiện có:\n[dán nội dung vào đây]",
+        "notebooklm_prompt": "Chỉ sử dụng các nguồn đã upload trong notebook này.\nNếu nguồn không có thông tin, ghi rõ: \"Không thấy trong nguồn\".\nƯu tiên trích dẫn nguồn nếu NotebookLM hỗ trợ.\n\nTạo bảng missing information cho hồ sơ môi trường.\n\nĐầu ra gồm:\n- Thông tin còn thiếu\n- Mục đích sử dụng\n- Ảnh hưởng nếu thiếu\n- Người cần cung cấp\n- Deadline đề xuất\n- Câu hỏi làm rõ\n\nThông tin hiện có:\n[dán nội dung vào đây]",
+        "gemini_prompt": "Tạo bảng missing information cho hồ sơ môi trường.\n\nĐầu ra gồm:\n- Thông tin còn thiếu\n- Mục đích sử dụng\n- Ảnh hưởng nếu thiếu\n- Người cần cung cấp\n- Deadline đề xuất\n- Câu hỏi làm rõ\n\nThông tin hiện có:\n[dán nội dung vào đây]",
+        "input_guide": {
+          "items": [
+            "Loại thủ tục: GPXD, PCCC, ĐTM, GPMT, nghiệm thu hoặc điều chỉnh hồ sơ.",
+            "Trạng thái hiện tại: đã có, chưa có, đang nộp, đang chờ duyệt, cần điều chỉnh.",
+            "Mốc triển khai dự kiến và rủi ro nếu hồ sơ chậm.",
+            "Đơn vị phụ trách và hồ sơ còn thiếu nếu biết."
+          ],
+          "example": "Dự án cải tạo nhà xưởng; PCCC đang thẩm duyệt; GPXD chưa rõ có cần điều chỉnh không; dự kiến thi công 01/09; cần legal gate trước triển khai.",
+          "placeholder": "Loại thủ tục; trạng thái hồ sơ; mốc triển khai; hồ sơ còn thiếu; owner; rủi ro nếu chậm..."
+        }
+      }
+    ]
+  },
+  {
+    "department": "Pháp lý dự án",
+    "tool": "Legal Gate trước triển khai",
+    "description": "Quyết định được thi công, chưa được thi công hay được làm có điều kiện.",
+    "platforms": [
+      "ChatGPT",
+      "Gemini"
+    ],
+    "prompts": [
+      {
+        "title": "Decision gate pháp lý trước thi công",
+        "use": "Khi cần báo cáo sếp/CĐT về điều kiện pháp lý trước khi triển khai.",
+        "level": "Chuyên sâu",
+        "platforms": [
+          "ChatGPT",
+          "Gemini"
+        ],
+        "prompt": "Đóng vai trọng tài pháp lý dự án.\n\nĐánh giá điều kiện pháp lý trước khi triển khai theo cấu trúc:\n1. Fact\n2. Assumption\n3. Hồ sơ blocking\n4. Hồ sơ non-blocking\n5. Rủi ro nếu triển khai ngay\n6. Điều kiện được đi tiếp\n7. Điều kiện phải dừng\n8. Điều kiện được đi tiếp có kiểm soát\n9. Kết luận: Dừng / Làm có điều kiện / Triển khai\n\nThông tin:\n[dán nội dung vào đây]",
+        "gemini_prompt": "Đóng vai trọng tài pháp lý dự án.\n\nĐánh giá điều kiện pháp lý trước khi triển khai theo cấu trúc:\n1. Fact\n2. Assumption\n3. Hồ sơ blocking\n4. Hồ sơ non-blocking\n5. Rủi ro nếu triển khai ngay\n6. Điều kiện được đi tiếp\n7. Điều kiện phải dừng\n8. Điều kiện được đi tiếp có kiểm soát\n9. Kết luận: Dừng / Làm có điều kiện / Triển khai\n\nThông tin:\n[dán nội dung vào đây]",
+        "input_guide": {
+          "items": [
+            "Loại thủ tục: GPXD, PCCC, ĐTM, GPMT, nghiệm thu hoặc điều chỉnh hồ sơ.",
+            "Trạng thái hiện tại: đã có, chưa có, đang nộp, đang chờ duyệt, cần điều chỉnh.",
+            "Mốc triển khai dự kiến và rủi ro nếu hồ sơ chậm.",
+            "Đơn vị phụ trách và hồ sơ còn thiếu nếu biết."
+          ],
+          "example": "Dự án cải tạo nhà xưởng; PCCC đang thẩm duyệt; GPXD chưa rõ có cần điều chỉnh không; dự kiến thi công 01/09; cần legal gate trước triển khai.",
+          "placeholder": "Loại thủ tục; trạng thái hồ sơ; mốc triển khai; hồ sơ còn thiếu; owner; rủi ro nếu chậm..."
+        }
+      }
+    ]
+  },
+  {
+    "department": "Kinh doanh",
+    "tool": "Phân tích khách hàng & cơ hội",
+    "description": "Dùng khi có lead, khách hàng mới hoặc dự án tiềm năng cần đánh giá cơ hội.",
+    "platforms": [
+      "ChatGPT",
+      "Gemini"
+    ],
+    "prompts": [
+      {
+        "title": "Phân tích nhu cầu và pain point khách hàng",
+        "use": "Khi chuẩn bị tiếp cận hoặc sau cuộc họp với khách hàng.",
+        "level": "Chuẩn",
+        "platforms": [
+          "ChatGPT",
+          "Gemini"
+        ],
+        "prompt": "Đóng vai chuyên viên phát triển kinh doanh.\n\nPhân tích khách hàng/cơ hội sau theo cấu trúc:\n1. Thông tin khách hàng\n2. Nhu cầu chính\n3. Pain point có thể có\n4. Dự án/cơ hội liên quan\n5. Mức độ phù hợp với năng lực công ty\n6. Rào cản tiếp cận\n7. Câu hỏi cần hỏi thêm\n8. Hướng tiếp cận đề xuất\n\nThông tin:\n[dán nội dung vào đây]",
+        "gemini_prompt": "Đóng vai chuyên viên phát triển kinh doanh.\n\nPhân tích khách hàng/cơ hội sau theo cấu trúc:\n1. Thông tin khách hàng\n2. Nhu cầu chính\n3. Pain point có thể có\n4. Dự án/cơ hội liên quan\n5. Mức độ phù hợp với năng lực công ty\n6. Rào cản tiếp cận\n7. Câu hỏi cần hỏi thêm\n8. Hướng tiếp cận đề xuất\n\nThông tin:\n[dán nội dung vào đây]",
+        "input_guide": {
+          "items": [
+            "Thông tin khách hàng, nhu cầu, pain point, giá trị cơ hội, giai đoạn bán hàng.",
+            "Mục tiêu: phân tích khách hàng, chuẩn bị họp, viết proposal, follow-up.",
+            "Nếu là email/proposal, nhập thông điệp muốn truyền tải.",
+            "Next action mong muốn sau khi AI xử lý."
+          ],
+          "example": "Khách hàng KVC cần cải tạo nhà xưởng; pain point tiến độ gấp; mục tiêu chuẩn bị follow-up và hướng tiếp cận.",
+          "placeholder": "Khách hàng; nhu cầu; pain point; giá trị cơ hội; stage; mục tiêu xử lý; next action..."
+        }
+      },
+      {
+        "title": "Chuẩn bị câu hỏi họp khách hàng",
+        "use": "Khi cần chuẩn bị agenda và câu hỏi khai thác nhu cầu.",
+        "level": "Nhanh",
+        "platforms": [
+          "ChatGPT",
+          "Gemini"
+        ],
+        "prompt": "Tạo bộ câu hỏi họp khách hàng cho cơ hội sau.\n\nĐầu ra gồm:\n1. Agenda đề xuất\n2. Câu hỏi về nhu cầu\n3. Câu hỏi về ngân sách\n4. Câu hỏi về tiến độ\n5. Câu hỏi về tiêu chí lựa chọn nhà thầu\n6. Câu hỏi về rủi ro/điểm đau\n7. Talking points cần nhấn mạnh\n\nThông tin khách hàng/cơ hội:\n[dán nội dung vào đây]",
+        "gemini_prompt": "Tạo bộ câu hỏi họp khách hàng cho cơ hội sau.\n\nĐầu ra gồm:\n1. Agenda đề xuất\n2. Câu hỏi về nhu cầu\n3. Câu hỏi về ngân sách\n4. Câu hỏi về tiến độ\n5. Câu hỏi về tiêu chí lựa chọn nhà thầu\n6. Câu hỏi về rủi ro/điểm đau\n7. Talking points cần nhấn mạnh\n\nThông tin khách hàng/cơ hội:\n[dán nội dung vào đây]",
+        "input_guide": {
+          "items": [
+            "Thông tin khách hàng, nhu cầu, pain point, giá trị cơ hội, giai đoạn bán hàng.",
+            "Mục tiêu: phân tích khách hàng, chuẩn bị họp, viết proposal, follow-up.",
+            "Nếu là email/proposal, nhập thông điệp muốn truyền tải.",
+            "Next action mong muốn sau khi AI xử lý."
+          ],
+          "example": "Khách hàng KVC cần cải tạo nhà xưởng; pain point tiến độ gấp; mục tiêu chuẩn bị follow-up và hướng tiếp cận.",
+          "placeholder": "Khách hàng; nhu cầu; pain point; giá trị cơ hội; stage; mục tiêu xử lý; next action..."
+        }
+      }
+    ]
+  },
+  {
+    "department": "Kinh doanh",
+    "tool": "Phân tích tài chính cơ hội / dự án",
+    "description": "Đánh giá doanh thu, chi phí, lợi nhuận và rủi ro tài chính sơ bộ.",
+    "platforms": [
+      "ChatGPT",
+      "Gemini"
+    ],
+    "prompts": [
+      {
+        "title": "Phân tích hiệu quả tài chính sơ bộ",
+        "use": "Khi cần đánh giá một cơ hội/dự án có đáng theo đuổi không.",
+        "level": "Chuẩn",
+        "platforms": [
+          "ChatGPT",
+          "Gemini"
+        ],
+        "prompt": "Đóng vai chuyên viên phân tích tài chính kinh doanh.\n\nPhân tích cơ hội/dự án sau theo cấu trúc:\n1. Doanh thu dự kiến\n2. Chi phí chính\n3. Biên lợi nhuận dự kiến\n4. Rủi ro tài chính\n5. Điều kiện thương mại cần kiểm soát\n6. Điểm chưa rõ về số liệu\n7. Khuyến nghị có nên tiếp tục theo đuổi hay không\n\nDữ liệu đầu vào:\n[dán thông tin vào đây]",
+        "gemini_prompt": "Đóng vai chuyên viên phân tích tài chính kinh doanh.\n\nPhân tích cơ hội/dự án sau theo cấu trúc:\n1. Doanh thu dự kiến\n2. Chi phí chính\n3. Biên lợi nhuận dự kiến\n4. Rủi ro tài chính\n5. Điều kiện thương mại cần kiểm soát\n6. Điểm chưa rõ về số liệu\n7. Khuyến nghị có nên tiếp tục theo đuổi hay không\n\nDữ liệu đầu vào:\n[dán thông tin vào đây]",
+        "input_guide": {
+          "items": [
+            "Doanh thu, chi phí, tạm ứng, điều kiện thanh toán, retention, mốc thu/chi.",
+            "Rủi ro âm dòng tiền hoặc điều khoản thương mại đang lo ngại.",
+            "Nếu có bảng theo tháng, dán nguyên bảng.",
+            "Mục tiêu: đánh giá hiệu quả, giảm áp lực dòng tiền hay báo cáo lãnh đạo."
+          ],
+          "example": "Doanh thu 30 tỷ; tạm ứng 10%; thanh toán nghiệm thu tháng; vật tư 18 tỷ trả trước 60%; retention 5%.",
+          "placeholder": "Doanh thu; chi phí; tạm ứng; thanh toán; retention; mốc thu/chi; rủi ro tài chính..."
+        }
+      },
+      {
+        "title": "Phân tích điều kiện thương mại ảnh hưởng lợi nhuận",
+        "use": "Khi cần kiểm tra tạm ứng, thanh toán, bảo hành, phạt, retention.",
+        "level": "Chuyên sâu",
+        "platforms": [
+          "ChatGPT",
+          "Gemini"
+        ],
+        "prompt": "Phân tích các điều kiện thương mại sau và ảnh hưởng đến lợi nhuận/dòng tiền.\n\nCấu trúc:\n1. Điều kiện thương mại chính\n2. Ảnh hưởng đến doanh thu\n3. Ảnh hưởng đến chi phí\n4. Ảnh hưởng đến dòng tiền\n5. Rủi ro phạt/chậm thanh toán/retention\n6. Điều khoản cần đàm phán lại\n7. Khuyến nghị\n\nThông tin:\n[dán nội dung vào đây]",
+        "gemini_prompt": "Phân tích các điều kiện thương mại sau và ảnh hưởng đến lợi nhuận/dòng tiền.\n\nCấu trúc:\n1. Điều kiện thương mại chính\n2. Ảnh hưởng đến doanh thu\n3. Ảnh hưởng đến chi phí\n4. Ảnh hưởng đến dòng tiền\n5. Rủi ro phạt/chậm thanh toán/retention\n6. Điều khoản cần đàm phán lại\n7. Khuyến nghị\n\nThông tin:\n[dán nội dung vào đây]",
+        "input_guide": {
+          "items": [
+            "Doanh thu, chi phí, tạm ứng, điều kiện thanh toán, retention, mốc thu/chi.",
+            "Rủi ro âm dòng tiền hoặc điều khoản thương mại đang lo ngại.",
+            "Nếu có bảng theo tháng, dán nguyên bảng.",
+            "Mục tiêu: đánh giá hiệu quả, giảm áp lực dòng tiền hay báo cáo lãnh đạo."
+          ],
+          "example": "Doanh thu 30 tỷ; tạm ứng 10%; thanh toán nghiệm thu tháng; vật tư 18 tỷ trả trước 60%; retention 5%.",
+          "placeholder": "Doanh thu; chi phí; tạm ứng; thanh toán; retention; mốc thu/chi; rủi ro tài chính..."
+        }
+      }
+    ]
+  },
+  {
+    "department": "Kinh doanh",
+    "tool": "Phân tích dòng tiền",
+    "description": "Xem dự án có gây áp lực vốn, âm dòng tiền hoặc cần điều chỉnh điều kiện thanh toán không.",
+    "platforms": [
+      "ChatGPT",
+      "Gemini"
+    ],
+    "prompts": [
+      {
+        "title": "Lập dòng tiền dự án theo tháng",
+        "use": "Khi có kế hoạch thu/chi hoặc điều kiện thanh toán dự kiến.",
+        "level": "Chuẩn",
+        "platforms": [
+          "ChatGPT",
+          "Gemini"
+        ],
+        "prompt": "Phân tích dòng tiền dự án theo dữ liệu sau.\n\nYêu cầu đầu ra dạng bảng theo tháng gồm:\n1. Doanh thu/thu tiền dự kiến\n2. Chi phí/chi tiền dự kiến\n3. Dòng tiền thuần\n4. Dòng tiền lũy kế\n5. Tháng có rủi ro âm dòng tiền\n6. Nguyên nhân chính\n7. Khuyến nghị điều chỉnh điều kiện thanh toán hoặc kế hoạch chi phí\n\nDữ liệu:\n[dán dữ liệu vào đây]",
+        "gemini_prompt": "Phân tích dòng tiền dự án theo dữ liệu sau.\n\nYêu cầu đầu ra dạng bảng theo tháng gồm:\n1. Doanh thu/thu tiền dự kiến\n2. Chi phí/chi tiền dự kiến\n3. Dòng tiền thuần\n4. Dòng tiền lũy kế\n5. Tháng có rủi ro âm dòng tiền\n6. Nguyên nhân chính\n7. Khuyến nghị điều chỉnh điều kiện thanh toán hoặc kế hoạch chi phí\n\nDữ liệu:\n[dán dữ liệu vào đây]",
+        "input_guide": {
+          "items": [
+            "Doanh thu, chi phí, tạm ứng, điều kiện thanh toán, retention, mốc thu/chi.",
+            "Rủi ro âm dòng tiền hoặc điều khoản thương mại đang lo ngại.",
+            "Nếu có bảng theo tháng, dán nguyên bảng.",
+            "Mục tiêu: đánh giá hiệu quả, giảm áp lực dòng tiền hay báo cáo lãnh đạo."
+          ],
+          "example": "Doanh thu 30 tỷ; tạm ứng 10%; thanh toán nghiệm thu tháng; vật tư 18 tỷ trả trước 60%; retention 5%.",
+          "placeholder": "Doanh thu; chi phí; tạm ứng; thanh toán; retention; mốc thu/chi; rủi ro tài chính..."
+        }
+      },
+      {
+        "title": "Đề xuất giảm áp lực dòng tiền",
+        "use": "Khi dự án có nguy cơ âm dòng tiền hoặc thiếu vốn lưu động.",
+        "level": "Chuyên sâu",
+        "platforms": [
+          "ChatGPT",
+          "Gemini"
+        ],
+        "prompt": "Đóng vai chuyên viên tài chính dự án.\n\nDựa trên dữ liệu sau, đề xuất phương án giảm áp lực dòng tiền.\n\nCấu trúc:\n1. Vấn đề dòng tiền chính\n2. Thời điểm rủi ro cao nhất\n3. Nguyên nhân\n4. Phương án điều chỉnh thanh toán\n5. Phương án điều chỉnh tiến độ chi phí\n6. Phương án đàm phán với khách hàng/NCC\n7. Khuyến nghị ưu tiên\n\nDữ liệu:\n[dán nội dung vào đây]",
+        "gemini_prompt": "Đóng vai chuyên viên tài chính dự án.\n\nDựa trên dữ liệu sau, đề xuất phương án giảm áp lực dòng tiền.\n\nCấu trúc:\n1. Vấn đề dòng tiền chính\n2. Thời điểm rủi ro cao nhất\n3. Nguyên nhân\n4. Phương án điều chỉnh thanh toán\n5. Phương án điều chỉnh tiến độ chi phí\n6. Phương án đàm phán với khách hàng/NCC\n7. Khuyến nghị ưu tiên\n\nDữ liệu:\n[dán nội dung vào đây]",
+        "input_guide": {
+          "items": [
+            "Doanh thu, chi phí, tạm ứng, điều kiện thanh toán, retention, mốc thu/chi.",
+            "Rủi ro âm dòng tiền hoặc điều khoản thương mại đang lo ngại.",
+            "Nếu có bảng theo tháng, dán nguyên bảng.",
+            "Mục tiêu: đánh giá hiệu quả, giảm áp lực dòng tiền hay báo cáo lãnh đạo."
+          ],
+          "example": "Doanh thu 30 tỷ; tạm ứng 10%; thanh toán nghiệm thu tháng; vật tư 18 tỷ trả trước 60%; retention 5%.",
+          "placeholder": "Doanh thu; chi phí; tạm ứng; thanh toán; retention; mốc thu/chi; rủi ro tài chính..."
+        }
+      }
+    ]
+  },
+  {
+    "department": "Kinh doanh",
+    "tool": "Pipeline Management",
+    "description": "Quản lý phễu cơ hội, xác suất thắng, ưu tiên follow-up và báo cáo pipeline.",
+    "platforms": [
+      "ChatGPT",
+      "Gemini"
+    ],
+    "prompts": [
+      {
+        "title": "Phân tích pipeline tổng thể",
+        "use": "Khi có bảng cơ hội kinh doanh và cần báo cáo nhanh cho quản lý.",
+        "level": "Chuẩn",
+        "platforms": [
+          "ChatGPT",
+          "Gemini"
+        ],
+        "prompt": "Phân tích pipeline kinh doanh sau.\n\nĐầu ra gồm:\n1. Tổng giá trị pipeline\n2. Weighted pipeline theo xác suất thắng\n3. Cơ hội ưu tiên cao\n4. Cơ hội có rủi ro mất\n5. Cơ hội bị treo quá lâu\n6. Action cần làm trong tuần\n7. Nhận xét về chất lượng pipeline\n\nDữ liệu:\n[dán bảng pipeline vào đây]",
+        "gemini_prompt": "Phân tích pipeline kinh doanh sau.\n\nĐầu ra gồm:\n1. Tổng giá trị pipeline\n2. Weighted pipeline theo xác suất thắng\n3. Cơ hội ưu tiên cao\n4. Cơ hội có rủi ro mất\n5. Cơ hội bị treo quá lâu\n6. Action cần làm trong tuần\n7. Nhận xét về chất lượng pipeline\n\nDữ liệu:\n[dán bảng pipeline vào đây]",
+        "input_guide": {
+          "items": [
+            "Danh sách cơ hội, giá trị, stage, xác suất thắng, owner, thời điểm dự kiến ký.",
+            "Cơ hội nóng, cơ hội bị treo và lý do.",
+            "Target doanh thu nếu có để so sánh.",
+            "Action cần làm trong tuần nếu đã biết."
+          ],
+          "example": "Cơ hội A: 20 tỷ, proposal, win rate 40%, owner Nam, close Q3; Cơ hội B treo do chờ ngân sách.",
+          "placeholder": "Tên cơ hội; giá trị; stage; win rate; owner; expected close; risk; next action..."
+        }
+      },
+      {
+        "title": "Tạo báo cáo pipeline cho sếp",
+        "use": "Khi cần báo cáo ngắn gọn tình hình cơ hội kinh doanh.",
+        "level": "Nhanh",
+        "platforms": [
+          "ChatGPT",
+          "Gemini"
+        ],
+        "prompt": "Viết báo cáo pipeline dạng executive summary.\n\nCấu trúc:\n1. Tình hình chung\n2. Top cơ hội quan trọng\n3. Cơ hội có khả năng ký gần nhất\n4. Rủi ro chính\n5. Hành động cần làm\n6. Vấn đề cần sếp hỗ trợ\n\nDữ liệu pipeline:\n[dán dữ liệu vào đây]",
+        "gemini_prompt": "Viết báo cáo pipeline dạng executive summary.\n\nCấu trúc:\n1. Tình hình chung\n2. Top cơ hội quan trọng\n3. Cơ hội có khả năng ký gần nhất\n4. Rủi ro chính\n5. Hành động cần làm\n6. Vấn đề cần sếp hỗ trợ\n\nDữ liệu pipeline:\n[dán dữ liệu vào đây]",
+        "input_guide": {
+          "items": [
+            "Danh sách cơ hội, giá trị, stage, xác suất thắng, owner, thời điểm dự kiến ký.",
+            "Cơ hội nóng, cơ hội bị treo và lý do.",
+            "Target doanh thu nếu có để so sánh.",
+            "Action cần làm trong tuần nếu đã biết."
+          ],
+          "example": "Cơ hội A: 20 tỷ, proposal, win rate 40%, owner Nam, close Q3; Cơ hội B treo do chờ ngân sách.",
+          "placeholder": "Tên cơ hội; giá trị; stage; win rate; owner; expected close; risk; next action..."
+        }
+      }
+    ]
+  },
+  {
+    "department": "Kinh doanh",
+    "tool": "Backlog Analysis",
+    "description": "Theo dõi phần việc đã ký nhưng chưa thực hiện/chưa ghi nhận doanh thu và rủi ro chuyển doanh thu.",
+    "platforms": [
+      "ChatGPT",
+      "Gemini"
+    ],
+    "prompts": [
+      {
+        "title": "Phân tích backlog doanh thu",
+        "use": "Khi cần kiểm tra khả năng chuyển backlog thành doanh thu trong kỳ.",
+        "level": "Chuẩn",
+        "platforms": [
+          "ChatGPT",
+          "Gemini"
+        ],
+        "prompt": "Phân tích backlog sau.\n\nYêu cầu:\n1. Tổng backlog hiện tại\n2. Backlog có khả năng chuyển thành doanh thu trong kỳ\n3. Backlog bị chậm hoặc có rủi ro\n4. Nguyên nhân chính gây chậm\n5. Tác động đến doanh thu/kế hoạch năm\n6. Action cần làm\n7. Khuyến nghị cho quản lý\n\nDữ liệu:\n[dán dữ liệu vào đây]",
+        "gemini_prompt": "Phân tích backlog sau.\n\nYêu cầu:\n1. Tổng backlog hiện tại\n2. Backlog có khả năng chuyển thành doanh thu trong kỳ\n3. Backlog bị chậm hoặc có rủi ro\n4. Nguyên nhân chính gây chậm\n5. Tác động đến doanh thu/kế hoạch năm\n6. Action cần làm\n7. Khuyến nghị cho quản lý\n\nDữ liệu:\n[dán dữ liệu vào đây]",
+        "input_guide": {
+          "items": [
+            "Hợp đồng đã ký, giá trị còn lại, kế hoạch ghi nhận doanh thu.",
+            "Backlog bị chậm và nguyên nhân.",
+            "Backlog có khả năng chuyển doanh thu trong kỳ.",
+            "Target tháng/quý/năm nếu có để AI đánh giá ảnh hưởng."
+          ],
+          "example": "Dự án A backlog 15 tỷ, dự kiến ghi nhận Q3; chậm do chưa bàn giao mặt bằng; ảnh hưởng doanh thu tháng 8.",
+          "placeholder": "Dự án/hợp đồng; giá trị backlog; kế hoạch ghi nhận; nguyên nhân chậm; owner; action..."
+        }
+      },
+      {
+        "title": "Bảng backlog risk",
+        "use": "Khi cần phân loại backlog theo mức độ rủi ro.",
+        "level": "Chuẩn",
+        "platforms": [
+          "ChatGPT",
+          "Gemini"
+        ],
+        "prompt": "Tạo bảng phân loại rủi ro backlog.\n\nĐầu ra gồm:\n- Dự án/hợp đồng\n- Giá trị backlog\n- Thời gian dự kiến chuyển doanh thu\n- Rủi ro chính\n- Mức độ rủi ro\n- Owner xử lý\n- Action tiếp theo\n- Deadline\n\nDữ liệu backlog:\n[dán dữ liệu vào đây]",
+        "gemini_prompt": "Tạo bảng phân loại rủi ro backlog.\n\nĐầu ra gồm:\n- Dự án/hợp đồng\n- Giá trị backlog\n- Thời gian dự kiến chuyển doanh thu\n- Rủi ro chính\n- Mức độ rủi ro\n- Owner xử lý\n- Action tiếp theo\n- Deadline\n\nDữ liệu backlog:\n[dán dữ liệu vào đây]",
+        "input_guide": {
+          "items": [
+            "Hợp đồng đã ký, giá trị còn lại, kế hoạch ghi nhận doanh thu.",
+            "Backlog bị chậm và nguyên nhân.",
+            "Backlog có khả năng chuyển doanh thu trong kỳ.",
+            "Target tháng/quý/năm nếu có để AI đánh giá ảnh hưởng."
+          ],
+          "example": "Dự án A backlog 15 tỷ, dự kiến ghi nhận Q3; chậm do chưa bàn giao mặt bằng; ảnh hưởng doanh thu tháng 8.",
+          "placeholder": "Dự án/hợp đồng; giá trị backlog; kế hoạch ghi nhận; nguyên nhân chậm; owner; action..."
+        }
+      }
+    ]
+  },
+  {
+    "department": "Kinh doanh",
+    "tool": "Proposal / Email thương mại",
+    "description": "Soạn email, follow-up, proposal summary và nội dung giới thiệu năng lực.",
+    "platforms": [
+      "ChatGPT",
+      "Gemini"
+    ],
+    "prompts": [
+      {
+        "title": "Email follow-up khách hàng",
+        "use": "Khi cần nhắc khách hàng sau họp/gửi proposal/báo giá.",
+        "level": "Nhanh",
+        "platforms": [
+          "ChatGPT",
+          "Gemini"
+        ],
+        "prompt": "Viết email follow-up khách hàng.\n\nYêu cầu:\n- Ngắn gọn\n- Lịch sự\n- Nhắc đúng nội dung đã trao đổi\n- Có action mong muốn từ khách hàng\n- Có deadline phản hồi nếu phù hợp\n\nThông tin:\n- Khách hàng:\n- Nội dung đã trao đổi:\n- Tài liệu đã gửi:\n- Hành động mong muốn:\n[dán thêm thông tin vào đây]",
+        "gemini_prompt": "Viết email follow-up khách hàng.\n\nYêu cầu:\n- Ngắn gọn\n- Lịch sự\n- Nhắc đúng nội dung đã trao đổi\n- Có action mong muốn từ khách hàng\n- Có deadline phản hồi nếu phù hợp\n\nThông tin:\n- Khách hàng:\n- Nội dung đã trao đổi:\n- Tài liệu đã gửi:\n- Hành động mong muốn:\n[dán thêm thông tin vào đây]",
+        "input_guide": {
+          "items": [
+            "Thông tin khách hàng, nhu cầu, pain point, giá trị cơ hội, giai đoạn bán hàng.",
+            "Mục tiêu: phân tích khách hàng, chuẩn bị họp, viết proposal, follow-up.",
+            "Nếu là email/proposal, nhập thông điệp muốn truyền tải.",
+            "Next action mong muốn sau khi AI xử lý."
+          ],
+          "example": "Khách hàng KVC cần cải tạo nhà xưởng; pain point tiến độ gấp; mục tiêu chuẩn bị follow-up và hướng tiếp cận.",
+          "placeholder": "Khách hàng; nhu cầu; pain point; giá trị cơ hội; stage; mục tiêu xử lý; next action..."
+        }
+      },
+      {
+        "title": "Executive summary proposal",
+        "use": "Khi cần viết phần tóm tắt đề xuất thương mại/kỹ thuật.",
+        "level": "Chuẩn",
+        "platforms": [
+          "ChatGPT",
+          "Gemini"
+        ],
+        "prompt": "Viết executive summary cho proposal dựa trên thông tin sau.\n\nCấu trúc:\n1. Bối cảnh/nhu cầu khách hàng\n2. Giải pháp đề xuất\n3. Giá trị mang lại\n4. Năng lực phù hợp của công ty\n5. Rủi ro/điều kiện cần lưu ý\n6. Đề xuất bước tiếp theo\n\nThông tin:\n[dán nội dung vào đây]",
+        "gemini_prompt": "Viết executive summary cho proposal dựa trên thông tin sau.\n\nCấu trúc:\n1. Bối cảnh/nhu cầu khách hàng\n2. Giải pháp đề xuất\n3. Giá trị mang lại\n4. Năng lực phù hợp của công ty\n5. Rủi ro/điều kiện cần lưu ý\n6. Đề xuất bước tiếp theo\n\nThông tin:\n[dán nội dung vào đây]",
+        "input_guide": {
+          "items": [
+            "Thông tin khách hàng, nhu cầu, pain point, giá trị cơ hội, giai đoạn bán hàng.",
+            "Mục tiêu: phân tích khách hàng, chuẩn bị họp, viết proposal, follow-up.",
+            "Nếu là email/proposal, nhập thông điệp muốn truyền tải.",
+            "Next action mong muốn sau khi AI xử lý."
+          ],
+          "example": "Khách hàng KVC cần cải tạo nhà xưởng; pain point tiến độ gấp; mục tiêu chuẩn bị follow-up và hướng tiếp cận.",
+          "placeholder": "Khách hàng; nhu cầu; pain point; giá trị cơ hội; stage; mục tiêu xử lý; next action..."
+        }
+      }
+    ]
+  },
+  {
+    "department": "Quản lý nội bộ",
+    "tool": "Biên bản họp & Action List",
+    "description": "Chuyển nội dung họp/email dài thành MoM, action, owner, deadline và issue.",
+    "platforms": [
+      "ChatGPT",
+      "Gemini"
+    ],
+    "prompts": [
+      {
+        "title": "Tạo biên bản họp hành động",
+        "use": "Khi có ghi chú họp thô và cần chuyển thành MoM.",
+        "level": "Chuẩn",
+        "platforms": [
+          "ChatGPT",
+          "Gemini"
+        ],
+        "prompt": "Chuyển nội dung họp sau thành biên bản hành động.\n\nĐầu ra gồm:\n1. Thông tin cuộc họp\n2. Nội dung chính đã trao đổi\n3. Quyết định đã chốt\n4. Action list dạng bảng:\n   - Việc cần làm\n   - Owner\n   - Deadline\n   - Mức ưu tiên\n   - Rủi ro nếu chậm\n5. Vấn đề còn mở\n6. Nội dung cần escalation\n\nGhi chú họp:\n[dán nội dung vào đây]",
+        "gemini_prompt": "Chuyển nội dung họp sau thành biên bản hành động.\n\nĐầu ra gồm:\n1. Thông tin cuộc họp\n2. Nội dung chính đã trao đổi\n3. Quyết định đã chốt\n4. Action list dạng bảng:\n   - Việc cần làm\n   - Owner\n   - Deadline\n   - Mức ưu tiên\n   - Rủi ro nếu chậm\n5. Vấn đề còn mở\n6. Nội dung cần escalation\n\nGhi chú họp:\n[dán nội dung vào đây]",
+        "input_guide": {
+          "items": [
+            "Vấn đề, bối cảnh, các bên liên quan, ảnh hưởng, owner, deadline.",
+            "Nếu báo cáo cho sếp, nêu rõ việc cần sếp quyết định.",
+            "Nếu là action list, nhập việc cần làm, người phụ trách, mốc thời gian.",
+            "Nếu là rủi ro, nhập ảnh hưởng kỹ thuật/tiến độ/chi phí/pháp lý/vận hành."
+          ],
+          "example": "Vấn đề: chậm báo giá; nguyên nhân dự kiến thiếu đầu vào; ảnh hưởng trễ deadline khách hàng; cần quyết định xin gia hạn.",
+          "placeholder": "Vấn đề; bối cảnh; bên liên quan; fact; risk; owner; deadline; quyết định cần xin..."
+        }
+      },
+      {
+        "title": "Email follow-up sau họp",
+        "use": "Khi cần gửi email xác nhận action sau cuộc họp.",
+        "level": "Nhanh",
+        "platforms": [
+          "ChatGPT",
+          "Gemini"
+        ],
+        "prompt": "Viết email follow-up sau cuộc họp.\n\nYêu cầu:\n- Tóm tắt ngắn\n- Nêu rõ action/owner/deadline\n- Không dài dòng\n- Giọng chuyên nghiệp, rõ trách nhiệm\n\nThông tin cuộc họp/action:\n[dán nội dung vào đây]",
+        "gemini_prompt": "Viết email follow-up sau cuộc họp.\n\nYêu cầu:\n- Tóm tắt ngắn\n- Nêu rõ action/owner/deadline\n- Không dài dòng\n- Giọng chuyên nghiệp, rõ trách nhiệm\n\nThông tin cuộc họp/action:\n[dán nội dung vào đây]",
+        "input_guide": {
+          "items": [
+            "Vấn đề, bối cảnh, các bên liên quan, ảnh hưởng, owner, deadline.",
+            "Nếu báo cáo cho sếp, nêu rõ việc cần sếp quyết định.",
+            "Nếu là action list, nhập việc cần làm, người phụ trách, mốc thời gian.",
+            "Nếu là rủi ro, nhập ảnh hưởng kỹ thuật/tiến độ/chi phí/pháp lý/vận hành."
+          ],
+          "example": "Vấn đề: chậm báo giá; nguyên nhân dự kiến thiếu đầu vào; ảnh hưởng trễ deadline khách hàng; cần quyết định xin gia hạn.",
+          "placeholder": "Vấn đề; bối cảnh; bên liên quan; fact; risk; owner; deadline; quyết định cần xin..."
+        }
+      }
+    ]
+  },
+  {
+    "department": "Quản lý nội bộ",
+    "tool": "Phản biện / Trọng tài phương án",
+    "description": "Dùng khi có phương án cần bảo vệ, phản biện hoặc kết luận trung lập.",
+    "platforms": [
+      "ChatGPT",
+      "Gemini"
+    ],
+    "prompts": [
+      {
+        "title": "Bảo vệ phương án",
+        "use": "Khi cần củng cố logic và cách trình bày cho một phương án.",
+        "level": "Chuẩn",
+        "platforms": [
+          "ChatGPT",
+          "Gemini"
+        ],
+        "prompt": "Đóng vai người bảo vệ phương án.\n\nHãy bảo vệ phương án sau theo cấu trúc:\n1. Kết luận nên chọn phương án\n2. Luận điểm chính\n3. Bằng chứng/dữ liệu hỗ trợ\n4. Điều kiện để phương án hiệu quả\n5. Rủi ro đã nhận diện\n6. Cách kiểm soát rủi ro\n7. Cách trả lời phản biện có thể gặp\n\nPhương án:\n[dán nội dung vào đây]",
+        "gemini_prompt": "Đóng vai người bảo vệ phương án.\n\nHãy bảo vệ phương án sau theo cấu trúc:\n1. Kết luận nên chọn phương án\n2. Luận điểm chính\n3. Bằng chứng/dữ liệu hỗ trợ\n4. Điều kiện để phương án hiệu quả\n5. Rủi ro đã nhận diện\n6. Cách kiểm soát rủi ro\n7. Cách trả lời phản biện có thể gặp\n\nPhương án:\n[dán nội dung vào đây]",
+        "input_guide": {
+          "items": [
+            "Phương án gốc hoặc nội dung cần xét.",
+            "Nếu có, nhập riêng luận điểm bảo vệ và luận điểm phản biện.",
+            "Fact đã có, giả định, rủi ro và điểm còn thiếu dữ liệu.",
+            "Quyết định cần đưa ra: dừng, làm có điều kiện hay triển khai."
+          ],
+          "example": "Phương án: tham gia gói thầu X; Bên bảo vệ: cơ hội doanh thu lớn; Bên phản biện: thiếu thời gian báo giá; cần trọng tài kết luận.",
+          "placeholder": "Phương án gốc; luận điểm bảo vệ; luận điểm phản biện; fact; assumption; risk; quyết định cần ra..."
+        }
+      },
+      {
+        "title": "Phản biện phương án",
+        "use": "Khi cần soi điểm yếu, lỗ hổng và giả định nguy hiểm.",
+        "level": "Chuyên sâu",
+        "platforms": [
+          "ChatGPT",
+          "Gemini"
+        ],
+        "prompt": "Đóng vai người phản biện độc lập.\n\nPhản biện phương án sau theo cấu trúc:\n1. Kết luận phản biện\n2. Điểm yếu chính\n3. Giả định nguy hiểm\n4. Rủi ro bị đánh giá thấp\n5. Dữ liệu còn thiếu\n6. Tình huống phương án có thể thất bại\n7. Cách chỉnh để phương án mạnh hơn\n\nPhương án:\n[dán nội dung vào đây]",
+        "gemini_prompt": "Đóng vai người phản biện độc lập.\n\nPhản biện phương án sau theo cấu trúc:\n1. Kết luận phản biện\n2. Điểm yếu chính\n3. Giả định nguy hiểm\n4. Rủi ro bị đánh giá thấp\n5. Dữ liệu còn thiếu\n6. Tình huống phương án có thể thất bại\n7. Cách chỉnh để phương án mạnh hơn\n\nPhương án:\n[dán nội dung vào đây]",
+        "input_guide": {
+          "items": [
+            "Phương án gốc hoặc nội dung cần xét.",
+            "Nếu có, nhập riêng luận điểm bảo vệ và luận điểm phản biện.",
+            "Fact đã có, giả định, rủi ro và điểm còn thiếu dữ liệu.",
+            "Quyết định cần đưa ra: dừng, làm có điều kiện hay triển khai."
+          ],
+          "example": "Phương án: tham gia gói thầu X; Bên bảo vệ: cơ hội doanh thu lớn; Bên phản biện: thiếu thời gian báo giá; cần trọng tài kết luận.",
+          "placeholder": "Phương án gốc; luận điểm bảo vệ; luận điểm phản biện; fact; assumption; risk; quyết định cần ra..."
+        }
+      },
+      {
+        "title": "Trọng tài trung lập",
+        "use": "Khi đã có phương án gốc, phần bảo vệ và phần phản biện.",
+        "level": "Chuyên sâu",
+        "platforms": [
+          "ChatGPT",
+          "Gemini"
+        ],
+        "prompt": "Đóng vai Trọng tài trung lập.\n\nĐọc phương án gốc, luận điểm bảo vệ và luận điểm phản biện dưới đây.\nKhông đứng về bên nào nếu chưa đủ fact.\n\nKết luận theo cấu trúc:\n1. Bản chất vấn đề\n2. Fact\n3. Assumption\n4. Unresolved Risk\n5. Mâu thuẫn chính giữa hai bên\n6. Decision Gate\n7. Final Recommendation: Dừng / Làm có điều kiện / Triển khai\n8. Điều kiện tối thiểu nếu được làm tiếp\n\nNội dung:\n[dán nội dung vào đây]",
+        "gemini_prompt": "Đóng vai Trọng tài trung lập.\n\nĐọc phương án gốc, luận điểm bảo vệ và luận điểm phản biện dưới đây.\nKhông đứng về bên nào nếu chưa đủ fact.\n\nKết luận theo cấu trúc:\n1. Bản chất vấn đề\n2. Fact\n3. Assumption\n4. Unresolved Risk\n5. Mâu thuẫn chính giữa hai bên\n6. Decision Gate\n7. Final Recommendation: Dừng / Làm có điều kiện / Triển khai\n8. Điều kiện tối thiểu nếu được làm tiếp\n\nNội dung:\n[dán nội dung vào đây]",
+        "input_guide": {
+          "items": [
+            "Phương án gốc hoặc nội dung cần xét.",
+            "Nếu có, nhập riêng luận điểm bảo vệ và luận điểm phản biện.",
+            "Fact đã có, giả định, rủi ro và điểm còn thiếu dữ liệu.",
+            "Quyết định cần đưa ra: dừng, làm có điều kiện hay triển khai."
+          ],
+          "example": "Phương án: tham gia gói thầu X; Bên bảo vệ: cơ hội doanh thu lớn; Bên phản biện: thiếu thời gian báo giá; cần trọng tài kết luận.",
+          "placeholder": "Phương án gốc; luận điểm bảo vệ; luận điểm phản biện; fact; assumption; risk; quyết định cần ra..."
+        }
+      }
+    ]
+  },
+  {
+    "department": "Quản lý nội bộ",
+    "tool": "Báo cáo cho sếp",
+    "description": "Chuyển thông tin thô thành executive summary, báo cáo rủi ro hoặc đề xuất quyết định.",
+    "platforms": [
+      "ChatGPT",
+      "Gemini"
+    ],
+    "prompts": [
+      {
+        "title": "Executive summary",
+        "use": "Khi cần báo cáo ngắn cho quản lý.",
+        "level": "Nhanh",
+        "platforms": [
+          "ChatGPT",
+          "Gemini"
+        ],
+        "prompt": "Viết executive summary từ nội dung sau.\n\nYêu cầu:\n- Ngắn gọn\n- Đi thẳng vào bản chất\n- Không văn chương\n- Có kết luận và khuyến nghị\n\nCấu trúc:\n1. Kết luận chính\n2. Bản chất vấn đề\n3. Ảnh hưởng\n4. Rủi ro\n5. Việc cần quyết định\n6. Khuyến nghị\n\nNội dung:\n[dán nội dung vào đây]",
+        "gemini_prompt": "Viết executive summary từ nội dung sau.\n\nYêu cầu:\n- Ngắn gọn\n- Đi thẳng vào bản chất\n- Không văn chương\n- Có kết luận và khuyến nghị\n\nCấu trúc:\n1. Kết luận chính\n2. Bản chất vấn đề\n3. Ảnh hưởng\n4. Rủi ro\n5. Việc cần quyết định\n6. Khuyến nghị\n\nNội dung:\n[dán nội dung vào đây]",
+        "input_guide": {
+          "items": [
+            "Vấn đề, bối cảnh, các bên liên quan, ảnh hưởng, owner, deadline.",
+            "Nếu báo cáo cho sếp, nêu rõ việc cần sếp quyết định.",
+            "Nếu là action list, nhập việc cần làm, người phụ trách, mốc thời gian.",
+            "Nếu là rủi ro, nhập ảnh hưởng kỹ thuật/tiến độ/chi phí/pháp lý/vận hành."
+          ],
+          "example": "Vấn đề: chậm báo giá; nguyên nhân dự kiến thiếu đầu vào; ảnh hưởng trễ deadline khách hàng; cần quyết định xin gia hạn.",
+          "placeholder": "Vấn đề; bối cảnh; bên liên quan; fact; risk; owner; deadline; quyết định cần xin..."
+        }
+      },
+      {
+        "title": "Báo cáo rủi ro",
+        "use": "Khi cần trình bày rủi ro và phương án xử lý.",
+        "level": "Chuẩn",
+        "platforms": [
+          "ChatGPT",
+          "Gemini"
+        ],
+        "prompt": "Chuyển nội dung sau thành báo cáo rủi ro.\n\nCấu trúc:\n1. Mô tả vấn đề\n2. Fact\n3. Assumption\n4. Rủi ro chính\n5. Mức độ ảnh hưởng: kỹ thuật / tiến độ / chi phí / pháp lý / vận hành\n6. Phương án xử lý\n7. Owner\n8. Deadline\n9. Khuyến nghị escalation nếu cần\n\nNội dung:\n[dán nội dung vào đây]",
+        "gemini_prompt": "Chuyển nội dung sau thành báo cáo rủi ro.\n\nCấu trúc:\n1. Mô tả vấn đề\n2. Fact\n3. Assumption\n4. Rủi ro chính\n5. Mức độ ảnh hưởng: kỹ thuật / tiến độ / chi phí / pháp lý / vận hành\n6. Phương án xử lý\n7. Owner\n8. Deadline\n9. Khuyến nghị escalation nếu cần\n\nNội dung:\n[dán nội dung vào đây]",
+        "input_guide": {
+          "items": [
+            "Vấn đề, bối cảnh, các bên liên quan, ảnh hưởng, owner, deadline.",
+            "Nếu báo cáo cho sếp, nêu rõ việc cần sếp quyết định.",
+            "Nếu là action list, nhập việc cần làm, người phụ trách, mốc thời gian.",
+            "Nếu là rủi ro, nhập ảnh hưởng kỹ thuật/tiến độ/chi phí/pháp lý/vận hành."
+          ],
+          "example": "Vấn đề: chậm báo giá; nguyên nhân dự kiến thiếu đầu vào; ảnh hưởng trễ deadline khách hàng; cần quyết định xin gia hạn.",
+          "placeholder": "Vấn đề; bối cảnh; bên liên quan; fact; risk; owner; deadline; quyết định cần xin..."
+        }
+      }
+    ]
+  },
+  {
+    "department": "Tool Tricks",
+    "tool": "Prompt Doctor",
+    "description": "Sửa prompt mơ hồ thành prompt rõ vai trò, bối cảnh, nhiệm vụ, đầu ra và tiêu chí kiểm tra.",
+    "platforms": [
+      "ChatGPT",
+      "Gemini"
+    ],
+    "prompts": [
+      {
+        "title": "Nâng cấp prompt thô",
+        "use": "Khi người dùng có prompt ngắn/mơ hồ và muốn biến thành prompt dùng được.",
+        "level": "Chuẩn",
+        "platforms": [
+          "ChatGPT",
+          "Gemini"
+        ],
+        "prompt": "Đóng vai prompt editor.\n\nHãy sửa prompt thô dưới đây thành prompt tốt hơn.\n\nYêu cầu prompt mới phải có:\n1. Vai trò AI\n2. Bối cảnh\n3. Nhiệm vụ cụ thể\n4. Định dạng đầu ra\n5. Tiêu chí kiểm tra\n6. Cảnh báo không suy diễn nếu thiếu dữ liệu\n\nĐầu ra gồm:\n- Nhận xét prompt gốc yếu ở đâu\n- Prompt đã chỉnh sửa\n- Gợi ý cách dùng\n\nPrompt thô:\n[dán prompt vào đây]",
+        "input_guide": {
+          "items": [
+            "Nhập bối cảnh, mục tiêu, dữ liệu chính, vấn đề cần xử lý và kết quả mong muốn.",
+            "Nếu là prompt dùng nhanh, chỉ cần dán nội dung cần phân tích.",
+            "Nếu dữ liệu thiếu, AI sẽ hỏi lại trước khi kết luận."
+          ],
+          "example": "Dán nội dung cần xử lý và nêu rõ muốn AI tóm tắt, phản biện, tạo checklist, tạo câu hỏi hay lập action.",
+          "placeholder": "Bối cảnh; dữ liệu chính; vấn đề cần xử lý; kết quả mong muốn..."
+        }
+      },
+      {
+        "title": "Rút gọn prompt dài",
+        "use": "Khi prompt quá dài, khó dùng lại.",
+        "level": "Nhanh",
+        "platforms": [
+          "ChatGPT",
+          "Gemini"
+        ],
+        "prompt": "Đóng vai prompt editor.\n\nRút gọn prompt dưới đây nhưng vẫn giữ đủ:\n1. Vai trò\n2. Nhiệm vụ\n3. Định dạng đầu ra\n4. Điều kiện không được suy diễn\n\nYêu cầu:\n- Ngắn hơn bản gốc ít nhất 40%\n- Dùng được ngay\n- Không làm mất ý chính\n\nPrompt cần rút gọn:\n[dán prompt vào đây]",
+        "input_guide": {
+          "items": [
+            "Nhập bối cảnh, mục tiêu, dữ liệu chính, vấn đề cần xử lý và kết quả mong muốn.",
+            "Nếu là prompt dùng nhanh, chỉ cần dán nội dung cần phân tích.",
+            "Nếu dữ liệu thiếu, AI sẽ hỏi lại trước khi kết luận."
+          ],
+          "example": "Dán nội dung cần xử lý và nêu rõ muốn AI tóm tắt, phản biện, tạo checklist, tạo câu hỏi hay lập action.",
+          "placeholder": "Bối cảnh; dữ liệu chính; vấn đề cần xử lý; kết quả mong muốn..."
+        }
+      }
+    ]
+  },
+  {
+    "department": "Tool Tricks",
+    "tool": "AI Selector",
+    "description": "Gợi ý nên dùng ChatGPT/Gemini hay NotebookLM theo loại việc và dữ liệu đầu vào.",
+    "platforms": [
+      "ChatGPT",
+      "Gemini"
+    ],
+    "prompts": [
+      {
+        "title": "Chọn AI phù hợp cho việc cần làm",
+        "use": "Khi chưa biết nên dùng ChatGPT, Gemini hay NotebookLM.",
+        "level": "Nhanh",
+        "platforms": [
+          "ChatGPT",
+          "Gemini"
+        ],
+        "prompt": "Đóng vai tư vấn sử dụng AI nội bộ.\n\nDựa trên nhu cầu dưới đây, hãy khuyến nghị nên dùng:\n- ChatGPT/Gemini\n- NotebookLM\n- Kết hợp cả hai\n\nCấu trúc đầu ra:\n1. Việc cần làm là gì\n2. Công cụ nên dùng\n3. Vì sao\n4. Dữ liệu đầu vào cần chuẩn bị\n5. Prompt nên dùng\n6. Lưu ý kiểm tra kết quả\n\nNhu cầu:\n[dán nhu cầu vào đây]",
+        "input_guide": {
+          "items": [
+            "Nhập bối cảnh, mục tiêu, dữ liệu chính, vấn đề cần xử lý và kết quả mong muốn.",
+            "Nếu là prompt dùng nhanh, chỉ cần dán nội dung cần phân tích.",
+            "Nếu dữ liệu thiếu, AI sẽ hỏi lại trước khi kết luận."
+          ],
+          "example": "Dán nội dung cần xử lý và nêu rõ muốn AI tóm tắt, phản biện, tạo checklist, tạo câu hỏi hay lập action.",
+          "placeholder": "Bối cảnh; dữ liệu chính; vấn đề cần xử lý; kết quả mong muốn..."
+        }
+      }
+    ]
+  },
+  {
+    "department": "Tool Tricks",
+    "tool": "FAR nhanh",
+    "description": "Tách nhanh Fact / Assumption / Risk / Missing data / Next action.",
+    "platforms": [
+      "ChatGPT",
+      "NotebookLM",
+      "Gemini"
+    ],
+    "prompts": [
+      {
+        "title": "Fact / Assumption / Risk",
+        "use": "Khi cần làm rõ đâu là sự thật, đâu là giả định, đâu là rủi ro.",
+        "level": "Chuẩn",
+        "platforms": [
+          "ChatGPT",
+          "NotebookLM",
+          "Gemini"
+        ],
+        "prompt": "Tách nội dung sau thành bảng:\n1. Fact: thông tin đã có căn cứ\n2. Assumption: giả định/chưa được xác nhận\n3. Risk: rủi ro nếu giả định sai\n4. Missing data: dữ liệu cần bổ sung\n5. Next action: việc cần làm tiếp theo\n\nYêu cầu:\n- Không biến giả định thành sự thật.\n- Nếu thiếu dữ liệu, nói rõ thiếu gì.\n\nNội dung:\n[dán nội dung vào đây]",
+        "notebooklm_prompt": "Chỉ sử dụng các nguồn đã upload trong notebook này.\n\nTách nội dung từ nguồn thành bảng:\n1. Fact: thông tin có trong nguồn\n2. Assumption: suy đoán/chưa được nguồn xác nhận\n3. Risk: rủi ro nếu giả định sai\n4. Missing data: dữ liệu không thấy trong nguồn\n5. Next action: việc cần làm tiếp theo\n\nNếu không thấy thông tin, ghi rõ: \"Không thấy trong nguồn\".\nƯu tiên trích dẫn nguồn nếu NotebookLM hỗ trợ.",
+        "input_guide": {
+          "items": [
+            "Nhập bối cảnh, mục tiêu, dữ liệu chính, vấn đề cần xử lý và kết quả mong muốn.",
+            "Nếu là prompt dùng nhanh, chỉ cần dán nội dung cần phân tích.",
+            "Nếu dữ liệu thiếu, AI sẽ hỏi lại trước khi kết luận."
+          ],
+          "example": "Dán nội dung cần xử lý và nêu rõ muốn AI tóm tắt, phản biện, tạo checklist, tạo câu hỏi hay lập action.",
+          "placeholder": "Bối cảnh; dữ liệu chính; vấn đề cần xử lý; kết quả mong muốn..."
+        }
+      }
+    ]
+  },
+  {
+    "department": "Tool Tricks",
+    "tool": "Decision Gate",
+    "description": "Xác định điều kiện đi tiếp, dừng hoặc đi tiếp có kiểm soát.",
+    "platforms": [
+      "ChatGPT",
+      "Gemini"
+    ],
+    "prompts": [
+      {
+        "title": "Xác định decision gate",
+        "use": "Khi cần quyết định có tiếp tục làm một việc/phương án/dự án hay không.",
+        "level": "Chuyên sâu",
+        "platforms": [
+          "ChatGPT",
+          "Gemini"
+        ],
+        "prompt": "Xác định decision gate cho tình huống sau.\n\nĐầu ra gồm:\n1. Bản chất vấn đề\n2. Fact đã có\n3. Dữ liệu còn thiếu\n4. Điều kiện được đi tiếp\n5. Điều kiện phải dừng\n6. Điều kiện được đi tiếp có kiểm soát\n7. Người/phòng ban có quyền quyết định\n8. Kết luận: Dừng / Làm có điều kiện / Triển khai\n\nTình huống:\n[dán nội dung vào đây]",
+        "input_guide": {
+          "items": [
+            "Nhập bối cảnh, mục tiêu, dữ liệu chính, vấn đề cần xử lý và kết quả mong muốn.",
+            "Nếu là prompt dùng nhanh, chỉ cần dán nội dung cần phân tích.",
+            "Nếu dữ liệu thiếu, AI sẽ hỏi lại trước khi kết luận."
+          ],
+          "example": "Dán nội dung cần xử lý và nêu rõ muốn AI tóm tắt, phản biện, tạo checklist, tạo câu hỏi hay lập action.",
+          "placeholder": "Bối cảnh; dữ liệu chính; vấn đề cần xử lý; kết quả mong muốn..."
+        }
+      }
+    ]
+  },
+  {
+    "department": "Tool Tricks",
+    "tool": "Sếp hỏi gì?",
+    "description": "Dự đoán câu hỏi khó của lãnh đạo trước khi trình bày báo cáo/phương án.",
+    "platforms": [
+      "ChatGPT",
+      "Gemini"
+    ],
+    "prompts": [
+      {
+        "title": "Dự đoán 10 câu hỏi khó",
+        "use": "Trước khi trình phương án/báo cáo cho lãnh đạo.",
+        "level": "Chuyên sâu",
+        "platforms": [
+          "ChatGPT",
+          "Gemini"
+        ],
+        "prompt": "Đóng vai lãnh đạo cấp cao.\n\nSau khi đọc báo cáo/phương án dưới đây, hãy liệt kê 10 câu hỏi khó có thể được hỏi.\n\nVới mỗi câu hỏi, nêu:\n1. Vì sao câu hỏi này quan trọng\n2. Câu trả lời ngắn gọn đề xuất\n3. Dữ liệu cần chuẩn bị để bảo vệ câu trả lời\n\nBáo cáo/phương án:\n[dán nội dung vào đây]",
+        "input_guide": {
+          "items": [
+            "Nhập bối cảnh, mục tiêu, dữ liệu chính, vấn đề cần xử lý và kết quả mong muốn.",
+            "Nếu là prompt dùng nhanh, chỉ cần dán nội dung cần phân tích.",
+            "Nếu dữ liệu thiếu, AI sẽ hỏi lại trước khi kết luận."
+          ],
+          "example": "Dán nội dung cần xử lý và nêu rõ muốn AI tóm tắt, phản biện, tạo checklist, tạo câu hỏi hay lập action.",
+          "placeholder": "Bối cảnh; dữ liệu chính; vấn đề cần xử lý; kết quả mong muốn..."
+        }
+      }
+    ]
+  },
+  {
+    "department": "Tool Tricks",
+    "tool": "Pre-mortem",
+    "description": "Giả định phương án thất bại để tìm nguyên nhân, dấu hiệu cảnh báo và cách giảm rủi ro.",
+    "platforms": [
+      "ChatGPT",
+      "Gemini"
+    ],
+    "prompts": [
+      {
+        "title": "Giả sử phương án thất bại",
+        "use": "Khi cần soi rủi ro trước khi triển khai.",
+        "level": "Chuyên sâu",
+        "platforms": [
+          "ChatGPT",
+          "Gemini"
+        ],
+        "prompt": "Giả sử phương án dưới đây thất bại sau 3 tháng.\n\nHãy phân tích:\n1. Vì sao thất bại\n2. Dấu hiệu cảnh báo sớm\n3. Rủi ro đã bị xem nhẹ\n4. Giả định nguy hiểm\n5. Điều kiện cần chốt trước khi làm\n6. Cách giảm xác suất thất bại\n7. Kết luận: có nên triển khai không\n\nPhương án:\n[dán nội dung vào đây]",
+        "input_guide": {
+          "items": [
+            "Nhập bối cảnh, mục tiêu, dữ liệu chính, vấn đề cần xử lý và kết quả mong muốn.",
+            "Nếu là prompt dùng nhanh, chỉ cần dán nội dung cần phân tích.",
+            "Nếu dữ liệu thiếu, AI sẽ hỏi lại trước khi kết luận."
+          ],
+          "example": "Dán nội dung cần xử lý và nêu rõ muốn AI tóm tắt, phản biện, tạo checklist, tạo câu hỏi hay lập action.",
+          "placeholder": "Bối cảnh; dữ liệu chính; vấn đề cần xử lý; kết quả mong muốn..."
+        }
+      }
+    ]
+  },
+  {
+    "department": "Tool Tricks",
+    "tool": "Red Team / Blue Team / Judge",
+    "description": "Tạo luồng bảo vệ, phản biện và trọng tài trung lập cho một phương án.",
+    "platforms": [
+      "ChatGPT",
+      "Gemini"
+    ],
+    "prompts": [
+      {
+        "title": "Workflow 3 bước: bảo vệ / phản biện / trọng tài",
+        "use": "Khi muốn phân tích một phương án theo nhiều góc nhìn.",
+        "level": "Chuyên sâu",
+        "platforms": [
+          "ChatGPT",
+          "Gemini"
+        ],
+        "prompt": "Phân tích phương án sau theo 3 vai:\n\n1. Blue Team - Bảo vệ phương án:\n- Vì sao nên chọn\n- Điều kiện để phương án hiệu quả\n- Cách kiểm soát rủi ro\n\n2. Red Team - Phản biện phương án:\n- Điểm yếu\n- Giả định nguy hiểm\n- Tình huống thất bại\n\n3. Judge - Trọng tài trung lập:\n- Fact\n- Assumption\n- Unresolved Risk\n- Decision Gate\n- Final Recommendation: Dừng / Làm có điều kiện / Triển khai\n\nPhương án:\n[dán nội dung vào đây]",
+        "input_guide": {
+          "items": [
+            "Nhập bối cảnh, mục tiêu, dữ liệu chính, vấn đề cần xử lý và kết quả mong muốn.",
+            "Nếu là prompt dùng nhanh, chỉ cần dán nội dung cần phân tích.",
+            "Nếu dữ liệu thiếu, AI sẽ hỏi lại trước khi kết luận."
+          ],
+          "example": "Dán nội dung cần xử lý và nêu rõ muốn AI tóm tắt, phản biện, tạo checklist, tạo câu hỏi hay lập action.",
+          "placeholder": "Bối cảnh; dữ liệu chính; vấn đề cần xử lý; kết quả mong muốn..."
+        }
+      }
+    ]
+  },
+  {
+    "department": "Tool Tricks",
+    "tool": "Email 3 tone",
+    "description": "Tạo 3 phiên bản email: mềm, trung tính, cứng/escalation.",
+    "platforms": [
+      "ChatGPT",
+      "Gemini"
+    ],
+    "prompts": [
+      {
+        "title": "Viết email 3 mức độ",
+        "use": "Khi cần chọn giọng phù hợp trước khi gửi email.",
+        "level": "Chuẩn",
+        "platforms": [
+          "ChatGPT",
+          "Gemini"
+        ],
+        "prompt": "Viết lại nội dung email dưới đây thành 3 phiên bản:\n\n1. Mềm: lịch sự, hợp tác\n2. Trung tính: rõ việc, rõ deadline\n3. Cứng/escalation: dứt khoát, nêu ảnh hưởng nếu không xử lý\n\nYêu cầu:\n- Không cảm tính\n- Rõ chủ ngữ vị ngữ\n- Có deadline nếu phù hợp\n- Dùng được ngay\n\nNội dung thô:\n[dán nội dung vào đây]",
+        "input_guide": {
+          "items": [
+            "Nhập bối cảnh, mục tiêu, dữ liệu chính, vấn đề cần xử lý và kết quả mong muốn.",
+            "Nếu là prompt dùng nhanh, chỉ cần dán nội dung cần phân tích.",
+            "Nếu dữ liệu thiếu, AI sẽ hỏi lại trước khi kết luận."
+          ],
+          "example": "Dán nội dung cần xử lý và nêu rõ muốn AI tóm tắt, phản biện, tạo checklist, tạo câu hỏi hay lập action.",
+          "placeholder": "Bối cảnh; dữ liệu chính; vấn đề cần xử lý; kết quả mong muốn..."
+        }
+      }
+    ]
+  },
+  {
+    "department": "Tool Tricks",
+    "tool": "Tạo câu hỏi ngược",
+    "description": "Buộc AI kiểm tra dữ liệu thiếu trước khi phân tích.",
+    "platforms": [
+      "ChatGPT",
+      "NotebookLM",
+      "Gemini"
+    ],
+    "prompts": [
+      {
+        "title": "Kiểm tra dữ liệu thiếu trước khi trả lời",
+        "use": "Khi đầu vào chưa chắc đủ, tránh AI trả lời vội.",
+        "level": "Chuẩn",
+        "platforms": [
+          "ChatGPT",
+          "NotebookLM",
+          "Gemini"
+        ],
+        "prompt": "Trước khi phân tích, hãy kiểm tra dữ liệu đầu vào.\n\nNếu thiếu thông tin quan trọng, lập bảng:\n1. Thông tin còn thiếu\n2. Vì sao cần\n3. Nếu không có thì ảnh hưởng gì\n4. Câu hỏi cần hỏi lại\n5. Mức độ ưu tiên\n\nSau đó mới phân tích ở mức có thể, và ghi rõ phần nào là giả định.\n\nNội dung:\n[dán nội dung vào đây]",
+        "notebooklm_prompt": "Chỉ sử dụng các nguồn đã upload trong notebook này.\n\nKiểm tra xem nguồn đã đủ dữ liệu để phân tích chưa.\nNếu thiếu thông tin, lập bảng:\n1. Thông tin không thấy trong nguồn\n2. Vì sao cần\n3. Nếu không có thì ảnh hưởng gì\n4. Câu hỏi cần hỏi lại\n5. Mức độ ưu tiên\n\nNếu phân tích, phải ghi rõ phần nào được nguồn hỗ trợ và phần nào chưa có trong nguồn.",
+        "input_guide": {
+          "items": [
+            "Nhập bối cảnh, mục tiêu, dữ liệu chính, vấn đề cần xử lý và kết quả mong muốn.",
+            "Nếu là prompt dùng nhanh, chỉ cần dán nội dung cần phân tích.",
+            "Nếu dữ liệu thiếu, AI sẽ hỏi lại trước khi kết luận."
+          ],
+          "example": "Dán nội dung cần xử lý và nêu rõ muốn AI tóm tắt, phản biện, tạo checklist, tạo câu hỏi hay lập action.",
+          "placeholder": "Bối cảnh; dữ liệu chính; vấn đề cần xử lý; kết quả mong muốn..."
+        }
+      }
+    ]
+  },
+  {
+    "department": "Tool Tricks",
+    "tool": "Checklist Generator",
+    "description": "Tạo checklist theo chủ đề công việc/kỹ thuật/quản lý.",
+    "platforms": [
+      "ChatGPT",
+      "Gemini"
+    ],
+    "prompts": [
+      {
+        "title": "Tạo checklist theo chủ đề",
+        "use": "Khi cần chuẩn hóa danh sách kiểm tra cho một việc.",
+        "level": "Chuẩn",
+        "platforms": [
+          "ChatGPT",
+          "Gemini"
+        ],
+        "prompt": "Tạo checklist cho chủ đề sau.\n\nChecklist phải chia nhóm:\n1. Dữ liệu đầu vào\n2. Tiêu chuẩn/quy định áp dụng\n3. Nội dung cần kiểm tra\n4. Interface với bên khác\n5. Rủi ro thường gặp\n6. Điều kiện hoàn thành\n7. Owner/đơn vị phụ trách nếu có\n\nChủ đề:\n[dán chủ đề vào đây]",
+        "input_guide": {
+          "items": [
+            "Nhập bối cảnh, mục tiêu, dữ liệu chính, vấn đề cần xử lý và kết quả mong muốn.",
+            "Nếu là prompt dùng nhanh, chỉ cần dán nội dung cần phân tích.",
+            "Nếu dữ liệu thiếu, AI sẽ hỏi lại trước khi kết luận."
+          ],
+          "example": "Dán nội dung cần xử lý và nêu rõ muốn AI tóm tắt, phản biện, tạo checklist, tạo câu hỏi hay lập action.",
+          "placeholder": "Bối cảnh; dữ liệu chính; vấn đề cần xử lý; kết quả mong muốn..."
+        }
+      }
+    ]
+  },
+  {
+    "department": "Tool Tricks",
+    "tool": "Risk Register Generator",
+    "description": "Chuyển nội dung thô thành bảng quản lý rủi ro.",
+    "platforms": [
+      "ChatGPT",
+      "Gemini"
+    ],
+    "prompts": [
+      {
+        "title": "Tạo risk register",
+        "use": "Khi cần quản lý rủi ro cho dự án/gói thầu/phương án.",
+        "level": "Chuẩn",
+        "platforms": [
+          "ChatGPT",
+          "Gemini"
+        ],
+        "prompt": "Tạo risk register từ nội dung sau.\n\nCột gồm:\n- Risk ID\n- Risk\n- Cause\n- Impact\n- Probability\n- Severity\n- Mitigation\n- Owner\n- Deadline\n- Status\n\nYêu cầu:\n- Không bịa dữ liệu chưa có.\n- Nếu thiếu owner/deadline, ghi \"Cần xác nhận\".\n\nNội dung:\n[dán nội dung vào đây]",
+        "input_guide": {
+          "items": [
+            "Nhập bối cảnh, mục tiêu, dữ liệu chính, vấn đề cần xử lý và kết quả mong muốn.",
+            "Nếu là prompt dùng nhanh, chỉ cần dán nội dung cần phân tích.",
+            "Nếu dữ liệu thiếu, AI sẽ hỏi lại trước khi kết luận."
+          ],
+          "example": "Dán nội dung cần xử lý và nêu rõ muốn AI tóm tắt, phản biện, tạo checklist, tạo câu hỏi hay lập action.",
+          "placeholder": "Bối cảnh; dữ liệu chính; vấn đề cần xử lý; kết quả mong muốn..."
+        }
+      }
+    ]
+  }
+]

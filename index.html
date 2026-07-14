@@ -6,7 +6,7 @@
   <meta name="description" content="Thư viện prompt AI thực chiến cho công việc nội bộ." />
   <meta name="theme-color" content="#07111f" />
   <title>AI Work Hub — Prompt Intelligence</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css?v=2.5.0" />
 </head>
 <body>
   <header class="topbar">
@@ -37,7 +37,7 @@
           <div class="stat"><strong id="toolCount">—</strong><span>Bộ công cụ</span></div>
           <div class="stat"><strong id="promptCount">—</strong><span>Prompt sẵn dùng</span></div>
           <div class="stat"><strong id="departmentCount">—</strong><span>Nhóm nghiệp vụ</span></div>
-          <div class="stat"><strong>03</strong><span>Nền tảng AI</span></div>
+          <div class="stat"><strong id="usageCount">00</strong><span>Lượt dùng trên máy</span></div>
         </div>
         <div class="quality-note"><span>✓</span><p><strong>Structured for quality</strong><br>Rõ mục tiêu · Rõ đầu vào · Rõ đầu ra</p></div>
       </div>
@@ -67,6 +67,7 @@
       <section class="shortcut-bar">
         <button class="shortcut-btn" onclick="showFavorites()"><span>☆</span> Yêu thích</button>
         <button class="shortcut-btn" onclick="showRecent()"><span>↺</span> Đã dùng gần đây</button>
+        <button class="shortcut-btn" onclick="showUsageStats()"><span>↗</span> Thống kê</button>
         <button class="shortcut-btn" onclick="showReadme()"><span>?</span> Hướng dẫn</button>
       </section>
 
@@ -82,17 +83,42 @@
     </section>
   </main>
 
+  <div id="promptDetailModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="detailTitle">
+    <div class="modal-content detail-modal">
+      <div class="modal-header">
+        <div><div class="eyebrow">PROMPT DETAIL</div><h2 id="detailTitle">Chi tiết prompt</h2><p id="detailUse"></p></div>
+        <button class="close-btn" type="button" onclick="closePromptDetail()" aria-label="Đóng">×</button>
+      </div>
+      <div id="detailBadges" class="badge-row"></div>
+      <div class="detail-toolbar">
+        <label>Nền tảng<select id="detailPlatform" onchange="changeDetailPlatform()"><option value="ChatGPT">ChatGPT / Gemini</option><option value="NotebookLM">NotebookLM</option></select></label>
+        <span id="detailUsage">Chưa sử dụng trên thiết bị này</span>
+      </div>
+      <label class="full-label">Chỉnh sửa trước khi sao chép<textarea id="detailEditor" rows="16" spellcheck="false"></textarea></label>
+      <div class="modal-actions detail-actions">
+        <button class="copy-btn ChatGPT" type="button" onclick="copyDetailPrompt()">Sao chép prompt</button>
+        <button class="builder-btn" type="button" onclick="openBuilderFromDetail()">Mở Prompt Builder</button>
+        <button class="favorite-btn" id="detailShareButton" type="button" onclick="shareCurrentPrompt()">Chia sẻ liên kết</button>
+        <button class="text-btn" type="button" onclick="resetDetailPrompt()">Khôi phục bản gốc</button>
+      </div>
+    </div>
+  </div>
 
-  <div id="builderModal" class="modal hidden">
+
+  <div id="builderModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="builderTitle">
     <div class="modal-content">
       <div class="modal-header">
         <div>
-          <h2>Prompt Builder</h2>
+          <div class="eyebrow">GUIDED BUILDER</div>
+          <h2 id="builderTitle">Prompt Builder</h2>
           <p id="builderSubtitle">Điền thông tin để tạo prompt hoàn chỉnh.</p>
         </div>
         <button class="close-btn" onclick="closeBuilder()">×</button>
       </div>
 
+      <div class="builder-progress"><span class="active" data-step-dot="1">1. Bối cảnh</span><span data-step-dot="2">2. Đầu ra</span><span data-step-dot="3">3. Dữ liệu</span><span data-step-dot="4">4. Hoàn tất</span></div>
+
+      <section class="builder-step active" data-builder-step="1">
       <div class="builder-grid">
         <label>
           Tên dự án / gói việc
@@ -102,9 +128,16 @@
           Khách hàng / đối tác
           <input id="builderClient" type="text" placeholder="Ví dụ: Kyocera, Meiko..." />
         </label>
-        <label>
-          Mục tiêu sử dụng
-          <select id="builderGoalType" onchange="updateBuilderHints()">
+      </div>
+      <label class="full-label">
+        Mô tả thêm mục tiêu
+        <input id="builderGoalDetail" type="text" placeholder="Ví dụ: Bảo vệ phương án chọn cáp MBA trước phản biện nội bộ" />
+      </label>
+      </section>
+
+      <section class="builder-step" data-builder-step="2">
+      <div class="builder-grid">
+        <label>Mục tiêu sử dụng<select id="builderGoalType" onchange="updateBuilderHints()">
             <option value="Tóm tắt để nắm nhanh thông tin">Tóm tắt để nắm nhanh thông tin</option>
             <option value="Báo cáo nội bộ">Báo cáo nội bộ</option>
             <option value="Trình lãnh đạo ra quyết định">Trình lãnh đạo ra quyết định</option>
@@ -116,8 +149,7 @@
             <option value="Tạo checklist">Tạo checklist</option>
             <option value="Tạo câu hỏi làm rõ / RFI">Tạo câu hỏi làm rõ / RFI</option>
             <option value="Khác">Khác</option>
-          </select>
-        </label>
+          </select></label>
         <label>
           Định dạng đầu ra
           <select id="builderOutput" onchange="updateBuilderHints()">
@@ -149,12 +181,9 @@
           </select>
         </label>
       </div>
+      </section>
 
-      <label class="full-label">
-        Mô tả thêm mục tiêu
-        <input id="builderGoalDetail" type="text" placeholder="Ví dụ: Bảo vệ phương án chọn cáp MBA trước phản biện nội bộ" />
-      </label>
-
+      <section class="builder-step" data-builder-step="3">
       <div class="builder-help" id="builderHintBox">
         <strong>Gợi ý nhập dữ liệu:</strong>
         <ul>
@@ -168,13 +197,18 @@
         Dữ liệu đầu vào / nội dung cần xử lý
         <textarea id="builderInput" rows="8" placeholder="Ví dụ kỹ thuật: MBA 2000kVA, 22/0.4kV; cáp đề xuất; chiều dài; phương pháp lắp đặt; tiêu chuẩn; phản biện đang gặp..."></textarea>
       </label>
+      </section>
 
-      <div class="modal-actions">
-        <button class="copy-btn ChatGPT" onclick="generateBuiltPrompt()">Generate Prompt</button>
-        <button class="copy-btn NotebookLM" onclick="copyBuiltPrompt()">Copy Prompt đã tạo</button>
-      </div>
-
+      <section class="builder-step" data-builder-step="4">
       <div class="prompt-box builder-output" id="builderOutputBox">Prompt đã tạo sẽ hiển thị tại đây.</div>
+      <div id="builderQuality" class="quality-score"></div>
+      </section>
+
+      <div class="modal-actions wizard-actions">
+        <button class="text-btn" id="builderBack" type="button" onclick="changeBuilderStep(-1)">← Quay lại</button>
+        <button class="builder-btn" id="builderNext" type="button" onclick="changeBuilderStep(1)">Tiếp tục →</button>
+        <button class="copy-btn NotebookLM hidden-action" id="builderCopy" type="button" onclick="copyBuiltPrompt()">Sao chép prompt</button>
+      </div>
     </div>
   </div>
 
@@ -182,7 +216,6 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-  <script src="data.js"></script>
-  <script src="app.js"></script>
+  <script src="app.js?v=2.5.0"></script>
 </body>
 </html>

@@ -12,9 +12,21 @@ let activeDepartment = "all";
 let activePlatform = "all";
 let currentBuilderPrompt = null;
 let builtPromptText = "";
+let currentBuilderStep = 1;
+let currentDetailPrompt = null;
+let TOOLS = [];
+let departments = ["all"];
+const promptRegistry = new Map();
 
-const departments = ["all", ...Array.from(new Set(TOOLS.map(item => item.department)))];
 const platforms = ["all", "ChatGPT", "NotebookLM", "Gemini"];
+
+function slugify(text) {
+  return String(text || "prompt").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/đ/g, "d").replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+}
+
+function getPromptId(tool, prompt) {
+  return slugify(`${tool.department}-${tool.tool}-${prompt.title}`);
+}
 
 function initDepartmentFilter() {
   if (!departmentFilter) return;
@@ -131,7 +143,9 @@ function renderTools() {
       .join("");
 
     const promptItems = visiblePrompts.map((prompt, promptIndex) => {
-      const safeId = `p-${toolIndex}-${promptIndex}-${Math.random().toString(36).slice(2)}`;
+      const promptKey = getPromptId(tool, prompt);
+      const safeId = `p-${promptKey}`;
+      promptRegistry.set(promptKey, { ...prompt, tool: tool.tool, department: tool.department, id: promptKey });
       const platformBadges = (prompt.platforms || [])
         .map(p => `<span class="badge platform ${escapeAttr(p)}">${escapeHtml(p)}</span>`)
         .join("");
@@ -145,18 +159,18 @@ function renderTools() {
 
       if ((prompt.platforms || []).includes("ChatGPT") || (prompt.platforms || []).includes("Gemini")) {
         buttons += `
-          <button class="copy-btn ChatGPT" onclick="copyTextById('${safeId}-chatgemini')">Copy ChatGPT/Gemini</button>
-          <textarea id="${safeId}-chatgemini" hidden>${escapeHtml(chatGeminiPrompt)}</textarea>
+          <button class="copy-btn ChatGPT" onclick="copyTextById('${safeId}-chatgemini', '${promptKey}')">Copy ChatGPT/Gemini</button>
+          <textarea id="${safeId}-chatgemini" data-prompt-key="${promptKey}" hidden>${escapeHtml(chatGeminiPrompt)}</textarea>
         `;
       } else {
         buttons += `
-          <textarea id="${safeId}-chatgemini" hidden>${escapeHtml(chatGeminiPrompt)}</textarea>
+          <textarea id="${safeId}-chatgemini" data-prompt-key="${promptKey}" hidden>${escapeHtml(chatGeminiPrompt)}</textarea>
         `;
       }
 
       if ((prompt.platforms || []).includes("NotebookLM")) {
         buttons += `
-          <button class="copy-btn NotebookLM" onclick="copyTextById('${safeId}-notebooklm')">Copy NotebookLM</button>
+          <button class="copy-btn NotebookLM" onclick="copyTextById('${safeId}-notebooklm', '${promptKey}')">Copy NotebookLM</button>
           <textarea id="${safeId}-notebooklm" hidden>${escapeHtml(notebookPrompt)}</textarea>
         `;
       } else {
@@ -178,6 +192,7 @@ function renderTools() {
       const favText = favoriteSaved ? "Đã lưu" : "Lưu";
 
       buttons += `
+        <button class="detail-btn" onclick="openPromptDetail('${promptKey}')">Xem & chỉnh sửa</button>
         <button id="${safeId}-fav-btn" class="${favClass}" onclick="toggleFavorite('${safeId}-fav-title', '${safeId}-fav-use', '${safeId}-chatgemini', '${safeId}-notebooklm', '${safeId}-fav-btn')">${favText}</button>
         <textarea id="${safeId}-fav-title" hidden>${escapeHtml(prompt.title)}</textarea>
         <textarea id="${safeId}-fav-use" hidden>${escapeHtml(prompt.use)}</textarea>
@@ -238,12 +253,82 @@ function togglePrompt(id) {
   }
 }
 
-function copyTextById(id) {
+function openPromptDetail(promptKey, updateHash = true) {
+  const prompt = promptRegistry.get(promptKey);
+  if (!prompt) return;
+  currentDetailPrompt = prompt;
+  document.getElementById("detailTitle").textContent = prompt.title;
+  document.getElementById("detailUse").textContent = prompt.use || "";
+  document.getElementById("detailBadges").innerHTML = `<span class="badge">${escapeHtml(prompt.department)}</span><span class="badge level">${escapeHtml(prompt.level || "Chuẩn")}</span>${(prompt.platforms || []).map(p => `<span class="badge platform ${escapeAttr(p)}">${escapeHtml(p)}</span>`).join("")}`;
+  const platform = document.getElementById("detailPlatform");
+  platform.value = (prompt.platforms || []).includes("ChatGPT") || !(prompt.platforms || []).includes("NotebookLM") ? "ChatGPT" : "NotebookLM";
+  platform.querySelector('option[value="NotebookLM"]').disabled = !(prompt.platforms || []).includes("NotebookLM");
+  changeDetailPlatform();
+  updateDetailUsage();
+  document.getElementById("promptDetailModal").classList.remove("hidden");
+  document.body.classList.add("modal-open");
+  if (updateHash) history.replaceState(null, "", `${location.pathname}${location.search}#prompt=${encodeURIComponent(promptKey)}`);
+}
+
+function closePromptDetail(clearHash = true) {
+  document.getElementById("promptDetailModal")?.classList.add("hidden");
+  document.body.classList.remove("modal-open");
+  if (clearHash && location.hash.startsWith("#prompt=")) history.replaceState(null, "", `${location.pathname}${location.search}`);
+}
+
+function getCurrentDetailText() {
+  if (!currentDetailPrompt) return "";
+  return document.getElementById("detailPlatform")?.value === "NotebookLM"
+    ? (currentDetailPrompt.notebooklm_prompt || currentDetailPrompt.prompt || "")
+    : (currentDetailPrompt.prompt || currentDetailPrompt.gemini_prompt || "");
+}
+
+function changeDetailPlatform() {
+  const editor = document.getElementById("detailEditor");
+  if (editor) editor.value = getCurrentDetailText();
+}
+
+function resetDetailPrompt() {
+  changeDetailPlatform();
+  showToast("Đã khôi phục nội dung gốc");
+}
+
+function copyDetailPrompt() {
+  if (!currentDetailPrompt) return;
+  copyText(document.getElementById("detailEditor")?.value || "");
+  recordPromptUsage(currentDetailPrompt.id);
+  saveRecentItem(currentDetailPrompt.title, document.getElementById("detailEditor")?.value || "");
+  updateDetailUsage();
+}
+
+function updateDetailUsage() {
+  if (!currentDetailPrompt) return;
+  const data = getUsageMap()[currentDetailPrompt.id];
+  const el = document.getElementById("detailUsage");
+  if (el) el.textContent = data ? `Đã dùng ${data.count} lần trên thiết bị này` : "Chưa sử dụng trên thiết bị này";
+}
+
+function shareCurrentPrompt() {
+  if (!currentDetailPrompt) return;
+  const url = `${location.origin}${location.pathname}${location.search}#prompt=${encodeURIComponent(currentDetailPrompt.id)}`;
+  copyText(url);
+  showToast("Đã sao chép liên kết trực tiếp");
+}
+
+function openBuilderFromDetail() {
+  if (!currentDetailPrompt) return;
+  const prompt = currentDetailPrompt;
+  closePromptDetail(false);
+  openBuilderWithPrompt({ title: prompt.title, use: prompt.use, chatGemini: prompt.prompt || prompt.gemini_prompt || "", notebook: prompt.notebooklm_prompt || prompt.prompt || "", inputGuide: prompt.input_guide || null });
+}
+
+function copyTextById(id, promptKey = "") {
   const el = document.getElementById(id);
   if (!el) return;
 
   copyText(el.value);
   saveRecentFromTextarea(id);
+  recordPromptUsage(promptKey || el.dataset.promptKey || "unknown");
 }
 
 function copyText(text) {
@@ -281,6 +366,23 @@ function showToast(message) {
   toast.classList.add("show");
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => toast.classList.remove("show"), 2200);
+}
+
+function getUsageMap() {
+  try { return JSON.parse(localStorage.getItem("ai_work_hub_usage") || "{}"); } catch { return {}; }
+}
+
+function recordPromptUsage(promptKey) {
+  const usage = getUsageMap();
+  usage[promptKey] = { count: (usage[promptKey]?.count || 0) + 1, lastUsed: new Date().toISOString() };
+  localStorage.setItem("ai_work_hub_usage", JSON.stringify(usage));
+  updateUsageOverview();
+}
+
+function updateUsageOverview() {
+  const total = Object.values(getUsageMap()).reduce((sum, item) => sum + (item.count || 0), 0);
+  const el = document.getElementById("usageCount");
+  if (el) el.textContent = String(total).padStart(2, "0");
 }
 
 function escapeHtml(text) {
@@ -383,13 +485,17 @@ function openBuilderById(chatGeminiId, notebookId, guideId, title, use) {
     inputGuide = null;
   }
 
-  currentBuilderPrompt = {
+  openBuilderWithPrompt({
     title,
     use,
     chatGemini: chatEl ? chatEl.value : "",
     notebook: noteEl ? noteEl.value : "",
     inputGuide
-  };
+  });
+}
+
+function openBuilderWithPrompt(promptData) {
+  currentBuilderPrompt = promptData;
 
   const builderSubtitle = document.getElementById("builderSubtitle");
   const builderProject = document.getElementById("builderProject");
@@ -401,24 +507,56 @@ function openBuilderById(chatGeminiId, notebookId, guideId, title, use) {
   const builderOutputBox = document.getElementById("builderOutputBox");
   const builderModal = document.getElementById("builderModal");
 
-  if (builderSubtitle) builderSubtitle.textContent = `${title} · ${use}`;
+  if (builderSubtitle) builderSubtitle.textContent = `${promptData.title} · ${promptData.use || ""}`;
   if (builderProject) builderProject.value = "";
   if (builderClient) builderClient.value = "";
-  if (builderGoalType) builderGoalType.value = suggestGoalType(title);
+  if (builderGoalType) builderGoalType.value = suggestGoalType(promptData.title);
   if (builderGoalDetail) builderGoalDetail.value = "";
-  if (builderOutput) builderOutput.value = suggestOutputFormat(title);
+  if (builderOutput) builderOutput.value = suggestOutputFormat(promptData.title);
   if (builderInput) builderInput.value = "";
   if (builderOutputBox) builderOutputBox.textContent = "Prompt đã tạo sẽ hiển thị tại đây.";
 
   updateBuilderHints();
   builtPromptText = "";
+  currentBuilderStep = 1;
+  renderBuilderStep();
 
-  if (builderModal) builderModal.classList.remove("hidden");
+  if (builderModal) {
+    builderModal.classList.remove("hidden");
+    document.body.classList.add("modal-open");
+  }
 }
 
 function closeBuilder() {
   const builderModal = document.getElementById("builderModal");
   if (builderModal) builderModal.classList.add("hidden");
+  document.body.classList.remove("modal-open");
+}
+
+function changeBuilderStep(direction) {
+  if (direction > 0 && currentBuilderStep === 1) {
+    const project = document.getElementById("builderProject")?.value.trim();
+    const goal = document.getElementById("builderGoalDetail")?.value.trim();
+    if (!project && !goal) { showToast("Hãy nhập tên dự án hoặc mục tiêu sử dụng"); return; }
+  }
+  if (direction > 0 && currentBuilderStep === 3) generateBuiltPrompt();
+  currentBuilderStep = Math.max(1, Math.min(4, currentBuilderStep + direction));
+  renderBuilderStep();
+}
+
+function renderBuilderStep() {
+  document.querySelectorAll("[data-builder-step]").forEach(el => el.classList.toggle("active", Number(el.dataset.builderStep) === currentBuilderStep));
+  document.querySelectorAll("[data-step-dot]").forEach(el => {
+    const step = Number(el.dataset.stepDot);
+    el.classList.toggle("active", step === currentBuilderStep);
+    el.classList.toggle("done", step < currentBuilderStep);
+  });
+  const back = document.getElementById("builderBack");
+  const next = document.getElementById("builderNext");
+  const copy = document.getElementById("builderCopy");
+  if (back) back.style.visibility = currentBuilderStep === 1 ? "hidden" : "visible";
+  if (next) next.classList.toggle("hidden-action", currentBuilderStep === 4);
+  if (copy) copy.classList.toggle("hidden-action", currentBuilderStep !== 4);
 }
 
 function generateBuiltPrompt() {
@@ -469,6 +607,21 @@ ${input || "[dán dữ liệu đầu vào tại đây]"}`;
 
   const builderOutputBox = document.getElementById("builderOutputBox");
   if (builderOutputBox) builderOutputBox.textContent = builtPromptText;
+  renderPromptQuality({ project, client, goal, input, output, detail });
+}
+
+function renderPromptQuality(values) {
+  const checks = [
+    [Boolean(values.project), "Có dự án/gói việc"],
+    [Boolean(values.goal), "Có mục tiêu rõ ràng"],
+    [Boolean(values.input && values.input.length >= 80), "Dữ liệu đầu vào đủ chi tiết"],
+    [Boolean(values.output), "Đã chọn định dạng đầu ra"],
+    [Boolean(values.detail), "Đã chọn mức độ phân tích"]
+  ];
+  const score = checks.filter(([ok]) => ok).length * 20;
+  const el = document.getElementById("builderQuality");
+  if (!el) return;
+  el.innerHTML = `<div class="score-head"><strong>Chất lượng prompt: ${score}/100</strong><span>${score >= 80 ? "Sẵn sàng sử dụng" : "Nên bổ sung dữ liệu"}</span></div><div class="score-track"><i style="width:${score}%"></i></div><div class="score-checks">${checks.map(([ok, label]) => `<span class="${ok ? "ok" : "missing"}">${ok ? "✓" : "○"} ${label}</span>`).join("")}</div>`;
 }
 
 function copyBuiltPrompt() {
@@ -506,6 +659,11 @@ function saveRecentFromTextarea(id) {
   ].slice(0, 12);
 
   setStore("ai_work_hub_recent", next);
+}
+
+function saveRecentItem(title, text) {
+  const items = getStore("ai_work_hub_recent");
+  setStore("ai_work_hub_recent", [{ title, text, time: new Date().toLocaleString("vi-VN") }, ...items.filter(i => i.text !== text)].slice(0, 12));
 }
 
 function inferTitleFromPrompt(text) {
@@ -608,6 +766,16 @@ function showFavorites() {
 function showRecent() {
   const items = getStore("ai_work_hub_recent");
   renderShortcut("🕘 Prompt đã copy gần đây", items, false);
+}
+
+function showUsageStats() {
+  if (!shortcutContainer) return;
+  const usage = getUsageMap();
+  const rows = [...promptRegistry.values()].map(prompt => ({ ...prompt, ...(usage[prompt.id] || { count: 0 }) })).filter(item => item.count > 0).sort((a, b) => b.count - a.count);
+  const total = rows.reduce((sum, item) => sum + item.count, 0);
+  shortcutContainer.classList.remove("hidden");
+  shortcutContainer.innerHTML = `<div class="stats-head"><div><div class="eyebrow">LOCAL ANALYTICS</div><h3>Thống kê sử dụng trên thiết bị</h3></div><strong>${total}<small> lượt sao chép</small></strong></div>${rows.length ? `<div class="usage-list">${rows.slice(0, 10).map((item, index) => `<button onclick="openPromptDetail('${item.id}')"><span>${index + 1}</span><div><strong>${escapeHtml(item.title)}</strong><small>${escapeHtml(item.department)}</small></div><b>${item.count}</b></button>`).join("")}</div>` : `<p class="prompt-meta">Chưa có dữ liệu. Thống kê sẽ xuất hiện sau khi cậu chủ sao chép prompt.</p>`}<p class="privacy-note">Dữ liệu này chỉ lưu trong trình duyệt hiện tại, không được gửi ra ngoài.</p>`;
+  shortcutContainer.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 function clearShortcutView(scroll = true) {
@@ -937,7 +1105,7 @@ if (levelFilter) {
 }
 
 document.addEventListener("keydown", event => {
-  if (event.key === "Escape") closeBuilder();
+  if (event.key === "Escape") { closeBuilder(); closePromptDetail(); }
   if (event.key === "/" && document.activeElement?.tagName !== "INPUT" && document.activeElement?.tagName !== "TEXTAREA") {
     event.preventDefault();
     searchInput?.focus();
@@ -948,7 +1116,28 @@ document.getElementById("builderModal")?.addEventListener("click", event => {
   if (event.target.id === "builderModal") closeBuilder();
 });
 
-initDepartmentFilter();
-initWorkspaceOverview();
-initTheme();
-renderAll();
+document.getElementById("promptDetailModal")?.addEventListener("click", event => {
+  if (event.target.id === "promptDetailModal") closePromptDetail();
+});
+
+async function initializeApp() {
+  try {
+    const response = await fetch(`data.json?v=2.5.0`);
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    TOOLS = await response.json();
+    departments = ["all", ...Array.from(new Set(TOOLS.map(item => item.department)))];
+    initDepartmentFilter();
+    initWorkspaceOverview();
+    updateUsageOverview();
+    initTheme();
+    renderAll();
+    const deepLink = location.hash.match(/^#prompt=(.+)$/);
+    if (deepLink) openPromptDetail(decodeURIComponent(deepLink[1]), false);
+  } catch (error) {
+    toolsContainer.innerHTML = `<div class="empty"><strong>Không thể tải thư viện prompt.</strong><br>Hãy mở website qua GitHub Pages hoặc một máy chủ web cục bộ, không mở trực tiếp bằng file.</div>`;
+    if (resultSummary) resultSummary.textContent = "Lỗi tải dữ liệu";
+    console.error("AI Work Hub data loading failed", error);
+  }
+}
+
+initializeApp();
