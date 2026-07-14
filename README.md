@@ -17,6 +17,8 @@ Phiên bản 3.1 bổ sung nền mạng thần kinh canvas hai lớp, các nút 
 - Xuất prompt thành Markdown, Word, CSV, JSON hoặc email.
 - Content Studio tạo, nhập và xuất prompt tùy chỉnh.
 - Đánh giá prompt và ghim prompt vào dự án.
+- Email Composer có màn hình xem trước, sao chép, tải bản nháp và mở ứng dụng email.
+- Workflow Center đồng bộ trạng thái tab và hỗ trợ quay lại đúng quy trình sau khi xem prompt.
 
 ## Điểm mới
 

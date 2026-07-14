@@ -14,6 +14,7 @@ let currentBuilderPrompt = null;
 let builtPromptText = "";
 let currentBuilderStep = 1;
 let currentDetailPrompt = null;
+let workflowReturnName = "";
 let TOOLS = [];
 let departments = ["all"];
 const promptRegistry = new Map();
@@ -267,6 +268,7 @@ function openPromptDetail(promptKey, updateHash = true) {
   changeDetailPlatform();
   updateDetailUsage();
   renderCurrentRating();
+  document.getElementById("detailWorkflowBack")?.classList.toggle("hidden-action", !workflowReturnName);
   document.getElementById("promptDetailModal").classList.remove("hidden");
   document.body.classList.add("modal-open");
   if (updateHash) history.replaceState(null, "", `${location.pathname}${location.search}#prompt=${encodeURIComponent(promptKey)}`);
@@ -276,6 +278,7 @@ function closePromptDetail(clearHash = true) {
   document.getElementById("promptDetailModal")?.classList.add("hidden");
   document.body.classList.remove("modal-open");
   if (clearHash && location.hash.startsWith("#prompt=")) history.replaceState(null, "", `${location.pathname}${location.search}`);
+  workflowReturnName = "";
 }
 
 function getCurrentDetailText() {
@@ -1437,7 +1440,7 @@ function confirmPinPrompt(projectId) {
 
 function renderProjectDetail(project) {
   const prompts = (project.promptIds || []).map(id => promptRegistry.get(id)).filter(Boolean);
-  return `<div class="project-hero"><div><span>${escapeHtml(project.status)}</span><h3>${escapeHtml(project.name)}</h3><p>${escapeHtml(project.client || "Dự án nội bộ")}</p></div><button class="text-btn" onclick="exportProject('${project.id}')">Xuất project ↓</button></div><div class="project-grid"><div><small>MỤC TIÊU & GHI CHÚ</small><p>${escapeHtml(project.notes || "Chưa có ghi chú.")}</p></div><div><small>PROMPT ĐÃ GHIM</small><strong>${prompts.length}</strong></div><div><small>NGÀY TẠO</small><strong>${new Date(project.createdAt).toLocaleDateString("vi-VN")}</strong></div></div><h4>Prompt trong dự án</h4><div class="project-prompts">${prompts.length ? prompts.map(prompt => `<button onclick="openRoutedPrompt('${prompt.id}')"><span>✦</span><div><b>${escapeHtml(prompt.title)}</b><small>${escapeHtml(prompt.department)}</small></div><i>→</i></button>`).join("") : `<p>Chưa có prompt. Mở một prompt và chọn ghim vào dự án.</p>`}</div><div class="smart-next">${renderSmartRecommendations()}</div>`;
+  return `<div class="project-hero"><div><span>${escapeHtml(project.status)}</span><h3>${escapeHtml(project.name)}</h3><p>${escapeHtml(project.client || "Dự án nội bộ")}</p></div><div class="project-actions"><button class="text-btn" onclick="exportProject('${project.id}')">Xuất project ↓</button><button class="danger-btn" onclick="requestDeleteProject('${project.id}')">Xóa project</button></div></div><div class="project-grid"><div><small>MỤC TIÊU & GHI CHÚ</small><p>${escapeHtml(project.notes || "Chưa có ghi chú.")}</p></div><div><small>PROMPT ĐÃ GHIM</small><strong>${prompts.length}</strong></div><div><small>NGÀY TẠO</small><strong>${new Date(project.createdAt).toLocaleDateString("vi-VN")}</strong></div></div><h4>Prompt trong dự án</h4><div class="project-prompts">${prompts.length ? prompts.map(prompt => `<button onclick="openRoutedPrompt('${prompt.id}')"><span>✦</span><div><b>${escapeHtml(prompt.title)}</b><small>${escapeHtml(prompt.department)}</small></div><i>→</i></button>`).join("") : `<p>Chưa có prompt. Mở một prompt và chọn ghim vào dự án.</p>`}</div><div class="smart-next">${renderSmartRecommendations()}</div>`;
 }
 
 function renderSmartRecommendations() {
@@ -1453,6 +1456,19 @@ function exportProject(id) {
   downloadFile(`${slugify(project.name)}.json`, JSON.stringify(project,null,2), "application/json");
 }
 
+function requestDeleteProject(id) {
+  const project = getStore("ai_work_hub_projects").find(item => item.id === id);
+  if (!project) return;
+  openOsModal("Xóa project?", "Hành động này chỉ ảnh hưởng dữ liệu lưu trên trình duyệt hiện tại.", `<div class="delete-confirm"><div class="delete-icon">!</div><h3>${escapeHtml(project.name)}</h3><p>Project, danh sách prompt đã ghim và ghi chú bên trong sẽ bị xóa. Thao tác này không thể hoàn tác.</p><div><button class="text-btn" onclick="openWorkspace('${project.id}')">Hủy</button><button class="danger-btn solid" onclick="deleteProject('${project.id}')">Xác nhận xóa</button></div></div>`, "CONFIRM DESTRUCTIVE ACTION");
+}
+
+function deleteProject(id) {
+  const projects = getStore("ai_work_hub_projects").filter(item => item.id !== id);
+  setStore("ai_work_hub_projects", projects);
+  showToast("Đã xóa project khỏi thiết bị");
+  openWorkspace(projects[0]?.id || "");
+}
+
 const WORKFLOW_DEFINITIONS = {
   "Đấu thầu": ["Tóm tắt scope / volume / deadline","Tách yêu cầu kỹ thuật / thương mại","Bảng missing information","Đánh giá Go / No-go / Conditional Go","Risk register gói thầu"],
   "Thiết kế": ["Tóm tắt yêu cầu thiết kế","Checklist đầu vào thiết kế","Phân tích phương án kỹ thuật","Review rủi ro thiết kế"],
@@ -1463,7 +1479,7 @@ const WORKFLOW_DEFINITIONS = {
 function openWorkflowCenter(preferred = "") {
   const names = Object.keys(WORKFLOW_DEFINITIONS); const active = names.includes(preferred) ? preferred : "Đấu thầu";
   const state = getStore("ai_work_hub_workflow_state");
-  openOsModal("Workflow Center", "Kết nối nhiều prompt thành một quy trình công việc có thứ tự và trạng thái.", `<div class="workflow-tabs">${names.map(name => `<button class="${name===active?"active":""}" onclick="renderWorkflow('${name}')">${name}</button>`).join("")}</div><div id="workflowCanvas"></div>`, "MULTI-STEP AUTOMATION");
+  openOsModal("Workflow Center", "Kết nối nhiều prompt thành một quy trình công việc có thứ tự và trạng thái.", `<div class="workflow-nav"><button class="back-btn" onclick="closeOsModal()">← Về Work OS</button><span>Chọn nhóm quy trình và đánh dấu từng bước khi hoàn thành.</span></div><div class="workflow-tabs">${names.map(name => `<button data-workflow-tab="${name}" class="${name===active?"active":""}" onclick="renderWorkflow('${name}')">${name}</button>`).join("")}</div><div id="workflowCanvas"></div>`, "MULTI-STEP AUTOMATION");
   renderWorkflow(active, state);
 }
 
@@ -1471,7 +1487,21 @@ function renderWorkflow(name, state = getStore("ai_work_hub_workflow_state")) {
   const titles = WORKFLOW_DEFINITIONS[name] || WORKFLOW_DEFINITIONS["Đấu thầu"];
   const completed = state.find(item => item.name === name)?.completed || [];
   const steps = titles.map(title => [...promptRegistry.values()].find(prompt => normalize(prompt.title).includes(normalize(title))) || [...promptRegistry.values()].find(prompt => normalize(prompt.title).includes(normalize(title.split(" ").slice(0,2).join(" "))))).filter(Boolean);
-  document.getElementById("workflowCanvas").innerHTML = `<div class="workflow-head"><div><small>WORKFLOW</small><h3>${name}</h3></div><span>${completed.length}/${steps.length} hoàn thành</span></div><div class="workflow-steps">${steps.map((prompt,index) => `<div class="${completed.includes(index)?"done":""}"><button class="step-check" onclick="toggleWorkflowStep('${name}',${index})">${completed.includes(index)?"✓":index+1}</button><button class="step-main" onclick="openRoutedPrompt('${prompt.id}')"><small>${escapeHtml(prompt.department)} · ${escapeHtml(prompt.level||"Chuẩn")}</small><b>${escapeHtml(prompt.title)}</b><span>${escapeHtml(prompt.use||"")}</span></button><i>→</i></div>`).join("")}</div>`;
+  document.querySelectorAll("[data-workflow-tab]").forEach(button => button.classList.toggle("active", button.dataset.workflowTab === name));
+  document.getElementById("workflowCanvas").innerHTML = `<div class="workflow-head"><div><small>WORKFLOW</small><h3>${name}</h3></div><span>${completed.length}/${steps.length} hoàn thành</span></div><div class="workflow-steps">${steps.map((prompt,index) => `<div class="${completed.includes(index)?"done":""}"><button class="step-check" onclick="toggleWorkflowStep('${name}',${index})">${completed.includes(index)?"✓":index+1}</button><button class="step-main" onclick="openWorkflowPrompt('${prompt.id}','${name}')"><small>${escapeHtml(prompt.department)} · ${escapeHtml(prompt.level||"Chuẩn")}</small><b>${escapeHtml(prompt.title)}</b><span>${escapeHtml(prompt.use||"")}</span></button><i>→</i></div>`).join("")}</div><div class="workflow-footer"><button class="text-btn" onclick="closeOsModal()">← Đóng workflow</button><small>Nhấn số thứ tự để đánh dấu hoàn thành · Nhấn nội dung để mở prompt</small></div>`;
+}
+
+function openWorkflowPrompt(promptId, workflowName) {
+  workflowReturnName = workflowName;
+  closeOsModal();
+  openPromptDetail(promptId);
+}
+
+function returnToWorkflowCenter() {
+  const name = workflowReturnName;
+  closePromptDetail(false);
+  workflowReturnName = "";
+  openWorkflowCenter(name);
 }
 
 function toggleWorkflowStep(name,index) {
@@ -1502,9 +1532,19 @@ function exportDetailPrompt() {
   if(format==="word")downloadFile(`${name}.doc`,`<html><meta charset="utf-8"><body><h1>${escapeHtml(currentDetailPrompt.title)}</h1><pre style="white-space:pre-wrap;font-family:Arial">${escapeHtml(text)}</pre></body></html>`,`application/msword`);
   if(format==="csv")downloadFile(`${name}.csv`,`"Title","Department","Prompt"\n"${currentDetailPrompt.title.replaceAll('"','""')}","${currentDetailPrompt.department}","${text.replaceAll('"','""')}"`,`text/csv;charset=utf-8`);
   if(format==="json")downloadFile(`${name}.json`,JSON.stringify({title:currentDetailPrompt.title,department:currentDetailPrompt.department,prompt:text},null,2),`application/json`);
-  if(format==="email")location.href=`mailto:?subject=${encodeURIComponent(currentDetailPrompt.title)}&body=${encodeURIComponent(text)}`;
+  if(format==="email"){openEmailComposer(currentDetailPrompt.title,text);return;}
   showToast(`Đã chuẩn bị bản xuất ${format.toUpperCase()}`);
 }
+
+function openEmailComposer(subject, body) {
+  sessionStorage.setItem("ai_work_hub_email_draft", JSON.stringify({subject,body}));
+  openOsModal("Soạn email từ prompt", "Xem trước, chỉnh sửa và sao chép nội dung trước khi mở ứng dụng email.", `<div class="email-composer"><div class="email-fields"><label>Người nhận<input id="emailTo" type="email" placeholder="name@company.com"/></label><label>Tiêu đề<input id="emailSubject" value="${escapeAttr(subject)}"/></label></div><label>Nội dung email<textarea id="emailBody" rows="16">${escapeHtml(body)}</textarea></label><div class="email-note"><span>i</span><p>Website không thể tự gửi email. Nút “Mở ứng dụng email” sử dụng phần mềm email mặc định trên máy; nếu chưa cấu hình, hãy dùng “Sao chép toàn bộ”.</p></div><div class="email-actions"><button class="text-btn" onclick="copyEmailDraft()">Sao chép toàn bộ</button><button class="text-btn" onclick="downloadEmailDraft()">Tải bản nháp .txt</button><button class="builder-btn" onclick="launchEmailClient()">Mở ứng dụng email →</button></div></div>`, "EMAIL COMPOSER");
+}
+
+function getEmailDraft() { return {to:document.getElementById("emailTo")?.value.trim()||"",subject:document.getElementById("emailSubject")?.value||"",body:document.getElementById("emailBody")?.value||""}; }
+function copyEmailDraft(){const draft=getEmailDraft();copyText(`To: ${draft.to}\nSubject: ${draft.subject}\n\n${draft.body}`);}
+function downloadEmailDraft(){const draft=getEmailDraft();downloadFile(`${slugify(draft.subject||"email-draft")}.txt`,`To: ${draft.to}\nSubject: ${draft.subject}\n\n${draft.body}`,"text/plain;charset=utf-8");showToast("Đã tải bản nháp email");}
+function launchEmailClient(){const draft=getEmailDraft();location.href=`mailto:${encodeURIComponent(draft.to)}?subject=${encodeURIComponent(draft.subject)}&body=${encodeURIComponent(draft.body)}`;setTimeout(()=>showToast("Nếu không có cửa sổ email, hãy dùng nút Sao chép toàn bộ"),800);}
 
 function rateCurrentPrompt(score){if(!currentDetailPrompt)return;const ratings=JSON.parse(localStorage.getItem("ai_work_hub_ratings")||"{}");ratings[currentDetailPrompt.id]=score;localStorage.setItem("ai_work_hub_ratings",JSON.stringify(ratings));renderCurrentRating();showToast(`Đã đánh giá ${score}/5`);}
 function renderCurrentRating(){if(!currentDetailPrompt)return;const score=JSON.parse(localStorage.getItem("ai_work_hub_ratings")||"{}")[currentDetailPrompt.id];document.querySelectorAll(".rating-row button").forEach((button,index)=>button.classList.toggle("active",Boolean(score&&index<score)));const el=document.getElementById("detailRating");if(el)el.textContent=score?`${score}/5 · lưu trên thiết bị`:"";}

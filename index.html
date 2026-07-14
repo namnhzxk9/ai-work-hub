@@ -6,7 +6,7 @@
   <meta name="description" content="Thư viện prompt AI thực chiến cho công việc nội bộ." />
   <meta name="theme-color" content="#070711" />
   <title>AI Work Hub — Prompt Intelligence</title>
-  <link rel="stylesheet" href="style.css?v=4.0.0" />
+  <link rel="stylesheet" href="style.css?v=4.1.0" />
 </head>
 <body>
   <header class="topbar">
@@ -121,7 +121,7 @@
     <div class="modal-content detail-modal">
       <div class="modal-header">
         <div><div class="eyebrow">PROMPT DETAIL</div><h2 id="detailTitle">Chi tiết prompt</h2><p id="detailUse"></p></div>
-        <button class="close-btn" type="button" onclick="closePromptDetail()" aria-label="Đóng">×</button>
+        <div class="modal-header-actions"><button class="back-btn hidden-action" id="detailWorkflowBack" type="button" onclick="returnToWorkflowCenter()">← Workflow</button><button class="close-btn" type="button" onclick="closePromptDetail()" aria-label="Đóng">×</button></div>
       </div>
       <div id="detailBadges" class="badge-row"></div>
       <div class="detail-toolbar">
@@ -265,6 +265,6 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-  <script src="app.js?v=4.0.0"></script>
+  <script src="app.js?v=4.1.0"></script>
 </body>
 </html>
